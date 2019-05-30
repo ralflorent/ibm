@@ -1,2 +1,3 @@
-# IBM
-Virtual Environment for Individual-Based Modeling (IBM)
+# Agent-Based Model for studying habitat use by waterbirds in coastal lagoons of the tropics
+
+
