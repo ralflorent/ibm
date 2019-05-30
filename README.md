@@ -2,4 +2,4 @@
 
 
 The general model concept is illustrated in the figure below.
-![image]concept_1v.png
+![image](concept_1v.png)
