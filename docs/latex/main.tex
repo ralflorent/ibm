@@ -1,0 +1,84 @@
+% Individual-Based Modeling (IBM)
+%
+% Advanced Project I - Jacobs University Bremen
+% Supervisor: Dr. Stefan Kettemann
+%
+% Created on May 29, 2019
+%
+% Authors:
+%   Ralph Florent <r.florent@jacobs-university.de>
+%   Davi Tavares <davi.tavares@leibniz-zmt.de>
+%   Agostino Merico <a.merico@jacobs-university.de>
+%
+% Main entry for the documentation
+
+% ==============================================================================
+% START: Preamble
+% ==============================================================================
+\documentclass{article}
+
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage[british,UKenglish,USenglish]{babel}
+\usepackage[backend=biber,style=numeric,sorting=none]{biblatex}
+\usepackage[utf8]{inputenc} % required to load before csquotes
+\usepackage{csquotes}
+\usepackage{graphicx}
+\usepackage[inner=3cm,outer=3cm,top=3cm,bottom=3cm]{geometry}
+\usepackage{hyperref}
+\usepackage{subcaption}
+\usepackage{url}
+
+\usepackage{biblatex}
+% Override hyper reference default configurations
+\hypersetup{colorlinks=true,linkcolor=blue,filecolor=magenta,urlcolor=cyan}
+\urlstyle{same}
+
+\addbibresource{references.bib} % Input references by file
+\graphicspath{{images/}} % Set path for image preloading
+
+\title{
+    {\includegraphics[scale=0.15]{logo-black.png}} \\
+    \vspace{1.4cm}
+    {\large \textbf{ADVANCED PROJECT I}} \\
+    {\large \textbf{Project Report}} \\
+    {\large Supervisor: Prof. Dr. Agostino Merico} \\
+    {\large Contributor: Dr. Davi Tavares} \\
+    \vspace{1.4cm}
+    {\large \textbf{Virtual Environment for Individual-Based Modeling}}
+}
+
+\vspace{1.4cm}
+\author{ \textit{By Ralph Florent}}
+\date{May 29, 2019}
+
+\vspace{1.4cm}
+% ==============================================================================
+% END: Preamble
+% ==============================================================================
+
+% ==============================================================================
+% START: Scripts
+% ==============================================================================
+\begin{document}
+\maketitle
+
+% Abstract
+\input{sections/abstract}
+\newpage
+
+% Introduction
+\input{sections/intro}
+
+% Contents
+\input{sections/contents}
+
+% References
+\clearpage
+\newpage
+\printbibliography
+
+\end{document}
+% ==============================================================================
+% END: Scripts
+% ==============================================================================
