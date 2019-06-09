@@ -26,6 +26,51 @@
 
 \section{Instrumentation}
 
+The VE, as specified literally, is developed in a complete \emph{virtualized} workspace. This virtualized workspace is made up of tools and software used to carry out this project to its current release. In this section, a brief overview of those tools and software is provided to help to reproduce or replicate the exact setup of the development environment put in place at the time of implementing the project.
+
+\subsection{Tools and Software}
+There are several currently-available programming tools that may achieve the same VE goal. The reason to believe so is that it turns out that today's open source community has grown larger and, subsequently, has been more actively involved in software improvements and new releases. As a result, accessing those online tools is no longer an issue, at least in terms of low-money budget, since they are publicly available (under free or moderately limited license).
+
+Given the availability of several options, enlisted below are the most regular choices of  tools and software for a developer with mere knowledge in programming:
+\begin{itemize}
+    \item GNU/Linux Ubuntu 16.04 (operating system)
+    \item Visual Studio Code (text editor for the documentation)
+    \item Git\footnote{Also available as a bash emulation for other platforms for free (e.g. Git Bash for Windows).} (version control)
+    \item GitHub (web-based hosting service for versioning system)
+    \item Python (programming language for the scripting)
+    \item Jupyter Notebook (workspace for the VE simulation)
+\end{itemize}
+
+\noindent
+Obviously, it is not a concern to access and use a set of randomly compatible versions of the above-mentioned tools and software. However, in case a developer wants the exact versions, Table \ref{table:tools-and-software} lists more detailed information on both the versions and sources for future downloads.
+
+\begin{table}[h!]
+    \begin{center}
+        \begin{tabular}{ |l|l|l|l| }
+            \hline
+            \multicolumn{4}{ |c| }{ \textbf{Tools \& Software}} \\
+            \hline % Table headers
+             & \textbf{Version} & \textbf{Source} & \textbf{Cost}  \\ [0.5ex]
+            \hline % Table body (row-wise contents)
+            \textbf{\textit{Visual Studio Code}} & 1.34.0 & See link in [1] & Free  \\
+            \hline
+            \textbf{\textit{Git}} & 2.7.4 & Built-in Linux program & Free  \\
+            \hline
+            \textbf{\textit{GitHub}} & N/A & See link in [3] & 5 free users  \\
+            \hline
+            \textbf{\textit{Python}} & 3.5 & See link in [4] & Free  \\
+            \hline
+            \textbf{\textit{Jupyter Notebook}} & 5.7.4 & See link in [5] & Free  \\
+            \hline
+        \end{tabular}
+        \caption{Detailed information on the tools and software used for the VE}
+        \label{table:tools-and-software}
+    \end{center}
+\end{table}
+
+\subsection{General Comments}
+The tools and software discussed in the previous subsection are chosen by a matter of personal preference. No further comparison or parallelism procedure has been carried out to assess the most convenient option. In other words, it might exist a better work environment where the VE simulation is simpler and easier\footnote{In the outlook section, "simpler" and "easier" simulation is explained with the perspective of an ideal use case scenario.}, or the VE surprisingly performs better\footnote{A better performance of the VE refers to reduction in processing time, resource consumption in an easy-to-follow simulation platform.}. But, given that this first release is most importantly seen as a prototype, more tools and sottware can be tested out in a near future so that we end up with a so-far optimal workspace for the VE.
+
 \section{Methodology}
 
 \section{Results \& Discussions}
