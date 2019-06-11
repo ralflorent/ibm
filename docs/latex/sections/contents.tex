@@ -114,6 +114,21 @@ Recalling that this Virtual Environment constitutes essentially a digital repres
 \subsubsection{Options}
 
 \subsection{Algorithm \& Data Structure}
+As illustrated in the flow chart of Figure \ref{fig:workflow-scheme}, the VE simulation implies the use of well-coordinated processes and subprocesses, which, once computed, will eventually attempt to explain the agents' behavior ant their mutual interactions with the environment in which they coexist. This section discusses the algorithm and data structure applied to contruct these processes and subprocesses.
+
+Some of the processes are really straightforward and do not demand a time-, or energy-consuming logic to build them. For instance, the initialization phase is one of the common cases where the developer only needs to take care of statically sets of values required as prior considerations for the initial conditions. But, as for the \emph{Update} process for example, a thoughtful, analytical solution is needed. So, the set of instructions (similar to the steps described in Figure \ref{fig:workflow-scheme}) that follows below is the overall algorithm used to accomplish the core functionality of the VE simulation:
+\begin{enumerate}
+    \item \textbf{\textit{Given}}: given a collection of geometrical measurements (design) of the existing habitats and human settlements in a specific environment, a finite number (relatively small, 20 for example) of seabirds, and a set of predefined probability distribution functions (PDF) whose arguments are the characteristics of that environment;
+    \item \textbf{\textit{Initialization}}: represent digitally (virtually) that environment by creating patches and agents;
+    \item \textbf{\textit{Update}}: randomly choose an agent, then assess the probability of it moving to a random destination, and finally move the agent (if doable);
+    \item \textbf{\textit{Observe}}: snapshot the current state of the plotted environment, then save figure as a PNG image;
+    \item \textbf{\textit{Iterate}}: Repeat steps \textbf{3} \& \textbf{4} for $n_times$;
+    \item \textbf{\textit{Stop}}: collect the dumped images and form GIF final image to visualize the random movements of the agents.
+\end{enumerate}
+
+% [Other algorithms]
+% Update algorithm
+% Habitat data structure
 
 \subsection{Implementation}
 
