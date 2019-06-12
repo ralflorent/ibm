@@ -3,5 +3,6 @@
 
 The general model concept is illustrated in the figure below.
 
-
-![image](concept_1v.png)
+<p align="center">
+  <img src="concept_1v.png" width="650">
+</p>
