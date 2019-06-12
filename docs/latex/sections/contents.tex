@@ -108,29 +108,77 @@ Analyzing the workflow diagram in Figure \ref{fig:workflow-scheme}, we denote th
 
 Recalling that this Virtual Environment constitutes essentially a digital representation of an Agent-Based Modeling system, each component of such a system relies on the interaction and interconnection with other involved components in an organized flow. Therefore, the diagram in Figure \ref{fig:workflow-scheme} shows a workflow scheme that intends to provide with a visual aid for a better understanding of the system's behaviour.
 
-\subsection{Third-Party Libraries}
-
-\subsubsection{Usage}
-\subsubsection{Options}
-
 \subsection{Algorithm \& Data Structure}
-As illustrated in the flow chart of Figure \ref{fig:workflow-scheme}, the VE simulation implies the use of well-coordinated processes and subprocesses, which, once computed, will eventually attempt to explain the agents' behavior ant their mutual interactions with the environment in which they coexist. This section discusses the algorithm and data structure applied to contruct these processes and subprocesses.
+The VE simulation implies the use of well-coordinated processes and subprocesses, which, once computed, will eventually attempt to explain the agents' behavior ant their mutual interactions with the environment in which they coexist. This section discusses the algorithm and data structure applied to contruct these processes and subprocesses.
 
-Some of the processes are really straightforward and do not demand a time-, or energy-consuming logic to build them. For instance, the initialization phase is one of the common cases where the developer only needs to take care of statically sets of values required as prior considerations for the initial conditions. But, as for the \emph{Update} process for example, a thoughtful, analytical solution is needed. So, the set of instructions (similar to the steps described in Figure \ref{fig:workflow-scheme}) that follows below is the overall algorithm used to accomplish the core functionality of the VE simulation:
+\subsubsection{The \emph{Habitat} and \emph{Agent} data structure}
+In the VE simulation, both the wetland areas and the human settlements of the coastal lagoons are represented by the term \emph{Habitat}\footnote{Note that human settlements are simply less appealing habitats for the waterbirds due to the humans' threatening characteristics}, and the waterbirds, by the term \emph{Agent}. In this case, the concept "Habitat"  is a 2-dimensional \emph{static} polygonal shape drawn from certain given geometrical measurements (see Figure 2). Similarly, the concept "Agent" is simply the representation of the waterbirds with some of its characteristics or attributes.
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[scale=0.33]{data-structure.png}
+    \caption{Data structure of \emph{Habitat} and \emph{Agent} \\ (credits: made with \emph{Lucidchart})}
+    \label{fig:data-structure}
+\end{figure}
+
+\noindent
+Observe that in Figure \ref{fig:data-structure} we use the class diagram named \emph{UML (Unified Modeling Language)} to model and document the properties of the components: Habitat and Agent. On the one hand, we construct a \textcolor{orange}{Habitat} class definition with the following properties:
+\begin{itemize}
+    \item \textbf{\textit{type}}: the type or category name of the habitat;
+    \item \textbf{\textit{vertices}}: the coordinates of the patch representing the habitat;
+    \item \textbf{\textit{color}}: the color (edge and face) to apply or distinguish a habitat from another;
+    \item \textbf{\textit{artist}}: the patch-based polygonal shape to draw on a given figure;
+    \item \textbf{\textit{props}}: the dictionary-like additional properties that characterize this habitat;
+    \item \textbf{\textit{build()}}: constructs the \emph{artist} or patch on a figure;
+    \item \textbf{\textit{contains\_point()}}: determines whether or not an x-y coordinate (point) belongs to a patch;
+    \item \textbf{\textit{count\_points()}}: counts the total number of agents located within the patch based on their x-y positions.
+    \item \textbf{\textit{get\_center()}}: obtains the center point (x-y coordinate)  of this habitat.
+\end{itemize}
+
+\noindent
+On the other hand,  we construct an \textcolor{orange}{Agent} class definition with the following properties:
+\begin{itemize}
+    \item \textbf{\textit{type}}: the type or category name of the agent species;
+    \item \textbf{\textit{x}}: the x-coordinate of the agent within an area;
+    \item \textbf{\textit{y}}: the y-coordinate of the agent within an area.
+\end{itemize}
+
+\noindent
+Keep in mind that some of the methods in the class definitions use helper functions to do their specific task. These helpers can be found in the Python scripts located in the Appendix section.
+
+\subsubsection{The overall algorithm}
+The overall algorithm is quite based on the step-by-step flow chart described in Figure \ref{fig:workflow-scheme}. In other words, it corresponds to the descriptive, logical aspects of the core functionality of the VE. The steps are as follows:
+
 \begin{enumerate}
     \item \textbf{\textit{Given}}: given a collection of geometrical measurements (design) of the existing habitats and human settlements in a specific environment, a finite number (relatively small, 20 for example) of seabirds, and a set of predefined probability distribution functions (PDF) whose arguments are the characteristics of that environment;
     \item \textbf{\textit{Initialization}}: represent digitally (virtually) that environment by creating patches and agents;
     \item \textbf{\textit{Update}}: randomly choose an agent, then assess the probability of it moving to a random destination, and finally move the agent (if doable);
     \item \textbf{\textit{Observe}}: snapshot the current state of the plotted environment, then save figure as a PNG image;
-    \item \textbf{\textit{Iterate}}: Repeat steps \textbf{3} \& \textbf{4} for $n_times$;
+    \item \textbf{\textit{Iterate}}: Repeat steps \textbf{3} \& \textbf{4} for $n$ times;
     \item \textbf{\textit{Stop}}: collect the dumped images and form GIF final image to visualize the random movements of the agents.
 \end{enumerate}
 
-% [Other algorithms]
-% Update algorithm
-% Habitat data structure
+
+\subsubsection{The \emph{Update} algorithm}
+Some of the processes are really straightforward and do not demand a time-, or energy-consuming logic to build them. For instance, the initialization phase is one of the common cases where the developer only needs to take care of statically sets of values required as prior considerations for the initial conditions. But, as for the \emph{Update} process, a thoughtful, analytical solution is needed.
+
+This algorithm basically defines an asynchronous approach to randomly update an agent's status, namely its geolocation. Thus, the set of instructions that follows below is the algorithm used to accomplish the "\emph{Synchronous Update}" functionality of the VE simulation:
+
+\begin{enumerate}
+    \item \textbf{\textit{Given}}: given a randomly selected agent;
+    \item \textbf{\textit{Initialization}}: randomly choose a new destination within an "acceptable" habitat (an area where this agent can move, given the environmental conditions);
+    \item \textbf{\textit{Computation}}: compute the probability of that new destination use for this agent.
+    \item \textbf{\textit{Update}}: finally, move agent to that new destination if the calculated probability complies with the threshold.
+\end{enumerate}
+
+Recalling that this version of the project is a prototype whose purpose is to virtualize a static Agent-Based Modeling system, these algorithms are not defined in their most simplistic mode. For this reason, they are subject to change in the future when it comes to updating the dynamics of the system or adding more complex variations.
 
 \subsection{Implementation}
+
+\subsection{Third-Party Libraries}
+
+\subsubsection{Usage}
+\subsubsection{Options}
 
 \section{Results \& Discussions}
 
