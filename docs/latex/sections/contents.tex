@@ -166,14 +166,40 @@ This algorithm basically defines an asynchronous approach to randomly update an 
 
 \begin{enumerate}
     \item \textbf{\textit{Given}}: given a randomly selected agent;
-    \item \textbf{\textit{Initialization}}: randomly choose a new destination within an "acceptable" habitat (an area where this agent can move, given the environmental conditions);
+    \item \textbf{\textit{Initialization}}: randomly choose a new destination within an "acceptable" habitat (an area where this agent can move to, given the environmental conditions);
     \item \textbf{\textit{Computation}}: compute the probability of that new destination use for this agent.
-    \item \textbf{\textit{Update}}: finally, move agent to that new destination if the calculated probability complies with the threshold.
+    \item \textbf{\textit{Update}}: finally, move the selected agent to that new destination if the calculated probability complies with the threshold.
 \end{enumerate}
 
-Recalling that this version of the project is a prototype whose purpose is to virtualize a static Agent-Based Modeling system, these algorithms are not defined in their most simplistic mode. For this reason, they are subject to change in the future when it comes to updating the dynamics of the system or adding more complex variations.
+Recalling that this version of the project is a prototype whose purpose is to virtualize a static Agent-Based Modeling system, these algorithms are defined in their most simplistic mode. For this reason, they are subject to change in the future when it comes to updating the dynamics of the system or adding more complex variations.
 
 \subsection{Implementation}
+As mentioned in the \emph{Tools and Software} subsection in \emph{Instrumentation}, the VE simulation is implemented in a Jupyter Notebook workspace using the Python programming language. They are many reasons for choosing this particular setting to develop this workspace and the free cost is one of them.
+
+The code implementation is based on the flow diagram presented in Figure \ref{fig:workflow-scheme} as well as the algorithms and data structure described in the previous subsection. Here, we mostly focus on the coding procedure and the programming standards to facilitate other colloborators' contributions and support in the future.
+
+A standard programming workflow, if it does not involve too much of team management, demands to follow a set of intended principles\footnote{Those principles vary among institutions. So far, there is not yet a clear proposed draft describing them. Therefore, following them remains subjective.} that takes a system from a development stage to a production stage. For instance, the code should be: \textit{architected, modular, standardized, structured, scalable, secure, performance-oriented, tested, testable, collaborative, time-estimated, documented, and so on}. These principles are very common among big tech companies' projects and can also be used for smaller, or startup projects.
+
+Since this actual version of the VE simulation is an early prototype, we focus on following part of these principles so far. Among them, figure:
+\begin{itemize}
+    \item \textbf{\textit{architected}}: the overall system follows a series of well-planned, modularized, interconnected conceptual tasks describing the interaction of the components within the system;
+    \item \textbf{\textit{standardized}}: the script follows the rules for the naming conventions in Python (variable names, function and class definition, etc);
+    \item \textbf{\textit{structured}}: the script is written semantically and logically, and organized sequentially (3rd-party libraries import, constants declaration, functions definition, and \emph{main}\footnote{Main entry function to run an application});
+    \item \textbf{\textit{scalable}}: the script can be easily extended for new releases and anticipates enhancements in the future;
+    \item \textbf{\textit{collaborative}}: the code is version-controlled using Git and GitHub online hosting service;
+    \item \textbf{\textit{documented}}: the script is well-documented and describes the coding content in a very human-friendly way.
+\end{itemize}
+
+Besides the coding procedure, we also created a commonly-standardized, organized file structure (See Figure \ref{fig:file-structure}) for the project. Note the parent folders named \textit{\textcolor{blue}{src}} and \textit{\textcolor{blue}{docs}}. The former is for the source code of the project and the latter, for the documentation. The contents under those folders are backed-up and synced with an online GitHub repository for versioning and collaboration reasons.
+
+Writing test is currently out of the scope of this release. We understand that using \emph{Unit Testing} and \emph{Integration Testing} for the implemented code is relatively important and should be covered. For now, the code is maintained and tested throughout the outputs and the visualizations as expected. But as for future updates or releases, the new implementation should be written using test-driven scripts methodology as the scalability of the project will make the code cumbersome to maintain and test.
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[scale=0.33]{file-structure.png}
+    \caption{File structure of the project}
+    \label{fig:file-structure}
+\end{figure}
 
 \subsection{Third-Party Libraries}
 
