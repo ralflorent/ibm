@@ -50,17 +50,17 @@ Obviously, it is not a concern to access and use a set of randomly compatible ve
             \hline
             \multicolumn{4}{ |c| }{ \textbf{Tools \& Software}} \\
             \hline % Table headers
-             & \textbf{Version} & \textbf{Source} & \textbf{Cost}  \\ [0.5ex]
+             & \textbf{Versions} & \textbf{Sources} & \textbf{Cost}  \\ [0.5ex]
             \hline % Table body (row-wise contents)
-            \textbf{\textit{Visual Studio Code}} & 1.34.0 & See link in [1] & Free  \\
+            \textbf{\textit{Visual Studio Code}} & 1.34.0 & See \cite{vscode} & Free  \\
             \hline
             \textbf{\textit{Git}} & 2.7.4 & Built-in Linux program & Free  \\
             \hline
-            \textbf{\textit{GitHub}} & N/A & See link in [3] & 5 free users  \\
+            \textbf{\textit{GitHub}} & N/A & See \cite{github} & 5 free users  \\
             \hline
-            \textbf{\textit{Python}} & 3.5 & See link in [4] & Free  \\
+            \textbf{\textit{Python}} & 3.5 & See \cite{python} & Free  \\
             \hline
-            \textbf{\textit{Jupyter Notebook}} & 5.7.4 & See link in [5] & Free  \\
+            \textbf{\textit{Jupyter Notebook}} & 5.7.4 & See \cite{jupyternotebook} & Free  \\
             \hline
         \end{tabular}
         \caption{Detailed information on the tools and software used for the VE}
@@ -178,7 +178,7 @@ As mentioned in the \emph{Tools and Software} subsection in \emph{Instrumentatio
 
 The code implementation is based on the flow diagram presented in Figure \ref{fig:workflow-scheme} as well as the algorithms and data structure described in the previous subsection. Here, we mostly focus on the coding procedure and the programming standards to facilitate other colloborators' contributions and support in the future.
 
-A standard programming workflow, if it does not involve too much of team management, demands to follow a set of intended principles\footnote{Those principles vary among institutions. So far, there is not yet a clear proposed draft describing them. Therefore, following them remains subjective.} that takes a system from a development stage to a production stage. For instance, the code should be: \textit{architected, modular, standardized, structured, scalable, secure, performance-oriented, tested, testable, collaborative, time-estimated, documented, and so on}. These principles are very common among big tech companies' projects and can also be used for smaller, or startup projects.
+A standard programming workflow, if it does not involve too much of team management, demands to follow a set of intended principles\footnote{Those principles vary among institutions. So far, there is not yet a clear proposed draft describing them. Therefore, following them remains subjective.} that takes a system from a development stage to a production stage. For instance, the code should be: \textit{architected, modular, standardized, structured, scalable, secure, performance-oriented, tested, testable, collaborative, time-estimated, documented, and so on}\cite{smashingmagazine}. These principles are very common among big tech companies' projects and can also be used for smaller, or startup projects.
 
 Since this actual version of the VE simulation is an early prototype, we focus on following part of these principles so far. Among them, figure:
 \begin{itemize}
@@ -203,8 +203,36 @@ Writing test is currently out of the scope of this release. We understand that u
 
 \subsection{Third-Party Libraries}
 
-\subsubsection{Usage}
-\subsubsection{Options}
+Like in most of software-based systems, not all the components (or parties) of such systems are built from scratch. That is also true for our VE simulation prototype. It is built on top of certain third-party libraries as illustrated in Table \ref{table:third-party-libraries}.
+
+\begin{table}[!ht]
+    \begin{center}
+        \begin{tabular}{ |l|l|l|l| }
+            \hline
+            \multicolumn{4}{ |c| }{ \textbf{Third-Party Libraries}} \\
+            \hline % Table headers
+             & \textbf{Versions} & \textbf{Sources} & \textbf{Features}  \\ [0.5ex]
+            \hline % Table body (row-wise contents)
+            \textbf{\textit{numpy}} & 1.15.4 & See \cite{numpy.random.rand,numpy.linalg.norm} & \textit{random, linalg.norm}  \\
+            \hline
+            \textbf{\textit{matplotlib}} & 3.0.2 & See \cite{matplotlib.patches,matplotlib.path,matplotlib.pyplot} & \textit{patches, path, pyplot}  \\
+            \hline
+            \textbf{\textit{imageio}} & 2.4.1 & See \cite{imageio} & \textit{imread, mimsave}  \\
+            \hline
+        \end{tabular}
+        \caption{Detailed information on the third-party libraries used in the VE simulation}
+        \label{table:third-party-libraries}
+    \end{center}
+\end{table}
+
+One of the core principles in Software Engineering is \emph{DRY (\textbf{D}o not \textbf{R}epeat \textbf{Y}ourself)}. This acronym encourages developers to avoid code duplication and focus on configurable and reusable components \cite{scalablepath}. With that being said, we focus mainly on some third-party component reusability. That, of course, comes with its pros and cons:
+\begin{itemize}
+    \item \textbf{\textit{pros}}: time saving, pre-tested code usage, modular code usage, etc.
+    \item \textbf{\textit{cons}}: dependency, lack of support, overuse, security issues, etc.
+\end{itemize}
+
+\noindent
+The key point behind this brief pros-and-cons topic is to signal that it important to carefully select the right libraries to use, which is what we did in the first place.
 
 \section{Results \& Discussions}
 
