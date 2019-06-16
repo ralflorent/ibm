@@ -236,6 +236,66 @@ The key point behind this brief pros-and-cons topic is to signal that it importa
 
 \section{Results \& Discussions}
 
+The virtual environment prototype is the end result of 2 combined pilot tests. The results of these tests are presented in the subsections that follow.
+
+\subsection{First Pilot Test}
+In this very first test, we aim for the most possible, simplistic Agent-Based Model simulation. The objective of this test is to simulate a physical environment of static habitats (restricted areas for the birds) and a few randomly positioned waterbirds with the expectations of moving around over time. In addition to that, we create a simple restriction rule, which is "\textit{the waterbirds are not allowed to visit the habitats}".
+
+Simulating this startup environment requires a focus on drawing specific patches (representing the habitats) and generating a finite number of agents (representing the waterbirds). In this case scenario, we use a square figure scaled from 0 to 1 in both sides as the limited area for the environment. Then, with the help of the \emph{matplotlib} 3rd-party library, we produce the patches. Similarly, we use object-based definitions to create the agents and randomly position them within the environment. No prior considerations.
+
+\subsubsection{The patches}
+A patch is the drawing version a habitat. It has a non-, or polygonal shape and tries to represent as closely as possible a 2-dimensional structure in reality. The shape can be very simple, as in the case of a simple square; and very complex, as in the case of a curvy closed-line. Besides its structural representation, a patch has some other properties such as \emph{facecolor}, \emph{edgecolor}, \emph{lineweight}, and so forth, that are related to the setting of the drawing itself (see more details in \cite{matplotlib.patches}). But in our case, we choose to go with the rectangular shape, which we consider sufficient for the demo.
+
+In earlier sections of this document, we introduced the \textcolor{orange}{Habitat} class definition with some attributes (type, vertices, color, etc.) that is to digitally represent a physical habitat or human settlement. But in this first pilot test, we use only a lightweight version of these attributes, which are the vertices. To illustrate our point about drawing a patch (or an artist) within an area, see the Python scripts below:
+
+\begin{listing}[H]
+    \inputminted
+    [
+        baselinestretch=1.2, % interspace size
+        bgcolor=darkgray,
+        fontsize=\footnotesize,
+        linenos % show line numbers
+    ]
+    {python}{scripts/intro-patch.py}
+    \caption{Script for creating a patch using \emph{matploblib}}
+    \label{lst:intro-patch}
+\end{listing}
+
+
+\noindent
+Observe how the codes in lines 23-24 in Listing \ref{lst:intro-patch} create a final plottable object that can be later drawn in a figure.
+
+\subsubsection{The agents}
+An agent is the drawing version of a waterbird. It can be of the type \emph{short-legged} or \emph{long-legged} species. This little nuance is what constitutes the core distinction in the waterbirds' behaviour within the habitats. Therefore, it remains relevant to set a clear cut in the design so that a short-legged type visually differs from a long-legged type.
+
+Recall that the \textcolor{orange}{Agent} class definition is really simple: \emph{type and x-y positions}. The type attribute takes the value of either "short-legged" or "long-legged" and the agent's position is the $x$ and $y$ coordinates that take decimal values between 0 and 1 within a 2-dimensional area. As a result, creating an agent in the VE is simply to instantiate an object of the on-the-fly class \textcolor{orange}{Agent}, define the type as "short-legged" or "long-legged", and finally assign a random position to that agent. However, due to the restriction rule mentioned previously, the randomly-generated positions cannot fall into the area occupied by the habitats.
+
+\begin{listing}[H]
+    \inputminted
+    [
+        baselinestretch=1.2, % interspace size
+        bgcolor=darkgray,
+        fontsize=\footnotesize,
+        linenos % show line numbers
+    ]
+    {python}{scripts/intro-agent.py}
+    \caption{Script for creating an agent}
+    \label{lst:intro-agent}
+\end{listing}
+
+Finally, the results of creating both patches and agents for the first pilot test are shown in Figure \ref{fig:pilot-test-1}. The figure shows a total of 3 static patches (of different sizes) and 30 randomly-positioned short-legged agents. Keep in mind that this creation process has been repeated 20 times and a final GIF image has been made out of the 20 generated images for a better visualization.
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[scale=0.65]{pilot-test-1.png}
+    \caption{Preview of the first pilot test results}
+    \label{fig:pilot-test-1}
+\end{figure}
+
+\subsection{Second Pilot Test}
+
+\subsection{The VE Prototype}
+
 \section{Conclusion}
 
 % ==============================================================================
