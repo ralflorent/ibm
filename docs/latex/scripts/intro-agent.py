@@ -27,7 +27,7 @@ def create_agents(n_agents):
         agent = Agent()
         agent.type = "short-legged"
         x, y = gen_random_point(patches) # that is not in patch
-        agent.x, agent.y = x, y # new position being assinged to this agent
+        agent.x, agent.y = x, y # new position being assigned to this agent
         agents.append(agent) # append (i.e. add) the ith agent into the array 'agents'
     return agents
 

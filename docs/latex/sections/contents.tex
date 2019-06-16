@@ -91,7 +91,7 @@ where each step contains itself a series of internal subprocesses aiming a speci
 \end{figure}
 
 \noindent
-\textbf{Important}: Observe in Figure \ref{fig:workflow-scheme} the remaining steps categorized as \emph{Preconditions} and \emph{Postconditions}. They represent respectively the \emph{Before} and \emph{After} the 3 main steps \emph{Initialize, Observe, and Update} are executed. Note also that the \emph{Initialize} process is considered as part of the Preconditions semantics. That is because it only prepares the basic conditions for the components of the system, which are the habitats and the birds.
+\textbf{Important}: \textit{Observe in Figure \ref{fig:workflow-scheme} the remaining steps categorized as \emph{Preconditions} and \emph{Postconditions}. They represent respectively the \emph{Before} and \emph{After} the 3 main steps \texttt{Initialize, Observe}, and \texttt{Update} are executed. Note also that the \texttt{Initialize} process is considered part of the Preconditions semantics. That is because it only prepares the basic conditions for the components of the system, which are the habitats and the birds.}
 
 Analyzing the workflow diagram in Figure \ref{fig:workflow-scheme}, we denote the following fields:
 \begin{itemize}
@@ -144,7 +144,7 @@ On the other hand,  we construct an \textcolor{orange}{Agent} class definition w
 \end{itemize}
 
 \noindent
-Keep in mind that some of the methods in the class definitions use helper functions to do their specific task. These helpers can be found in the Python scripts located in the Appendix section.
+\textbf{Important}: \textit{Keep in mind that some of the methods in the class definitions use helper functions to do their specific task. These helpers can be found in the Python scripts located in the Appendix section.}
 
 \subsubsection{The overall algorithm}
 The overall algorithm is quite based on the step-by-step flow chart described in Figure \ref{fig:workflow-scheme}. In other words, it corresponds to the descriptive, logical aspects of the core functionality of the VE. The steps are as follows:
@@ -239,14 +239,14 @@ The key point behind this brief pros-and-cons topic is to signal that it importa
 The virtual environment prototype is the end result of 2 combined pilot tests. The results of these tests are presented in the subsections that follow.
 
 \subsection{First Pilot Test}
-In this very first test, we aim for the most possible, simplistic Agent-Based Model simulation. The objective of this test is to simulate a physical environment of static habitats (restricted areas for the birds) and a few randomly positioned waterbirds with the expectations of moving around over time. In addition to that, we create a simple restriction rule, which is "\textit{the waterbirds are not allowed to visit the habitats}".
+In this very first test, we aim for the most possible, simplistic Agent-Based Modeling simulation. The objective of this test is to simulate a physical environment of static habitats and a few randomly-positioned waterbirds with the expectations of moving around over time. In addition to that, we create a simple restriction rule, which is "\textit{the waterbirds are not allowed to visit the habitats}".
 
-Simulating this startup environment requires a focus on drawing specific patches (representing the habitats) and generating a finite number of agents (representing the waterbirds). In this case scenario, we use a square figure scaled from 0 to 1 in both sides as the limited area for the environment. Then, with the help of the \emph{matplotlib} 3rd-party library, we produce the patches. Similarly, we use object-based definitions to create the agents and randomly position them within the environment. No prior considerations.
+Simulating this startup environment requires a focus on drawing specific patches (representing the habitats) and generating a finite number of agents (representing the waterbirds). In this case scenario, we use a square figure scaled from 0 to 1 in both sides as the limited area for the environment (see Figure \ref{fig:pilot-test-1}). Then, with the help of the \emph{matplotlib} 3rd-party library, we produce the patches. Similarly, we use object-based definitions to create the agents and randomly position them within the environment using some helper functions. No prior considerations.
 
 \subsubsection{The patches}
-A patch is the drawing version a habitat. It has a non-, or polygonal shape and tries to represent as closely as possible a 2-dimensional structure in reality. The shape can be very simple, as in the case of a simple square; and very complex, as in the case of a curvy closed-line. Besides its structural representation, a patch has some other properties such as \emph{facecolor}, \emph{edgecolor}, \emph{lineweight}, and so forth, that are related to the setting of the drawing itself (see more details in \cite{matplotlib.patches}). But in our case, we choose to go with the rectangular shape, which we consider sufficient for the demo.
+A patch is a drawing version of a habitat. It has a non-, or polygonal shape and tries to represent as closely as possible a 2-dimensional structure in reality. The shape can be very simple, as in the case of a simple square; and very complex, as in the case of a curvy closed-line. Besides its structural representation, a patch has some other properties such as \emph{facecolor}, \emph{edgecolor}, \emph{lineweight}, and so forth, that are related to the setting of the drawing itself (see more details in \cite{matplotlib.patches}). But in our case, we choose to go with the rectangular shape, which we consider sufficient for the demo.
 
-In earlier sections of this document, we introduced the \textcolor{orange}{Habitat} class definition with some attributes (type, vertices, color, etc.) that is to digitally represent a physical habitat or human settlement. But in this first pilot test, we use only a lightweight version of these attributes, which are the vertices. To illustrate our point about drawing a patch (or an artist) within an area, see the Python scripts below:
+In earlier sections of this document, we introduced the \textcolor{orange}{Habitat} class definition with some attributes (\emph{type, vertices, color, etc.}) that is to digitally represent a physical habitat or human settlement. But in this first pilot test, we use only a lightweight version of these attributes, which are the vertices. To illustrate our point about drawing a patch (or an artist) within an area, see the Python scripts below:
 
 \begin{listing}[H]
     \inputminted
@@ -266,9 +266,9 @@ In earlier sections of this document, we introduced the \textcolor{orange}{Habit
 Observe how the codes in lines 23-24 in Listing \ref{lst:intro-patch} create a final plottable object that can be later drawn in a figure.
 
 \subsubsection{The agents}
-An agent is the drawing version of a waterbird. It can be of the type \emph{short-legged} or \emph{long-legged} species. This little nuance is what constitutes the core distinction in the waterbirds' behaviour within the habitats. Therefore, it remains relevant to set a clear cut in the design so that a short-legged type visually differs from a long-legged type.
+An agent is a drawing version of a waterbird. It can be of the type \emph{short-legged} or \emph{long-legged} species. This little nuance is what constitutes the core distinction in the waterbirds' behaviour within the habitats. Therefore, it remains relevant to set a clear cut in the design so that a short-legged type visually differs from a long-legged type.
 
-Recall that the \textcolor{orange}{Agent} class definition is really simple: \emph{type and x-y positions}. The type attribute takes the value of either "short-legged" or "long-legged" and the agent's position is the $x$ and $y$ coordinates that take decimal values between 0 and 1 within a 2-dimensional area. As a result, creating an agent in the VE is simply to instantiate an object of the on-the-fly class \textcolor{orange}{Agent}, define the type as "short-legged" or "long-legged", and finally assign a random position to that agent. However, due to the restriction rule mentioned previously, the randomly-generated positions cannot fall into the area occupied by the habitats.
+Recall that the \textcolor{orange}{Agent} class definition is really simple in terms of properties: \emph{type and x-y positions}. The \emph{type} attribute takes the value of either "short-legged" or "long-legged" and the agent's position is the $x$-$y$ coordinates that take decimal values between 0 and 1 within a 2-dimensional area. As a result, creating an agent in the VE simulation is simply to instantiate an object of the on-the-fly class \textcolor{orange}{Agent}, then define its type as "short-legged" or "long-legged", and finally assign a random position to that agent. However, due to the restriction rule mentioned previously, the randomly-generated positions cannot fall into the area occupied by the habitats.
 
 \begin{listing}[H]
     \inputminted
@@ -279,20 +279,50 @@ Recall that the \textcolor{orange}{Agent} class definition is really simple: \em
         linenos % show line numbers
     ]
     {python}{scripts/intro-agent.py}
-    \caption{Script for creating an agent}
+    \caption{Script for creating an agent using the \emph{gen\_random\_point()} helper}
     \label{lst:intro-agent}
 \end{listing}
 
-Finally, the results of creating both patches and agents for the first pilot test are shown in Figure \ref{fig:pilot-test-1}. The figure shows a total of 3 static patches (of different sizes) and 30 randomly-positioned short-legged agents. Keep in mind that this creation process has been repeated 20 times and a final GIF image has been made out of the 20 generated images for a better visualization.
+Finally, the results of creating both patches and agents for the first pilot test are illustrated in Figure \ref{fig:pilot-test-1}.
 
 \begin{figure}[h!]
     \centering
     \includegraphics[scale=0.65]{pilot-test-1.png}
-    \caption{Preview of the first pilot test results}
+    \caption{Preview of the first pilot test results: there is a total of 3 static patches (of different sizes) and 30 randomly-positioned short-legged agents. This visualization is the first generated plot of 20. The entire creation process is repeated 20 times and a final GIF image is built up out of the 20 generated images for a better visualization.}
     \label{fig:pilot-test-1}
 \end{figure}
 
 \subsection{Second Pilot Test}
+In the first pilot test, we try to wrap up some key concepts and terminologies to avoid confusion with the interpretations of the end results. The second pilot test, built on top of what is mainly explained in the first pilot test\footnote{If not read yet, it is highly recommended to read the First Pilot Test part in order to grasp the whole idea of the second pilot test. Both are loosely coupled.}, adds a little bit more complexity to the simulation.
+
+In the second pilot test, we focus on creating an approach that intends to bring the VE simulation closer to a real-life case scenario by randomizing the movements for the agents based on resource availability. That is, we clearly differentiate which patch an agent can move to by taking into account the maximum number of agents that can cohabit a patch at once. This particular denotation, resource availability, is the core principle used to determine whether or not a waterbird should move to another habitat to look for food since in real life the amount of waterbirds is directly proportional to food consumption. Obviously, other environmental aspects such as the nature of the habitats are not being considered yet.
+
+Another important point to mention in this test is that it is related to the flowchart shown in Figure \ref{fig:workflow-scheme}, excluding the \emph{Sensitivity Analysis} step. Likewise, the test follows the general algorithm discussed in previous sections, with the exception of the \emph{Update} process. Consequently, this alters the implementation as well as the scripting.
+
+\begin{listing}[H]
+    \inputminted
+    [
+        baselinestretch=1.2, % interspace size
+        bgcolor=darkgray,
+        fontsize=\footnotesize,
+        linenos % show line numbers
+    ]
+    {python}{scripts/intro-update.py}
+    \caption{Script for updating an agent's position randomly}
+    \label{lst:intro-update}
+\end{listing}
+
+The script in Listing \ref{lst:intro-update} is not considered as the best approach to reflect the second pilot test scenario because it violates most of the programming standards mentioned in previous sections. Although the \emph{update} function does what it is supposed to do, it is implemented in a hard-to-follow, not-so-well-structured way. Note the \emph{magic} values in lines 6, 13, 16, 26, 29, and 33 used to locate the array's positions (a particular patch). Note also the patches' maximum capacity values in lines 21 and 34. For this reason, we only intend to explain how to interpret not the implemented code, but the visualizations (see Figure \ref{fig:pilot-test-2}).
+
+\noindent
+\textbf{Important}: \textit{This code implementation may look tedious in the first place but no refactoring remains necessary since it is just a step that leads to our final goal. Keep in mind that the definition of the helper functions \texttt{gen\_random\_point()} and \texttt{count\_points()} can be found in the Appendix section}.
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[scale=0.65]{pilot-test-2.png}
+    \caption{Preview of the second pilot test results: the yellow rectangles (patches) are the areas for long-legged waterbirds (agent) and the purple rectangles, the areas for the short-legged waterbirds. A long-legged agent can only travel between the yellow patches and a short-legged agent, between the purple patches. The initial conditions for the small rectangles (yellow and purple) are set according to the maximum capacity. Once the small patches reach the maximal capacity, an allowed agent can no longer travel across them unless the corresponding number of agent of the patch in question reduces over time.}
+    \label{fig:pilot-test-2}
+\end{figure}
 
 \subsection{The VE Prototype}
 
