@@ -85,7 +85,7 @@ where each step contains itself a series of internal subprocesses aiming a speci
 
 \begin{figure}[h!]
     \centering
-    \includegraphics[scale=0.33]{workflow-scheme.png}
+    \includegraphics[scale=0.33]{docs/workflow-scheme.png}
     \caption{Workflow diagram \\ (credits: made with \emph{Lucidchart})}
     \label{fig:workflow-scheme}
 \end{figure}
@@ -116,7 +116,7 @@ In the VE simulation, both the wetland areas and the human settlements of the co
 
 \begin{figure}[h!]
     \centering
-    \includegraphics[scale=0.33]{data-structure.png}
+    \includegraphics[scale=0.33]{docs/data-structure.png}
     \caption{Data structure of \emph{Habitat} and \emph{Agent} \\ (credits: made with \emph{Lucidchart})}
     \label{fig:data-structure}
 \end{figure}
@@ -196,7 +196,7 @@ Writing test is currently out of the scope of this release. We understand that u
 
 \begin{figure}[h!]
     \centering
-    \includegraphics[scale=0.33]{file-structure.png}
+    \includegraphics[scale=0.33]{docs/file-structure.png}
     \caption{File structure of the project}
     \label{fig:file-structure}
 \end{figure}
@@ -287,7 +287,7 @@ Finally, the results of creating both patches and agents for the first pilot tes
 
 \begin{figure}[h!]
     \centering
-    \includegraphics[scale=0.65]{pilot-test-1.png}
+    \includegraphics[scale=0.65]{ve-0.1/0.png}
     \caption{Preview of the first pilot test results: there is a total of 3 static patches (of different sizes) and 30 randomly-positioned short-legged agents. This visualization is the first generated plot of 20. The entire creation process is repeated 20 times and a final GIF image is built up out of the 20 generated images for a better visualization.}
     \label{fig:pilot-test-1}
 \end{figure}
@@ -319,12 +319,45 @@ The script in Listing \ref{lst:intro-update} is not considered as the best appro
 
 \begin{figure}[h!]
     \centering
-    \includegraphics[scale=0.65]{pilot-test-2.png}
+    \includegraphics[scale=0.65]{ve-0.2/0.png}
     \caption{Preview of the second pilot test results: the yellow rectangles (patches) are the areas for long-legged waterbirds (agent) and the purple rectangles, the areas for the short-legged waterbirds. A long-legged agent can only travel between the yellow patches and a short-legged agent, between the purple patches. The initial conditions for the small rectangles (yellow and purple) are set according to the maximum capacity. Once the small patches reach the maximal capacity, an allowed agent can no longer travel across them unless the corresponding number of agent of the patch in question reduces over time.}
     \label{fig:pilot-test-2}
 \end{figure}
 
 \subsection{The VE Prototype}
+This part of the document discusses the current release of the ABM project, which is considered as the first prototype of the virtual environment simulation. The reason to state that is because this version goes beyond the first 2 pilot tests and covers important features of the VE system. It includes a higher degree of complexity, which brings the VE simulation much closer to the lifestyle of the waterbirds inhabiting the coastal lagoons of the tropics.
+
+Again, this prototype relies on the terms and concepts clarified in the early tests. Besides the other tests, this version follows all the programming principles, the algorithms, the workflow scheme, previously discussed in this document. It also uses the predefined probability distribution functions (PDF) for the environmental characteristics that play an important role on the waterbirds' behaviour within the habitats and their interactions with each other.
+
+\begin{figure}[h!]
+    \centering
+    \begin{subfigure}[b]{0.4\linewidth}
+      \includegraphics[scale=0.4]{ve-0.3/0.png}
+      \caption{Sample 1}
+    \end{subfigure}
+    \begin{subfigure}[b]{0.4\linewidth}
+      \includegraphics[scale=0.4]{ve-0.3/10.png}
+      \caption{Sample 2}
+    \end{subfigure} \\ [2ex]
+    \begin{subfigure}[b]{0.4\linewidth}
+      \includegraphics[scale=0.4]{ve-0.3/30.png}
+      \caption{Sample 3}
+    \end{subfigure}
+    \begin{subfigure}[b]{0.4\linewidth}
+      \includegraphics[scale=0.4]{ve-0.3/99.png}
+      \caption{Sample 4}
+    \end{subfigure}
+    \caption{Preview of the VE simulation results: this visualization shows an extract of 4 samples out of 100 "processing random movements" units based on the PDFs. \emph{Sample 1} and \emph{Sample 4} are respectively the starting and ending point of the entire process. In one processing unit, only one agent gets to move, if the conditions are fulfilled to do so. }
+    \label{fig:ve-prototype}
+\end{figure}
+
+Unlike the other tests, the VE simulation setting of this prototype contains some updates, most importantly in the design. First off, there are more defined habitats: yellow, blue, green, and fully-colored pink, with some distinctive environmental characteristics each.
+% \begin{itemize}
+%     \item \texttt{yellow}
+%     \item \texttt{blue}
+%     \item \texttt{green}
+%     \item \texttt{pink}
+% \end{itemize}
 
 \section{Conclusion}
 
