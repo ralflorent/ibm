@@ -351,15 +351,62 @@ Again, this prototype relies on the terms and concepts clarified in the early te
     \label{fig:ve-prototype}
 \end{figure}
 
-Unlike the other tests, the VE simulation setting of this prototype contains some updates, most importantly in the design. First off, there are more defined habitats: yellow, blue, green, and fully-colored pink, with some distinctive environmental characteristics each.
-% \begin{itemize}
-%     \item \texttt{yellow}
-%     \item \texttt{blue}
-%     \item \texttt{green}
-%     \item \texttt{pink}
-% \end{itemize}
+\subsubsection{General comments}
+Unlike the other tests, the VE simulation setting of this prototype contains some updates, most importantly in the design. Firstly, there are more defined habitats: (edge-colored) \texttt{yellow, blue, green}, and (fully-colored) \texttt{pink} with some distinctive environmental characteristics each.
+\begin{itemize}
+    \item \texttt{yellow}: categorized as \emph{one}, these habitats represent the common places where the short-legged wading waterbirds can only wander for food.
+    \item \texttt{blue}: categorized as \emph{two}, this habitat contains certain properties that benefit only the long-legged waterbirds. For instance, the water depth of this habitat can be within one meter range.
+    \item \texttt{green}: categorized as \emph{three}, this habitat, besides its geometry (smaller in size), contains similar characteristics that restrain the short-legged birds from visiting it.
+    \item \texttt{pink}: categorized as \emph{human}, these habitats represent the human settlements. This factor also influences the waterbirds' behaviour, given the distance between a human settlement and a particular appealing, resourceful habitat.
+\end{itemize}
+
+\noindent
+\textbf{Important}: \textit{The habitats' category names \texttt{one, two, three}, and \texttt{human} are just arbitrary names. Note that they could be changed in the future, if judged necessary}.
+
+\noindent
+Next, the white dots and black dots are now labelled respectively as the long-legged waterbirds and short-legged waterbirds. Finally, the waterbird movements are driven by the category type of the habitat. For instance, the long-legged waterbirds can move to any habitat except for the human settlements whereas the short-legged waterbirds can only move to the \emph{one} (\texttt{yellow}) habitats.
+
+\subsubsection{Analysis of the results}
+The results shown in Figure \ref{fig:ve-prototype} are a single-run\footnote{Running the script yourself will not achieve the same results due the random initialization state.} of the scripts in the Appendix. We only extract 4 samples out of the 100 generated plots to explain the waterbirds' behaviour and interactions under a specific initial condition (see Table \ref{table:ve-init}). And this initial condition can only generate a single-point dataset for each PDF over time. In order to achieve a data set, we need to collect a set of initial conditions, especially for the habitats' characteristics and tune their values over time. For instance, simulating a water depth reduction or tweaking the food availability factors are a good example of how to achieve a multi-point dataset for each PDF. But since this is out of the scope of this release, we only mention it as our next considerations for future releases.
+
+\begin{table}[!ht]
+    \begin{center}
+        \begin{tabular}{ ||l|l|| }
+            \hline
+            \multicolumn{2}{ ||c|| }{ \textbf{Initial Conditions}} \\
+            \hline \hline % Table body (row-wise contents)
+            \textbf{\textit{Total of long-legged waterbirds}} &  20 \\
+            \hline
+            \textbf{\textit{Total of short-legged waterbirds}} &  20 \\
+            \hline
+            \textbf{\textit{Processing times}} &  100 \\
+            \hline
+            \textbf{\textit{Threshold for }} &  $1 * e^{-7}$ \\
+            \hline
+            \textbf{\textit{Areas for short-legged waterbirds}} &  \texttt{one} \\
+            \hline
+            \textbf{\textit{Areas for long-legged waterbirds}} &  \texttt{one, two, three} \\
+            \hline
+            \textbf{\textit{Habitat one (big)}} & s = 80psu, w = 5cm, f = 0.3  \\
+            \hline
+            \textbf{\textit{Habitat one (small)}} & s = 80psu, w = 5cm, f = 2.56  \\
+            \hline
+            \textbf{\textit{Habitat two}} & s = 10psu, w = 5cm, f = 6.41  \\
+            \hline
+            \textbf{\textit{Habitat three}} & s = 25psu, w = 40cm, f = 11.53  \\
+            \hline
+        \end{tabular}
+        \caption{Default values and parameters for the VE prototype's initial conditions. Note that the geometrical measurements of the habitats are part of the initialization process, but omitted here (refer to Appendix for more details on them).}
+        \label{table:ve-init}
+    \end{center}
+\end{table}
+
+The first sample, \emph{Time 0}, is the first generated plot with a random distribution of the waterbirds within the allowed areas. Note that the long-legged birds (white dots) are spread out in all 4 habitats whereas the short-legged birds (black dots) are only located in the habitats categorized as \emph{one}. Then in the second sample, \emph{Time 10}, we notice that the long-legged birds start leaving Habitat \emph{two}. And finally, in the last 2 samples, Habitat \emph{two} remains empty. The reason for this is that the movements of the long-legged birds in this particular case are reasonably driven by the PDFs and the chosen threshold. That is, the chosen threshold factor does not have a fair probability (50\% each) of whether a bird should move or not.
 
 \section{Conclusion}
+This document reports the analysis and results of the Agent-Based Model when studying habitat use by waterbirds in coastal lagoons of the tropics. We have built a virtual environment that is computationally inexpensive by simply considering a few designing aspects to simulate the ABM under certain conditions. So far, the realization of this virtual environment is very promising and brings us closer to the real-life situation of the waterbirds' behaviour.
+
+The current version of the virtual environment is a prototype that has room for a lot of improvements. All along the document, some of these improvements are mentioned as well as some important points that are expected to be tackled in future releases.
 
 % ==============================================================================
 % END: Methods, Results, Discussions, Conclusion
