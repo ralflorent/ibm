@@ -23,7 +23,6 @@
 % ==============================================================================
 
 \section{Instrumentation}
-
 The VE, as specified literally, is developed in a complete \emph{virtualized} workspace. This virtualized workspace is made up of tools and software used to carry out this project to its current release. In this section, a brief overview of those tools and software is provided to help to reproduce or replicate the exact setup of the development environment put in place at the time of implementing the project.
 
 \subsection{Tools and Software}
@@ -142,7 +141,7 @@ On the other hand,  we construct an \textcolor{orange}{Agent} class definition w
 \end{itemize}
 
 \noindent
-\textbf{Important}: \textit{Keep in mind that some of the methods in the class definitions use helper functions to do their specific task. These helpers can be found in the Python scripts located in the Appendix section.}
+\textbf{Important}: \textit{Keep in mind that some of the methods in the class definitions use helper functions to do their specific task. These helpers can be found in the Python scripts located in Appendix \ref{sec:code-repo}.}
 
 \subsubsection{The overall algorithm}
 The overall algorithm is quite based on the step-by-step flow chart described in Figure \ref{fig:workflow-scheme}. In other words, it corresponds to the descriptive, logical aspects of the core functionality of the VE. The steps are as follows:
@@ -155,7 +154,6 @@ The overall algorithm is quite based on the step-by-step flow chart described in
     \item \textbf{\textit{Iterate}}: Repeat steps \textbf{3} \& \textbf{4} for $n$ times;
     \item \textbf{\textit{Stop}}: collect the dumped images and form GIF final image to visualize the random movements of the agents.
 \end{enumerate}
-
 
 \subsubsection{The \emph{Update} algorithm}
 Some of the processes are really straightforward and do not demand a time-, or energy-consuming logic to build them. For instance, the initialization phase is one of the common cases where the developer only needs to take care of statically sets of values required as prior considerations for the initial conditions. But, as for the \emph{Update} process, a thoughtful, analytical solution is needed.
@@ -233,8 +231,14 @@ One of the core principles in Software Engineering is \emph{DRY (\textbf{D}o not
 The key point behind this brief pros-and-cons topic is to signal that it important to carefully select the right libraries to use, which is what we did in the first place.
 
 \section{Results \& Discussions}
+The virtual environment prototype is the end result of 2 combined pilot tests following the general model concept illustrated in Figure \ref{fig:concept-1v}. The results of these tests are presented in the subsections that follow.
 
-The virtual environment prototype is the end result of 2 combined pilot tests. The results of these tests are presented in the subsections that follow.
+\begin{figure}[h!]
+    \centering
+    \includegraphics[scale=0.33]{docs/concept_1v.png}
+    \caption{General model concept for studying habitat use by waterbirds in coastal lagoons of the tropics. The functions for calculating the probability of birds moving using a given water depth, distance from human settlement and salinity can be found in Appendix \ref{sec:code-repo}.}
+    \label{fig:concept-1v}
+\end{figure}
 
 \subsection{First Pilot Test}
 In this very first test, we aim for the most possible, simplistic Agent-Based Modeling simulation. The objective of this test is to simulate a physical environment of static habitats and a few randomly-positioned waterbirds with the expectations of moving around over time. In addition to that, we create a simple restriction rule, which is "\textit{the waterbirds are not allowed to visit the habitats}".
@@ -313,7 +317,7 @@ Another important point to mention in this test is that it is related to the flo
 The script in Listing \ref{lst:intro-update} is not considered as the best approach to reflect the second pilot test scenario because it violates most of the programming standards mentioned in previous sections. Although the \emph{update} function does what it is supposed to do, it is implemented in a hard-to-follow, not-so-well-structured way. Note the \emph{magic} values in lines 6, 13, 16, 26, 29, and 33 used to locate the array's positions (a particular patch). Note also the patches' maximum capacity values in lines 21 and 34. For this reason, we only intend to explain how to interpret not the implemented code, but the visualizations (see Figure \ref{fig:pilot-test-2}).
 
 \noindent
-\textbf{Important}: \textit{This code implementation may look tedious in the first place but no refactoring remains necessary since it is just a step that leads to our final goal. Keep in mind that the definition of the helper functions \texttt{gen\_random\_point()} and \texttt{count\_points()} can be found in the Appendix section}.
+\textbf{Important}: \textit{This code implementation may look tedious in the first place but no refactoring remains necessary since it is just a step that leads to our final goal. Keep in mind that the definition of the helper functions \texttt{gen\_random\_point()} and \texttt{count\_points()} can be found in Appendix \ref{sec:code-repo}}.
 
 \begin{figure}[h!]
     \centering
@@ -365,7 +369,7 @@ Unlike the other tests, the VE simulation setting of this prototype contains som
 Next, the white dots and black dots are now labelled respectively as the long-legged waterbirds and short-legged waterbirds. Finally, the waterbird movements are driven by the category type of the habitat. For instance, the long-legged waterbirds can move to any habitat except for the human settlements whereas the short-legged waterbirds can only move to the \emph{one} (\texttt{yellow}) habitats.
 
 \subsubsection{Analysis of the results}
-The results shown in Figure \ref{fig:ve-prototype} are a single-run\footnote{Running the script yourself will not achieve the same results due the random initialization state.} of the scripts in the Appendix. We only extract 4 samples out of the 100 generated plots to explain the waterbirds' behaviour and interactions under a specific initial condition (see Table \ref{table:ve-init}). And this initial condition can only generate a single-point dataset for each PDF over time. In order to achieve a data set, we need to collect a set of initial conditions, especially for the habitats' characteristics and tune their values over time. For instance, simulating a water depth reduction or tweaking the food availability factors are a good example of how to achieve a multi-point dataset for each PDF. But since this is out of the scope of this release, we only mention it as our next considerations for future releases.
+The results shown in Figure \ref{fig:ve-prototype} are a single-run\footnote{Running the script yourself will not achieve the same results due the random initialization state.} of the scripts in Appendix \ref{sec:code-repo}. We only extract 4 samples out of the 100 generated plots to explain the waterbirds' behaviour and interactions under a specific initial condition (see Table \ref{table:ve-init}). And this initial condition can only generate a single-point dataset for each PDF over time. In order to achieve a data set, we need to collect a set of initial conditions, especially for the habitats' characteristics and tune their values over time. For instance, simulating a water depth reduction or tweaking the food availability factors are a good example of how to achieve a multi-point dataset for each PDF. But since this is out of the scope of this release, we only mention it as our next considerations for future releases.
 
 \begin{table}[!ht]
     \begin{center}
@@ -394,7 +398,7 @@ The results shown in Figure \ref{fig:ve-prototype} are a single-run\footnote{Run
             \textbf{\textit{Habitat three}} & s = 25psu, w = 40cm, f = 11.53  \\
             \hline
         \end{tabular}
-        \caption{Default values and parameters for the VE prototype's initial conditions. Note that the geometrical measurements of the habitats are part of the initialization process, but omitted here (refer to Appendix for more details on them).}
+        \caption{Default values and parameters for the VE prototype's initial conditions. Note that the geometrical measurements of the habitats are part of the initialization process, but omitted here (refer to Appendix \ref{sec:code-repo} for more details on them).}
         \label{table:ve-init}
     \end{center}
 \end{table}
