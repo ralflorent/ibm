@@ -26,20 +26,20 @@
 The VE, as specified literally, is developed in a complete \emph{virtualized} workspace. This virtualized workspace is made up of tools and software used to carry out this project to its current release. In this section, a brief overview of those tools and software is provided to help to reproduce or replicate the exact setup of the development environment put in place at the time of implementing the project.
 
 \subsection{Tools and Software}
-There are several currently-available programming tools that may achieve the same VE goal. The reason to believe so is that it turns out that today's open source community has grown larger and, subsequently, has been more actively involved in software improvements and new releases. As a result, accessing those online tools is no longer an issue, at least in terms of low-money budget, since they are publicly available (under free or moderately limited license).
+Several currently-available programming tools may achieve the same VE goal. The reason to believe so is that it turns out that today's open source community has grown larger and, subsequently, has been more actively involved in software improvements and new releases. As a result, accessing those online tools is no longer an issue, at least in terms of low-money budget, since they are publicly available (under free or moderately limited license).
 
-Given the availability of several options, enlisted below are the most regular choices of  tools and software for a developer with mere knowledge in programming:
+Given the availability of several options, enlisted below are the most natural choices of  tools and software for a developer with mere knowledge in programming:
 \begin{itemize}
     \item GNU/Linux Ubuntu 16.04 (operating system)
     \item Visual Studio Code (text editor for the documentation)
-    \item Git\footnote{Also available as a bash emulation for other platforms for free (e.g. Git Bash for Windows).} (version control)
+    \item Git\footnote{Also available as a bash emulation for other platforms for free (e.g., Git Bash for Windows).} (version control)
     \item GitHub (web-based hosting service for versioning system)
     \item Python (programming language for the scripting)
     \item Jupyter Notebook (workspace for the VE simulation)
 \end{itemize}
 
 \noindent
-Obviously, it is not a concern to access and use a set of randomly compatible versions of the above-mentioned tools and software. However, in case a developer wants the exact versions, Table \ref{table:tools-and-software} lists more detailed information on both the versions and sources for future downloads.
+It is not a concern to access and use a set of randomly compatible versions of the tools and software mentioned above. However, in case a developer wants the exact versions, Table \ref{table:tools-and-software} lists more detailed information on both the releases and sources for future downloads.
 
 \begin{table}[!ht]
     \begin{center}
@@ -66,10 +66,10 @@ Obviously, it is not a concern to access and use a set of randomly compatible ve
 \end{table}
 
 \subsection{General Comments}
-The tools and software discussed in the previous subsection are chosen by a matter of personal preference. No further comparison or parallelism procedure has been carried out to assess the most convenient option. That is to say, it might exist a better work environment where the VE simulation is simpler and/or easier, or the VE surprisingly performs better\footnote{In the outlook section, "simpler" and "easier" simulation is explained with the perspective of an ideal use case scenario. Similarly, a better performance of the VE refers to reduction in processing time, resource consumption in an easy-to-follow simulation platform.}. But, given that this first release is most importantly seen as a prototype, more tools and software can be tested out in a near future so that we end up with a so-called optimal workspace for the VE.
+The tools and software discussed in the previous subsection are chosen by a matter of personal preference. No further comparison or parallelism procedure has been carried out to assess the most convenient option. That is to say, it might exist a better work environment where the VE simulation is simpler and/or easier, or the VE surprisingly performs better\footnote{In the outlook section, "simpler" and "easier" simulation is explained with the perspective of an ideal use case scenario. Similarly, improved performance of the VE refers to a reduction in processing time, resource consumption in an easy-to-follow simulation platform.}. But, given that this first release is most importantly seen as a prototype, more tools and software can be tested out in a near future so that we end up with a so-called optimal workspace for the VE.
 
 \section{Methodology}
-This section will explore the methods used to implement the core functionality of this project. This exploration includes the mention of the workflow scheme, the third-party libraries usage and options, the algorithm and content structure, and finally the programmatically-implemented coding procedure.
+This section will explore the methods used to implement the core functionality of this project. This exploration includes the mention of the workflow scheme, the third-party libraries usage and options, the algorithm and content structure, and finally, the programmatically-implemented coding procedure.
 
 \subsection{Workflow Scheme}
 This project's workflow scheme consists of 3 main steps:
@@ -93,23 +93,23 @@ where each step contains itself a series of internal subprocesses aiming a speci
 Analyzing the workflow diagram in Figure \ref{fig:workflow-scheme}, we denote the following fields:
 \begin{itemize}
     \item \textbf{\textit{Start}}: indicates the starting point of the VE simulation.
-    \item \textbf{\textit{Prior Considerations}}: are the basic setup necessary to fulfill the initialization phase requirements\footnote{These considerations, mostly based on the concerned entities (waterbirds, coastal lagoons), the environmental variables, and any additional properties contributing to the setup phase of the VE simulation, are also discussed in this document in the theoretical section.}. This setup spans the following elements: the geometry of the habitats and the human settlements; the functions defining the probability distribution of the random movements (driven by the water salinity, water depth, and food availability factors); the duration of the overall simulation process; and a reasonable threshold to handle the feasability of the random movements for a given seabird under certain conditions.
-    \item \textbf{\textit{Initialize}}: creates the initial conditions of the system based on prior considerations mentioned above. That is, the patches (habitats) and agents (seabirds) creation.
+    \item \textbf{\textit{Prior Considerations}}: are the basic setup necessary to fulfill the initialization phase requirements\footnote{These considerations, mostly based on the concerned entities (waterbirds, coastal lagoons), the environmental variables, and any additional properties contributing to the setup phase of the VE simulation, are also discussed in this document in the theoretical section.}. This setup spans the following elements: the geometry of the habitats and the human settlements; the functions defining the probability distribution of the random movements (driven by the water salinity, water depth, and food availability factors); the duration of the overall simulation process; and a reasonable threshold to handle the feasibility of the random movements for a given seabird under certain conditions.
+    \item \textbf{\textit{Initialize}}: creates the initial conditions of the system based on prior considerations mentioned above. That is the patches (habitats) and agents (seabirds) creation.
     \item \textbf{\textit{Observe}}: generates a 2-dimensional plot whose scale goes from zero to one(\emph{$0-1$}) in both axes (x, y). The rendered plot helps to visualize both the patches' and agents' positions.
     \item \textbf{\textit{Processing Time?}}: focuses on updating the agents' positions' as long as the conditional parameter for the processing time holds. That is, the iteration is exclusively based on a specific number of times without accounting for other parameters that might influence the habitats and the birds. Note that, in this current version, the iteration is set statically during the prior considerations process.
     \item \textbf{\textit{Update}}: randomly assigns an agent to new positions within the existing habitats, considering a given threshold and the other aspects of the probability distribution.
     \item \textbf{\textit{Sensitivity Analysis}}: collects the probability values to form a set of probability distributions, which later can be analyzed and compared to each other with the expectation to draw conclusions on the final output.
-    \item \textbf{\textit{Data Storage}}: given the generated plots, collects  them as PNG images and then generates a GIF out of the entire dumped images. This is relevant to provide the end-user useful insights on the collected data.
+    \item \textbf{\textit{Data Storage}}: given the generated plots, collects them as PNG images, and then generates a GIF out of the entire dumped images. That is relevant to provide the end-user useful insights on the collected data.
     \item \textbf{\textit{End}}: indicates the ending point of the VE simulation.
 \end{itemize}
 
-Recalling that this Virtual Environment constitutes essentially a digital representation of an Agent-Based Modeling system, each component of such a system relies on the interaction and interconnection with other involved components in an organized flow. Therefore, the diagram in Figure \ref{fig:workflow-scheme} shows a workflow scheme that intends to provide with a visual aid for a better understanding of the system's behaviour.
+Recalling that this Virtual Environment constitutes essentially a digital representation of an Agent-Based Modeling system, each component of such a system relies on the interaction and interconnection with other involved elements in an organized flow. Therefore, the diagram in Figure \ref{fig:workflow-scheme} shows a workflow scheme that intends to provide a visual aid for a better understanding of the system's behavior.
 
 \subsection{Algorithm \& Data Structure}
-The VE simulation implies the use of well-coordinated processes and subprocesses, which, once computed, will eventually attempt to explain the agents' behavior ant their mutual interactions with the environment in which they coexist. This section discusses the algorithm and data structure applied to contruct these processes and subprocesses.
+The VE simulation implies the use of well-coordinated processes and subprocesses, which, once computed, will eventually attempt to explain the agents' behavior and their mutual interactions with the environment in which they coexist. This section discusses the algorithm and data structure applied to construct these processes and subprocesses.
 
 \subsubsection{The \emph{Habitat} and \emph{Agent} data structure}
-In the VE simulation, both the wetland areas and the human settlements of the coastal lagoons are represented by the term \emph{Habitat}\footnote{Note that human settlements are simply less appealing habitats for the waterbirds due to the humans' threatening characteristics}, and the waterbirds, by the term \emph{Agent}. In this case, the concept "Habitat"  is a 2-dimensional \emph{static} polygonal shape drawn from certain given geometrical measurements (see Figure 2). Similarly, the concept "Agent" is simply the representation of the waterbirds with some of its characteristics or attributes.
+In the VE simulation, both the wetland areas and the human settlements of the coastal lagoons are represented by the term \emph{Habitat}\footnote{Note that human settlements are less appealing habitats for the waterbirds due to the humans' threatening characteristics}, and the waterbirds, by the term \emph{Agent}. In this case, the concept "Habitat"  is a 2-dimensional \emph{static} polygonal shape drawn from certain given geometrical measurements (see Figure \ref{fig:data-structure}). Similarly, the concept "Agent" is simply the representation of the waterbirds with some of its characteristics or attributes.
 
 \begin{figure}[h!]
     \centering
@@ -119,7 +119,7 @@ In the VE simulation, both the wetland areas and the human settlements of the co
 \end{figure}
 
 \noindent
-Observe that in Figure \ref{fig:data-structure} we use the class diagram named \emph{UML (Unified Modeling Language)} to model and document the properties of the components: Habitat and Agent. On the one hand, we construct a \textcolor{orange}{Habitat} class definition with the following properties:
+Observe that in Figure \ref{fig:data-structure}, we use the class diagram named \emph{UML (Unified Modeling Language)} to model and document the properties of the components: Habitat and Agent. On the one hand, we construct a \textcolor{orange}{Habitat} class definition with the following properties:
 \begin{itemize}
     \item \textbf{\textit{type}}: the type or category name of the habitat;
     \item \textbf{\textit{vertices}}: the coordinates of the patch representing the habitat;
@@ -133,7 +133,7 @@ Observe that in Figure \ref{fig:data-structure} we use the class diagram named \
 \end{itemize}
 
 \noindent
-On the other hand,  we construct an \textcolor{orange}{Agent} class definition with the following properties:
+On the other hand, we construct an \textcolor{orange}{Agent} class definition with the following properties:
 \begin{itemize}
     \item \textbf{\textit{type}}: the type or category name of the agent species;
     \item \textbf{\textit{x}}: the x-coordinate of the agent within an area;
@@ -156,9 +156,9 @@ The overall algorithm is quite based on the step-by-step flow chart described in
 \end{enumerate}
 
 \subsubsection{The \emph{Update} algorithm}
-Some of the processes are really straightforward and do not demand a time-, or energy-consuming logic to build them. For instance, the initialization phase is one of the common cases where the developer only needs to take care of statically sets of values required as prior considerations for the initial conditions. But, as for the \emph{Update} process, a thoughtful, analytical solution is needed.
+Some of the processes are straightforward and do not demand a time-, or energy-consuming logic to build them. For instance, the initialization phase is one of the common cases where the developer only needs to take care of statically sets of values required as prior considerations for the initial conditions. But, as for the \emph{Update} process, a rational, analytical solution is needed.
 
-This algorithm basically defines an asynchronous approach to randomly update an agent's status, namely its geolocation. Thus, the set of instructions that follows below is the algorithm used to accomplish the "\emph{Synchronous Update}" functionality of the VE simulation:
+This algorithm defines an asynchronous approach to update an agent's status, namely its geolocation randomly. Thus, the set of instructions that follows below is the algorithm used to accomplish the "\emph{Synchronous Update}" functionality of the VE simulation:
 
 \begin{enumerate}
     \item \textbf{\textit{Given}}: given a randomly selected agent;
@@ -167,16 +167,16 @@ This algorithm basically defines an asynchronous approach to randomly update an 
     \item \textbf{\textit{Update}}: finally, move the selected agent to that new destination if the calculated probability complies with the threshold.
 \end{enumerate}
 
-Recalling that this version of the project is a prototype whose purpose is to virtualize a static Agent-Based Modeling system, these algorithms are defined in their most simplistic mode. For this reason, they are subject to change in the future when it comes to updating the dynamics of the system or adding more complex variations.
+Recalling that this version of the project is a prototype whose purpose is to virtualize a static Agent-Based Modeling system, these algorithms are defined in their most simplistic model. For this reason, they are subject to change in the future when it comes to updating the dynamics of the system or adding more complex variations.
 
 \subsection{Implementation}
-As mentioned in the \emph{Tools and Software} subsection in \emph{Instrumentation}, the VE simulation is implemented in a Jupyter Notebook workspace using the Python programming language. They are many reasons for choosing this particular setting to develop this workspace and the free cost is one of them.
+As mentioned in the \emph{Tools and Software} subsection in \emph{Instrumentation}, the VE simulation is implemented in a Jupyter Notebook workspace using the Python programming language. They are many reasons for choosing this particular setting to develop this workspace, and the free cost is one of them.
 
-The code implementation is based on the flow diagram presented in Figure \ref{fig:workflow-scheme} as well as the algorithms and data structure described in the previous subsection. Here, we mostly focus on the coding procedure and the programming standards to facilitate other colloborators' contributions and support in the future.
+The code implementation is based on the flow diagram presented in Figure \ref{fig:workflow-scheme} as well as the algorithms and data structure described in the previous subsection. Here, we mostly focus on the coding procedure and the programming standards to facilitate other collaborators' contributions and support in the future.
 
-A standard programming workflow, if it does not involve too much of team management, demands to follow a set of intended principles\footnote{Those principles vary among institutions. So far, there is not yet a clear proposed draft describing them. Therefore, following them remains subjective.} that takes a system from a development stage to a production stage. For instance, the code should be: \textit{architected, modular, standardized, structured, scalable, secure, performance-oriented, tested, testable, collaborative, time-estimated, documented, and so on}\cite{smashingmagazine}. These principles are very common among big tech companies' projects and can also be used for smaller, or startup projects.
+A standard programming workflow, if it does not involve too much of team management, demands to follow a set of intended principles\footnote{Those principles vary among institutions. So far, there is not yet a clear proposed draft describing them. Therefore, supporting them remains subjective.} that takes a system from a development stage to a production stage. For instance, the code should be: \textit{architected, modular, standardized, structured, scalable, secure, performance-oriented, tested, testable, collaborative, time-estimated, documented, and so on}\cite{smashingmagazine}. These principles are prevalent among big tech companies' projects and can also be used for smaller, or startup projects.
 
-Since this actual version of the VE simulation is an early prototype, we focus on following part of these principles so far. Among them, figure:
+Since this original version of the VE simulation is an early prototype, we focus on following part of these principles so far. Among them, figure:
 \begin{itemize}
     \item \textbf{\textit{architected}}: the overall system follows a series of well-planned, modularized, interconnected conceptual tasks describing the interaction of the components within the system;
     \item \textbf{\textit{standardized}}: the script follows the rules for the naming conventions in Python (variable names, function and class definition, etc);
@@ -188,7 +188,7 @@ Since this actual version of the VE simulation is an early prototype, we focus o
 
 Besides the coding procedure, we also created a commonly-standardized, organized file structure (See Figure \ref{fig:file-structure}) for the project. Note the parent folders named \textit{\textcolor{blue}{src}} and \textit{\textcolor{blue}{docs}}. The former is for the source code of the project and the latter, for the documentation. The contents under those folders are backed-up and synced with an online GitHub repository for versioning and collaboration reasons.
 
-Writing test is currently out of the scope of this release. We understand that using \emph{Unit Testing} and \emph{Integration Testing} for the implemented code is relatively important and should be covered. For now, the code is maintained and tested throughout the outputs and the visualizations as expected. But as for future updates or releases, the new implementation should be written using test-driven scripts methodology as the scalability of the project will make the code cumbersome to maintain and test.
+Writing test is currently out of the scope of this release. We understand that using \emph{Unit Testing} and \emph{Integration Testing} for the implemented code is relatively essential and should be covered. For now, the coding is maintained and tested throughout the outputs and the visualizations as expected. But as for future updates or releases, the new implementation should be written using test-driven scripts methodology as the scalability of the project will make the code cumbersome to maintain and test.
 
 \begin{figure}[h!]
     \centering
@@ -198,8 +198,7 @@ Writing test is currently out of the scope of this release. We understand that u
 \end{figure}
 
 \subsection{Third-Party Libraries}
-
-Like in most of software-based systems, not all the components (or parties) of such systems are built from scratch. That is also true for our VE simulation prototype. It is built on top of certain third-party libraries as illustrated in Table \ref{table:third-party-libraries}.
+Like in most of the software-based systems, not all the components (or parties) of such systems are built from scratch. That is also true for our VE simulation prototype. It is built on top of specific third-party libraries, as illustrated in Table \ref{table:third-party-libraries}.
 
 \begin{table}[!ht]
     \begin{center}
@@ -228,27 +227,27 @@ One of the core principles in Software Engineering is \emph{DRY (\textbf{D}o not
 \end{itemize}
 
 \noindent
-The key point behind this brief pros-and-cons topic is to signal that it important to carefully select the right libraries to use, which is what we did in the first place.
+The key point behind this brief pros-and-cons topic is to signal that it is crucial to carefully select the right libraries to use, which is what we did in the first place.
 
 \section{Results \& Discussions}
-The virtual environment prototype is the end result of 2 combined pilot tests following the general model concept illustrated in Figure \ref{fig:concept-1v}. The results of these tests are presented in the subsections that follow.
+The virtual environment prototype is the end-result of 2 combined pilot tests following the general model concept illustrated in Figure \ref{fig:concept-1v}. The results of these tests are presented in the subsections that follow.
 
 \begin{figure}[h!]
     \centering
     \includegraphics[scale=0.33]{docs/concept_1v.png}
-    \caption{General model concept for studying habitat use by waterbirds in coastal lagoons of the tropics. The functions for calculating the probability of birds moving using a given water depth, distance from human settlement and salinity can be found in Appendix \ref{sec:code-repo}.}
+    \caption{The general model concept for studying habitat use by waterbirds in coastal lagoons of the tropics. The functions for calculating the probability of birds moving using a given water depth, distance from human settlement and salinity can be found in Appendix \ref{sec:code-repo}.}
     \label{fig:concept-1v}
 \end{figure}
 
 \subsection{First Pilot Test}
 In this very first test, we aim for the most possible, simplistic Agent-Based Modeling simulation. The objective of this test is to simulate a physical environment of static habitats and a few randomly-positioned waterbirds with the expectations of moving around over time. In addition to that, we create a simple restriction rule, which is "\textit{the waterbirds are not allowed to visit the habitats}".
 
-Simulating this startup environment requires a focus on drawing specific patches (representing the habitats) and generating a finite number of agents (representing the waterbirds). In this case scenario, we use a square figure scaled from 0 to 1 in both sides as the limited area for the environment (see Figure \ref{fig:pilot-test-1}). Then, with the help of the \emph{matplotlib} 3rd-party library, we produce the patches. Similarly, we use object-based definitions to create the agents and randomly position them within the environment using some helper functions. No prior considerations.
+Simulating this startup environment requires a focus on drawing specific patches (representing the habitats) and generating a finite number of agents (representing the waterbirds). In this case scenario, we use a square figure scaled from 0 to 1 in both sides as the limited area for the environment (see Figure \ref{fig:pilot-test-1}). Then, with the help of the \emph{matplotlib} 3rd-party library, we produce the patches. Similarly, we use object-based definitions to create the agents and randomly position them within the environment using some helper functions — no prior considerations.
 
 \subsubsection{The patches}
 A patch is a drawing version of a habitat. It has a non-, or polygonal shape and tries to represent as closely as possible a 2-dimensional structure in reality. The shape can be very simple, as in the case of a simple square; and very complex, as in the case of a curvy closed-line. Besides its structural representation, a patch has some other properties such as \emph{facecolor}, \emph{edgecolor}, \emph{lineweight}, and so forth, that are related to the setting of the drawing itself (see more details in \cite{matplotlib.patches}). But in our case, we choose to go with the rectangular shape, which we consider sufficient for the demo.
 
-In earlier sections of this document, we introduced the \textcolor{orange}{Habitat} class definition with some attributes (\emph{type, vertices, color, etc.}) that is to digitally represent a physical habitat or human settlement. But in this first pilot test, we use only a lightweight version of these attributes, which are the vertices. To illustrate our point about drawing a patch (or an artist) within an area, see the Python scripts below:
+In earlier sections of this document, we introduced the \textcolor{orange}{Habitat} class definition with some attributes (\emph{type, vertices, color, etc.}) that is to represent a natural habitat or human settlement digitally. But in this first pilot test, we use only a lightweight version of these attributes, which are the vertices. To illustrate our point about drawing a patch (or an artist) within an area, see the Python scripts below:
 
 \begin{listing}[H]
     \inputminted
@@ -263,14 +262,13 @@ In earlier sections of this document, we introduced the \textcolor{orange}{Habit
     \label{lst:intro-patch}
 \end{listing}
 
-
 \noindent
 Observe how the codes in lines 23-24 in Listing \ref{lst:intro-patch} create a final plottable object that can be later drawn in a figure.
 
 \subsubsection{The agents}
 An agent is a drawing version of a waterbird. It can be of the type \emph{short-legged} or \emph{long-legged} species. This little nuance is what constitutes the core distinction in the waterbirds' behaviour within the habitats. Therefore, it remains relevant to set a clear cut in the design so that a short-legged type visually differs from a long-legged type.
 
-Recall that the \textcolor{orange}{Agent} class definition is really simple in terms of properties: \emph{type and x-y positions}. The \emph{type} attribute takes the value of either "short-legged" or "long-legged" and the agent's position is the $x$-$y$ coordinates that take decimal values between 0 and 1 within a 2-dimensional area. As a result, creating an agent in the VE simulation is simply to instantiate an object of the on-the-fly class \textcolor{orange}{Agent}, then define its type as "short-legged" or "long-legged", and finally assign a random position to that agent. However, due to the restriction rule mentioned previously, the randomly-generated positions cannot fall into the area occupied by the habitats.
+Recall that the \textcolor{orange}{Agent} class definition is really simple in terms of properties: \emph{type and x-y positions}. The \emph{type} attribute takes the value of either "short-legged" or "long-legged" and the agent's position is the $x$-$y$ coordinates that take decimal values between zero (0) and one (1) within a 2-dimensional area. As a result, creating an agent in the VE simulation is to instantiate an object of the on-the-fly class \textcolor{orange}{Agent}, then define its type as "short-legged" or "long-legged", and finally assign a random position to that agent. However, due to the restriction rule mentioned previously, the randomly-generated positions cannot fall into the area occupied by the habitats.
 
 \begin{listing}[H]
     \inputminted
@@ -290,16 +288,16 @@ Finally, the results of creating both patches and agents for the first pilot tes
 \begin{figure}[h!]
     \centering
     \includegraphics[scale=0.65]{ve-0.1/0.png}
-    \caption{Preview of the first pilot test results: there is a total of 3 static patches (of different sizes) and 30 randomly-positioned short-legged agents. This visualization is the first generated plot of 20. The entire creation process is repeated 20 times and a final GIF image is built up out of the 20 generated images for a better visualization.}
+    \caption{Preview of the first pilot test results: there is a total of 3 static patches (of different sizes) and 30 randomly-positioned short-legged agents. This visualization is the first generated plot of 20. The entire creation process is repeated 20 times, and a final GIF image is built up out of the 20 generated images for better visualization.}
     \label{fig:pilot-test-1}
 \end{figure}
 
 \subsection{Second Pilot Test}
-In the first pilot test, we try to wrap up some key concepts and terminologies to avoid confusion with the interpretations of the end results. The second pilot test, built on top of what is mainly explained in the first pilot test\footnote{If not read yet, it is highly recommended to read the First Pilot Test part in order to grasp the whole idea of the second pilot test. Both are loosely coupled.}, adds a little bit more complexity to the simulation.
+In the first pilot test, we try to wrap up some key concepts and terminologies to avoid confusion with the interpretations of the end-results. The second pilot test, built on top of what is mainly explained in the first pilot test\footnote{If not read yet, it is highly recommended to read the First Pilot Test part to grasp the whole idea of the second pilot test. Both are loosely coupled.}, adds a little bit more complexity to the simulation.
 
-In the second pilot test, we focus on creating an approach that intends to bring the VE simulation closer to a real-life case scenario by randomizing the movements for the agents based on resource availability. That is, we clearly differentiate which patch an agent can move to by taking into account the maximum number of agents that can cohabit a patch at once. This particular denotation, resource availability, is the core principle used to determine whether or not a waterbird should move to another habitat to look for food since in real life the amount of waterbirds is directly proportional to food consumption. Obviously, other environmental aspects such as the nature of the habitats are not being considered yet.
+In the second pilot test, we focus on creating an approach that intends to bring the VE simulation closer to a real-life case scenario by randomizing the movements for the agents based on resource availability. That is, we clearly differentiate which patch an agent can move to by taking into account the maximum number of agents that can cohabit a patch at once. This particular denotation, resource availability, is the core principle used to determine whether or not a waterbird should move to another habitat to look for food since in real life the amount of waterbirds is directly proportional to food consumption. Obviously, other environmental aspects, such as the nature of the habitats are not being considered yet.
 
-Another important point to mention in this test is that it is related to the flowchart shown in Figure \ref{fig:workflow-scheme}, excluding the \emph{Sensitivity Analysis} step. Likewise, the test follows the general algorithm discussed in previous sections, with the exception of the \emph{Update} process. Consequently, this alters the implementation as well as the scripting.
+Another critical point to mention in this test is that it is related to the flowchart shown in Figure \ref{fig:workflow-scheme}, excluding the \emph{Sensitivity Analysis} step. Likewise, the test follows the general algorithm discussed in previous sections, except for the \emph{Update} process. Consequently, this alters the implementation as well as the scripting.
 
 \begin{listing}[H]
     \inputminted
@@ -322,14 +320,14 @@ The script in Listing \ref{lst:intro-update} is not considered as the best appro
 \begin{figure}[h!]
     \centering
     \includegraphics[scale=0.65]{ve-0.2/0.png}
-    \caption{Preview of the second pilot test results: the yellow rectangles (patches) are the areas for long-legged waterbirds (agent) and the purple rectangles, the areas for the short-legged waterbirds. A long-legged agent can only travel between the yellow patches and a short-legged agent, between the purple patches. The initial conditions for the small rectangles (yellow and purple) are set according to the maximum capacity. Once the small patches reach the maximal capacity, an allowed agent can no longer travel across them unless the corresponding number of agent of the patch in question reduces over time.}
+    \caption{Preview of the second pilot test results: the yellow rectangles (patches) are the areas for long-legged waterbirds (agent) and the purple rectangles, the areas for the short-legged waterbirds. A long-legged agent can only travel between the yellow patches and a short-legged agent, between the purple patches. The initial conditions for the small rectangles (yellow and purple) are set according to the maximum capacity. Once the small patches reach the maximal capacity, an allowed agent can no longer travel across them unless the corresponding number of agents of the patch in question reduces over time.}
     \label{fig:pilot-test-2}
 \end{figure}
 
 \subsection{The VE Prototype}
-This part of the document discusses the current release of the ABM project, which is considered as the first prototype of the virtual environment simulation. The reason to state that is because this version goes beyond the first 2 pilot tests and covers important features of the VE system. It includes a higher degree of complexity, which brings the VE simulation much closer to the lifestyle of the waterbirds inhabiting the coastal lagoons of the tropics.
+This part of the document discusses the current release of the ABM project, which is considered as the first prototype of the virtual environment simulation. The reason to state that is that this version goes beyond the first two pilot tests and covers important features of the VE system. It includes a higher degree of complexity, which brings the VE simulation much closer to the lifestyle of the waterbirds inhabiting the coastal lagoons of the tropics.
 
-Again, this prototype relies on the terms and concepts clarified in the early tests. Besides the other tests, this version follows all the programming principles, the algorithms, the workflow scheme, previously discussed in this document. It also uses the predefined probability distribution functions (PDF) for the environmental characteristics that play an important role on the waterbirds' behaviour within the habitats and their interactions with each other.
+Again, this prototype relies on the terms and concepts clarified in the initial tests. Besides the other tests, this version follows all the programming principles, the algorithms, the workflow scheme, previously discussed in this document. It also uses the predefined probability distribution functions (PDF) for the environmental characteristics that play an essential role in the waterbirds' behavior within the habitats and their interactions with each other.
 
 \begin{figure}[h!]
     \centering
@@ -356,20 +354,20 @@ Again, this prototype relies on the terms and concepts clarified in the early te
 \subsubsection{General comments}
 Unlike the other tests, the VE simulation setting of this prototype contains some updates, most importantly in the design. Firstly, there are more defined habitats: (edge-colored) \texttt{yellow, blue, green}, and (fully-colored) \texttt{pink} with some distinctive environmental characteristics each.
 \begin{itemize}
-    \item \texttt{yellow}: categorized as \emph{one}, these habitats represent the common places where the short-legged wading waterbirds can only wander for food.
-    \item \texttt{blue}: categorized as \emph{two}, this habitat contains certain properties that benefit only the long-legged waterbirds. For instance, the water depth of this habitat can be within one meter range.
+    \item \texttt{yellow}: categorized as \emph{one}, these habitats represent the common places where the short-legged wading waterbirds can only wander aimlessly for food.
+    \item \texttt{blue}: categorized as \emph{two}, this habitat contains certain properties that benefit only the long-legged waterbirds. For instance, the water depth of this habitat can be within a one-meter range.
     \item \texttt{green}: categorized as \emph{three}, this habitat, besides its geometry (smaller in size), contains similar characteristics that restrain the short-legged birds from visiting it.
-    \item \texttt{pink}: categorized as \emph{human}, these habitats represent the human settlements. This factor also influences the waterbirds' behaviour, given the distance between a human settlement and a particular appealing, resourceful habitat.
+    \item \texttt{pink}: categorized as \emph{human}, these habitats represent the human settlements. This factor also influences the waterbirds' behavior, given the distance between a human settlement and a particularly appealing, resourceful habitat.
 \end{itemize}
 
 \noindent
 \textbf{Important}: \textit{The habitats' category names \texttt{one, two, three}, and \texttt{human} are just arbitrary names. Note that they could be changed in the future, if judged necessary}.
 
 \noindent
-Next, the white dots and black dots are now labelled respectively as the long-legged waterbirds and short-legged waterbirds. Finally, the waterbird movements are driven by the category type of the habitat. For instance, the long-legged waterbirds can move to any habitat except for the human settlements whereas the short-legged waterbirds can only move to the \emph{one} (\texttt{yellow}) habitats.
+Next, the white dots and black dots are now labeled respectively as the long-legged waterbirds and short-legged waterbirds. Finally, the waterbird movements are driven by the habitat's category type. For instance, the long-legged waterbirds can move to any habitat except for the human settlements, whereas the short-legged waterbirds can only move to the \emph{one} (\texttt{yellow}) habitats.
 
 \subsubsection{Analysis of the results}
-The results shown in Figure \ref{fig:ve-prototype} are a single-run\footnote{Running the script yourself will not achieve the same results due the random initialization state.} of the scripts in Appendix \ref{sec:code-repo}. We only extract 4 samples out of the 100 generated plots to explain the waterbirds' behaviour and interactions under a specific initial condition (see Table \ref{table:ve-init}). And this initial condition can only generate a single-point dataset for each PDF over time. In order to achieve a data set, we need to collect a set of initial conditions, especially for the habitats' characteristics and tune their values over time. For instance, simulating a water depth reduction or tweaking the food availability factors are a good example of how to achieve a multi-point dataset for each PDF. But since this is out of the scope of this release, we only mention it as our next considerations for future releases.
+The results shown in Figure \ref{fig:ve-prototype} are a single-run\footnote{Running the script yourself will not achieve the same results due to the random initialization state.} of the scripts in Appendix \ref{sec:code-repo}. We only extract four samples out of the 100 generated plots to explain the waterbirds' behavior and interactions under a specific initial condition (see Table \ref{table:ve-init}). And this initial condition can only generate a single-point dataset for each PDF over time. To achieve a data set, we need to collect a set of initial conditions, especially for the habitats' characteristics and tune their values over time. For instance, simulating a water depth reduction or tweaking the food availability factors are an excellent example of how to achieve a multi-point dataset for each PDF. But since this is out of the scope of this release, we only mention it as our next considerations for future releases.
 
 \begin{table}[!ht]
     \begin{center}
@@ -403,12 +401,12 @@ The results shown in Figure \ref{fig:ve-prototype} are a single-run\footnote{Run
     \end{center}
 \end{table}
 
-The first sample, \emph{Time 0}, is the first generated plot with a random distribution of the waterbirds within the allowed areas. Note that the long-legged birds (white dots) are spread out in all 4 habitats whereas the short-legged birds (black dots) are only located in the habitats categorized as \emph{one}. Then in the second sample, \emph{Time 10}, we notice that the long-legged birds start leaving Habitat \emph{two}. And finally, in the last 2 samples, Habitat \emph{two} remains empty. The reason for this is that the movements of the long-legged birds in this particular case are reasonably driven by the PDFs and the chosen threshold. That is, the chosen threshold factor does not have a fair probability (50\% each) of whether a bird should move or not.
+The first sample, \emph{Time 0}, is the first generated plot with a random distribution of the waterbirds within the allowed areas. Note that the long-legged birds (white dots) are spread out in all four habitats whereas the short-legged birds (black dots) are only located in the habitats categorized as \emph{one}. Then in the second sample, \emph{Time 10}, we notice that the long-legged birds start leaving Habitat \emph{two}. And finally, in the last 2 samples, Habitat \emph{two} remains empty. The reason for this is that the movements of the long-legged birds in this particular case are reasonably driven by the PDFs and the chosen threshold. That is, the chosen threshold factor does not have a reasonable probability (50\% each) of whether a bird should move or not.
 
 \section{Conclusion}
-This document reports the analysis and results of the Agent-Based Model when studying habitat use by waterbirds in coastal lagoons of the tropics. We have built a virtual environment that is computationally inexpensive by simply considering a few designing aspects to simulate the ABM under certain conditions. So far, the realization of this virtual environment is very promising and brings us closer to the real-life situation of the waterbirds' behaviour.
+This document reports the analysis and results of the Agent-Based Model when studying habitat use by waterbirds in coastal lagoons of the tropics. We have built a virtual environment that is computationally inexpensive by simply considering a few designing aspects to simulate the ABM under certain conditions. So far, the realization of this virtual environment is very promising and brings us closer to the real-life situation of the waterbirds' behavior.
 
-The current version of the virtual environment is a prototype that has room for a lot of improvements. All along the document, some of these improvements are mentioned as well as some important points that are expected to be tackled in future releases.
+The current version of the virtual environment is a prototype that has room for a lot of improvements. Throughout the document, some of these improvements are mentioned as well as some important points that are expected to be tackled in future releases.
 
 % ==============================================================================
 % END: Methods, Results, Discussions, Conclusion
