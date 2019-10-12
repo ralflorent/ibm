@@ -7,7 +7,7 @@
 #   Davi Tavares <davi.tavares@leibniz-zmt.de>
 #   Agostino Merico <a.merico@jacobs-university.de>
 #
-# Setup to bootstrap your next Python project
+# Setup to bootstrap the Python project
 
 # ==============================================================================
 # START: Setup
