@@ -13,4 +13,4 @@ dist/**/*.png
 dist/**/*.gif
 
 # documentation
-#docs/**/*.pdf
+docs/**/*.pdf
