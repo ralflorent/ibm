@@ -17,9 +17,11 @@
 
 import matplotlib.pyplot as plotter # plotter
 
-plotter.ioff() # turn off interactive plotting mode
-
 # TODO: plotter, env, sys, file, common config
+
+def init():
+    plotter.ioff() # turn off interactive plotting mode
+
 
 # ==============================================================================
 # END: Config

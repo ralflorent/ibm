@@ -14,27 +14,30 @@
 # ==============================================================================
 
 # -*- coding: utf-8 -*-
+import numpy as np # arithmetic computer
+import matplotlib.pyplot as plt # plotter
+import matplotlib.patches as Patches # artist
+import imageio as gm # gif maker
+import constants as CONST
 
-from helpers import *
+from matplotlib.path import Path # designing field
+from helpers import gen_rand_point, which_habitat, compute_dist
 from habitat import Habitat
 from agent import Agent
-from constants import *
 
-plt.ioff() # turn off interactive plotting mode
 
 def create_patches():
-    global habitats
     habitats = []
 
     # Food availability per habitat: 0.3, 2.56, 6.41, and 11.53
     # prepare static (patch-based) habitats and human settlements
-    habitats.append( Habitat('one', HABITAT_1A_VERTICES, 'orange', {'w': 0.05, 's': 80, 'f': 0.3}) )
-    habitats.append( Habitat('one', HABITAT_1B_VERTICES, 'orange', {'w': 0.05, 's': 80, 'f': 2.56}) )
-    habitats.append( Habitat('two', HABITAT_2_VERTICES, 'blue', {'w': 1.0, 's': 10, 'f': 6.41}) )
-    habitats.append( Habitat('three', HABITAT_3_VERTICES, 'green', {'w': 0.40, 's': 25, 'f': 11.53}) )
-    habitats.append( Habitat('human', HUMAN_STM1_VERTICES, 'red') )
-    habitats.append( Habitat('human', HUMAN_STM2_VERTICES, 'red') )
-    habitats.append( Habitat('human', HUMAN_STM3_VERTICES, 'red') )
+    habitats.append( Habitat('one', CONST.HABITAT_1A_VERTICES, 'orange', {'w': 0.05, 's': 80, 'f': 0.3}) )
+    habitats.append( Habitat('one', CONST.HABITAT_1B_VERTICES, 'orange', {'w': 0.05, 's': 80, 'f': 2.56}) )
+    habitats.append( Habitat('two', CONST.HABITAT_2_VERTICES, 'blue', {'w': 1.0, 's': 10, 'f': 6.41}) )
+    habitats.append( Habitat('three', CONST.HABITAT_3_VERTICES, 'green', {'w': 0.40, 's': 25, 'f': 11.53}) )
+    habitats.append( Habitat('human', CONST.HUMAN_STM1_VERTICES, 'red') )
+    habitats.append( Habitat('human', CONST.HUMAN_STM2_VERTICES, 'red') )
+    habitats.append( Habitat('human', CONST.HUMAN_STM3_VERTICES, 'red') )
 
     # then build patch for each habitat
     for h in habitats:
@@ -47,22 +50,21 @@ def create_patches():
 
 
 # create agents
-def create_agents():
+def create_agents(habitats):
     """
     TODO: docs
     """
-    global habitats, agents
     agents = []
 
     # build patches for short- and long-legged seabirds
-    short_legged_habitat = [h for h in habitats if h.type in SHORT_LEGGED_SEABIRD_HABITAT_LIMIT]
-    long_legged_habitat  = [h for h in habitats if h.type in LONG_LEGGED_SEABIRD_HABITAT_LIMIT]
+    short_legged_habitat = [h for h in habitats if h.type in CONST.SHORT_LEGGED_SEABIRD_HABITAT_LIMIT]
+    long_legged_habitat  = [h for h in habitats if h.type in CONST.LONG_LEGGED_SEABIRD_HABITAT_LIMIT]
 
-    for i in range(TOTAL_SHORT_LEGGED_SEABIRDS + TOTAL_LONG_LEGGED_SEABIRDS):
+    for i in range(CONST.TOTAL_SHORT_LEGGED_SEABIRDS + CONST.TOTAL_LONG_LEGGED_SEABIRDS):
         ag = Agent()
 
         # classify agents as short- and long-legged seabirds
-        if i < TOTAL_SHORT_LEGGED_SEABIRDS:
+        if i < CONST.TOTAL_SHORT_LEGGED_SEABIRDS:
             ag.type = 'short-legged'
             ag.x, ag.y = gen_rand_point(short_legged_habitat, 'in')
         else:
@@ -78,16 +80,16 @@ def initialize():
     """
     TODO: docs
     """
-    create_patches()
-    create_agents()
+    habitats = create_patches()
+    agents = create_agents(habitats)
+    return habitats, agents
 
 
-def observe():
+def observe(habitats, agents, counter=0):
     """
     Create and plot figure
     TODO: docs
     """
-    global habitats, agents
     plt.cla()
 
     fig = plt.figure(figsize=(11, 6.5)) # define figure size 11x6.5 inches
@@ -110,31 +112,30 @@ def observe():
     plt.xticks(fontsize=12)
     plt.yticks(fontsize=12)
     plt.legend(loc="best")
-    plt.xlabel('Time ' + str(int(t)), fontsize=15) # Identify which image is plotted
+    plt.xlabel('Time ' + str(int(counter)), fontsize=15) # Identify which image is plotted
     plt.title('Virtual Environment', fontsize=15) # Title the graph
 
-    image_path = FILEPATH + str(int(t)) + '.png'
+    image_path = CONST.FILEPATH + str(int(counter)) + '.png'
     plt.savefig(image_path, bbox_inches='tight', pad_inches=0)
     plt.close(fig)
 
     # storing image for final gif
     image = gm.imread(image_path)
-    IMAGE_STORAGE.append(image)
+    CONST.IMAGE_STORAGE.append(image)
     # END: observe
 
 
-def update():
+def update(agents):
     """
     TODO: docs
     """
-    global agents
 
     # Cannot put single artist in more than one figure
     habitats = create_patches()
 
     # build patches for short- and long-legged seabirds, human settlements
-    short_legged_habitat = [h for h in habitats if h.type in SHORT_LEGGED_SEABIRD_HABITAT_LIMIT]
-    long_legged_habitat  = [h for h in habitats if h.type in LONG_LEGGED_SEABIRD_HABITAT_LIMIT]
+    short_legged_habitat = [h for h in habitats if h.type in CONST.SHORT_LEGGED_SEABIRD_HABITAT_LIMIT]
+    long_legged_habitat  = [h for h in habitats if h.type in CONST.LONG_LEGGED_SEABIRD_HABITAT_LIMIT]
     human_settlements = [h for h in habitats if h.type == 'human']
 
     # randomly choose an agent to update its status,
@@ -201,8 +202,10 @@ def update():
         print('---- long: s:{:1.5f}, w:{:1.5f}, d:{:1.5f}, f:{:1.5f}'.format(_prob_s, _prob_w, _prob_d, _prob_f))
 
     print('---- overall prob: {:1.10f}'.format(prob))
-    if prob > THRESHOLD:
+    if prob > CONST.THRESHOLD:
         agent.x, agent.y = _x, _y
+
+    return habitats, agents
     # END: update
 
 # ==============================================================================

@@ -11,6 +11,8 @@
 # distribution package
 dist/**/*.png
 dist/**/*.gif
+samples/**/*.png
+samples/**/*.gif
 
 # documentation
 docs/**/*.pdf

@@ -17,9 +17,17 @@
 
 import numpy as np # arithmetic computations
 import imageio as gm # gif maker
-import matplotlib.pyplot as plt # plotter
-import matplotlib.patches as Patches
-from matplotlib.path import Path
+
+
+def make_gif(dirname='./', gifname='image.gif', storage=[]):
+    """
+    Store or dump all generated png images on disk
+
+    TODO: proper docs
+    """
+    filename = dirname + gifname
+    gm.mimsave(filename, storage)
+
 
 def gen_rand_point(habitats, option=None):
     """ Generate random point that belongs (or not) to a set of patches
@@ -72,7 +80,11 @@ def gen_rand_point(habitats, option=None):
 
 
 def compute_dist(habitat, human_settlements):
-    """ Compute relative distances to the existing human settlements"""
+    """
+    Compute relative distances to the existing human settlements
+
+    TODO: proper docs
+    """
     distances = []
     h_center = np.array( habitat.get_center() ) # center point of the habitat
 
@@ -86,11 +98,16 @@ def compute_dist(habitat, human_settlements):
 
 
 def which_habitat(point, habitats):
-    """ Determine in which habitat dwells the current agent"""
+    """
+    Determine in which habitat dwells the current agent
+
+    TODO: proper docs
+    """
     for h in habitats:
         if h.contains_point(point):
             return h
     return None
+
 
 # ==============================================================================
 # END: Helpers

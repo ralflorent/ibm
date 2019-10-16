@@ -15,15 +15,13 @@
 
 # -*- coding: utf-8 -*-
 
-""" Global Default Variables """
 # Path variables
-MAIN_DIRECTORY = '../../dist/'
+MAIN_DIRECTORY = '../../samples/'
 FILEPATH = MAIN_DIRECTORY + 'frame/'
 
 # Miscellaneous variables
 IMAGE_STORAGE = []  # images to become gif
-PROCESSING_TIME = 100 # time limit for the entire process
-t = 0 # initial time step over the overall processing time
+PROCESSING_TIME = 10 # time limit for the entire process
 THRESHOLD = 1e-7 # threshold to allow agents' movements driven by the probability
 
 # Matplotlib Patches variables
