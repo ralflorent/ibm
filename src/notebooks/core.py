@@ -19,9 +19,10 @@ import matplotlib.pyplot as plt # plotter
 import matplotlib.patches as Patches # artist
 import imageio as gm # gif maker
 import constants as CONST
+import copy as cp
 
 from matplotlib.path import Path # designing field
-from helpers import gen_rand_point, which_habitat, compute_dist
+from helpers import gen_rand_point, which_habitat, compute_dist, update_store
 from habitat import Habitat
 from agent import Agent
 
@@ -49,7 +50,7 @@ def create_patches():
     return habitats
 
 
-# create agents
+# create agents once
 def create_agents(habitats):
     """
     TODO: docs
@@ -62,6 +63,7 @@ def create_agents(habitats):
 
     for i in range(CONST.TOTAL_SHORT_LEGGED_SEABIRDS + CONST.TOTAL_LONG_LEGGED_SEABIRDS):
         ag = Agent()
+        ag.name = str(i + 1) # labelling for analysis
 
         # classify agents as short- and long-legged seabirds
         if i < CONST.TOTAL_SHORT_LEGGED_SEABIRDS:
@@ -72,6 +74,9 @@ def create_agents(habitats):
             ag.x, ag.y = gen_rand_point(long_legged_habitat, 'in')
 
         agents.append(ag) # store in-memory agents
+
+        # create a dict-based structure to store and run analytics
+        CONST.STORE['agents'].append({ ag.name: { 'pos': [], 'pdf': [] }})
 
     return agents
 
@@ -96,7 +101,7 @@ def observe(habitats, agents, counter=0):
     ax  = fig.add_subplot(111)
 
     for h in habitats:
-        ax.add_patch(h.artist) # add artists (patches) to display rectangles
+        ax.add_patch( cp.copy(h.artist) ) # add artists (patches) to display rectangles
 
     # distribute agents according their types
     short = [ag for ag in agents if ag.type == 'short-legged']
@@ -107,6 +112,7 @@ def observe(habitats, agents, counter=0):
     ax.plot([ag.x for ag in long], [ag.y for ag in long], 'o', mfc ='w', mec ='k', label='long-legged')
 
     # additional settings for the graph
+    # TODO: relocate in config.py and constants.py to increase performance
     plt.axis('image')
     plt.axis([0, 1, 0, 1])
     plt.xticks(fontsize=12)
@@ -125,22 +131,18 @@ def observe(habitats, agents, counter=0):
     # END: observe
 
 
-def update(agents):
+def update_one(habitats, agent):
     """
     TODO: docs
     """
 
-    # Cannot put single artist in more than one figure
-    habitats = create_patches()
+    # FIXME: Cannot put single artist in more than one figure
+    # habitats = create_patches()
 
     # build patches for short- and long-legged seabirds, human settlements
     short_legged_habitat = [h for h in habitats if h.type in CONST.SHORT_LEGGED_SEABIRD_HABITAT_LIMIT]
     long_legged_habitat  = [h for h in habitats if h.type in CONST.LONG_LEGGED_SEABIRD_HABITAT_LIMIT]
     human_settlements = [h for h in habitats if h.type == 'human']
-
-    # randomly choose an agent to update its status,
-    # approach for asynchronous updates: see Davi's ref.
-    agent = agents[ np.random.randint( len(agents) ) ]
 
     # simulating random movements
     """ Algorithm to move agents
@@ -177,6 +179,7 @@ def update(agents):
         d = _d[min_index] # distance to human settlement
         w, s, f = _habitat.props.values() # water depth, salinity, food availability
 
+        # TODO: avoid magic numbers and string values
         _prob_w = 0.00002 * w**2 - 0.0009 * w + 0.0114
         _prob_d = -0.0013 * d**2 + 0.0074 * d - 0.0001
         _prob_s = 0.00006 * s**2 + 0.0002 * s + 0.0004
@@ -205,8 +208,32 @@ def update(agents):
     if prob > CONST.THRESHOLD:
         agent.x, agent.y = _x, _y
 
-    return habitats, agents
+    # store agent's position and probs
+    update_store(CONST.STORE['agents'], agent, prob)
+    return agent
     # END: update
+
+
+def update(habitats, agents):
+    """
+    This update signifies that, at a time t, some changes should apply to every
+    and each single agent of the system.
+
+    TODO: proper docs
+    """
+    updated_agents = [] # temporary for the new agents' positions
+
+    while len(agents) > 0:
+        # randomly choose an agent to update its status,
+        # approach for asynchronous updates: see Davi's ref.
+        agent = agents[ np.random.randint( len(agents) ) ]
+
+        updated_agents.append( update_one(habitats, cp.copy(agent)) )
+
+        agents.remove(agent)
+
+    return updated_agents
+
 
 # ==============================================================================
 # END: Core functionality

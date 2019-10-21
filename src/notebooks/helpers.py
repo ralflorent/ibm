@@ -109,6 +109,18 @@ def which_habitat(point, habitats):
     return None
 
 
+def update_store(objects, agent, prob):
+    """"""
+    objects = objects if isinstance(objects, list) else [objects]
+
+    for o in objects:
+        for k in o.keys():
+            if k == agent.name:
+                o[k]['pos'].append( (agent.x, agent.y) )
+                o[k]['pdf'].append(prob)
+                break
+
+
 # ==============================================================================
 # END: Helpers
 # ==============================================================================

@@ -40,13 +40,15 @@ HUMAN_STM2_VERTICES = [(0.85, 0.70), (0.85, 0.90), (0.95, 0.90), (0.95, 0.70), (
 HUMAN_STM3_VERTICES = [(0.80, 0.15), (0.80, 0.25), (0.90, 0.25), (0.90, 0.15), (0.80, 0.15)]
 
 # Total of Agents
-TOTAL_LONG_LEGGED_SEABIRDS  = 20
-TOTAL_SHORT_LEGGED_SEABIRDS = 20
+TOTAL_LONG_LEGGED_SEABIRDS  = 5
+TOTAL_SHORT_LEGGED_SEABIRDS = 5
 
 # Seabird can use certain habitats
 LONG_LEGGED_SEABIRD_HABITAT_LIMIT  = ['one', 'two', 'three']
 SHORT_LEGGED_SEABIRD_HABITAT_LIMIT = ['one']
 
+# dictionary-based, in-memory Store for sensitivity analysis
+STORE = { 'env': {}, 'agents': [], 'habitats': [] }
 
 # ==============================================================================
 # END: Constants
