@@ -32,10 +32,10 @@ def create_patches():
 
     # Food availability per habitat: 0.3, 2.56, 6.41, and 11.53
     # prepare static (patch-based) habitats and human settlements
-    habitats.append( Habitat('one', CONST.HABITAT_1A_VERTICES, 'orange', {'w': 0.05, 's': 80, 'f': 0.3}) )
-    habitats.append( Habitat('one', CONST.HABITAT_1B_VERTICES, 'orange', {'w': 0.05, 's': 80, 'f': 2.56}) )
-    habitats.append( Habitat('two', CONST.HABITAT_2_VERTICES, 'blue', {'w': 1.0, 's': 10, 'f': 6.41}) )
-    habitats.append( Habitat('three', CONST.HABITAT_3_VERTICES, 'green', {'w': 0.40, 's': 25, 'f': 11.53}) )
+    habitats.append( Habitat('orange-sm', CONST.HABITAT_1A_VERTICES, 'orange', {'w': 0.05, 's': 80, 'f': 0.3}) )
+    habitats.append( Habitat('orange-lg', CONST.HABITAT_1B_VERTICES, 'orange', {'w': 0.05, 's': 80, 'f': 2.56}) )
+    habitats.append( Habitat('blue', CONST.HABITAT_2_VERTICES, 'blue', {'w': 1.0, 's': 10, 'f': 6.41}) )
+    habitats.append( Habitat('green', CONST.HABITAT_3_VERTICES, 'green', {'w': 0.40, 's': 25, 'f': 11.53}) )
     habitats.append( Habitat('human', CONST.HUMAN_STM1_VERTICES, 'red') )
     habitats.append( Habitat('human', CONST.HUMAN_STM2_VERTICES, 'red') )
     habitats.append( Habitat('human', CONST.HUMAN_STM3_VERTICES, 'red') )
@@ -76,7 +76,7 @@ def create_agents(habitats):
         agents.append(ag) # store in-memory agents
 
         # create a dict-based structure to store and run analytics
-        CONST.STORE['agents'].append({ ag.name: { 'pos': [], 'pdf': [] }})
+        CONST.STORE['agents'].append({ ag.name: { 'hab': [], 'pos': [], 'pdf': [] }})
 
     return agents
 
@@ -87,6 +87,20 @@ def initialize():
     """
     habitats = create_patches()
     agents = create_agents(habitats)
+
+    # initialize stats for first run
+    snapshots = {
+        'orange-sm': { 'short-legged': 0, 'long-legged': 0 },
+        'orange-lg': { 'short-legged': 0, 'long-legged': 0 },
+        'blue': { 'short-legged': 0, 'long-legged': 0 },
+        'green': { 'short-legged': 0, 'long-legged': 0 }
+    }
+
+    for agent in agents:
+        habitat = which_habitat((agent.x, agent.y), habitats)
+        snapshots[habitat.type][agent.type] += 1
+
+    CONST.STORE['habitats'].append(snapshots)
     return habitats, agents
 
 
@@ -185,8 +199,8 @@ def update_one(habitats, agent):
         _prob_s = 0.00006 * s**2 + 0.0002 * s + 0.0004
         _prob_f = (0.00673 * f**2) - (0.002936 * f) + 0.5
         prob = _prob_s * _prob_w * _prob_d * _prob_f
-        print('-- habitat: {}'.format(_habitat.type))
-        print('---- short: s:{:1.5f}, w:{:1.5f}, d:{:1.5f}, f:{:1.5f}'.format(_prob_s, _prob_w, _prob_d, _prob_f))
+        # print('-- habitat: {}'.format(_habitat.type))
+        # print('---- short: s:{:1.5f}, w:{:1.5f}, d:{:1.5f}, f:{:1.5f}'.format(_prob_s, _prob_w, _prob_d, _prob_f))
     else:
         _x, _y = gen_rand_point(long_legged_habitat, 'in')
         _habitat = which_habitat((_x, _y), long_legged_habitat)
@@ -201,16 +215,16 @@ def update_one(habitats, agent):
         _prob_s = -0.000004 * s**2 + 0.0004 * s - 0.0002
         _prob_f = (0.00340 * f) + 0.5
         prob = _prob_s * _prob_w * _prob_d * _prob_f
-        print('-- habitat: {}'.format(_habitat.type))
-        print('---- long: s:{:1.5f}, w:{:1.5f}, d:{:1.5f}, f:{:1.5f}'.format(_prob_s, _prob_w, _prob_d, _prob_f))
+        # print('-- habitat: {}'.format(_habitat.type))
+        # print('---- long: s:{:1.5f}, w:{:1.5f}, d:{:1.5f}, f:{:1.5f}'.format(_prob_s, _prob_w, _prob_d, _prob_f))
 
-    print('---- overall prob: {:1.10f}'.format(prob))
+    # print('---- overall prob: {:1.10f}'.format(prob))
     if prob > CONST.THRESHOLD:
         agent.x, agent.y = _x, _y
 
     # store agent's position and probs
-    update_store(CONST.STORE['agents'], agent, prob)
-    return agent
+    update_store(CONST.STORE['agents'], agent, prob, _habitat.type)
+    return agent, _habitat
     # END: update
 
 
@@ -223,14 +237,25 @@ def update(habitats, agents):
     """
     updated_agents = [] # temporary for the new agents' positions
 
+    snapshots = {
+        'orange-sm': { 'short-legged': 0, 'long-legged': 0 },
+        'orange-lg': { 'short-legged': 0, 'long-legged': 0 },
+        'blue': { 'short-legged': 0, 'long-legged': 0 },
+        'green': { 'short-legged': 0, 'long-legged': 0 }
+    }
+
     while len(agents) > 0:
         # randomly choose an agent to update its status,
         # approach for asynchronous updates: see Davi's ref.
         agent = agents[ np.random.randint( len(agents) ) ]
-
-        updated_agents.append( update_one(habitats, cp.copy(agent)) )
-
+        updated_agent, habitat = update_one(habitats, cp.copy(agent))
+        updated_agents.append( updated_agent )
         agents.remove(agent)
+
+        # save stats for each agent: regions -> blue -> short-legged: value
+        snapshots[habitat.type][updated_agent.type] += 1
+
+    CONST.STORE['habitats'].append(snapshots)
 
     return updated_agents
 

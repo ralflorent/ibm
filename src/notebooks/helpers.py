@@ -17,6 +17,8 @@
 
 import numpy as np # arithmetic computations
 import imageio as gm # gif maker
+import matplotlib.pyplot as plt
+import constants as CONST
 
 
 def make_gif(dirname='./', gifname='image.gif', storage=[]):
@@ -109,16 +111,83 @@ def which_habitat(point, habitats):
     return None
 
 
-def update_store(objects, agent, prob):
+def update_store(objects, agent, prob, hab):
     """"""
     objects = objects if isinstance(objects, list) else [objects]
 
     for o in objects:
         for k in o.keys():
             if k == agent.name:
+                o[k]['hab'].append(hab)
                 o[k]['pos'].append( (agent.x, agent.y) )
                 o[k]['pdf'].append(prob)
                 break
+
+
+def plot_figure():
+    """
+    TODO: proper docs
+    """
+    t = np.arange(CONST.PROCESSING_TIME)
+
+    shorts, longs = dict(), dict()
+
+    for regions in CONST.STORE['habitats']:
+        for k in regions.keys():
+            if k not in shorts:
+                shorts[k] = []
+            if k not in longs:
+                longs[k] = []
+            shorts[k].append(regions[k]['short-legged'])
+            longs[k].append(regions[k]['long-legged'])
+
+    plt.cla()
+    fig = plt.figure(1, figsize=(11, 6.5))
+
+    panel_A = fig.add_subplot(2,2,1)
+    panel_A.plot(t, shorts['orange-lg'], 'k', label='short legs')
+    panel_A.plot(t, longs['orange-lg'], color='#AAAAAA', label='long legs')
+    panel_A.legend(loc='best')
+    panel_A.set_xlim([0, 20])
+    panel_A.tick_params(axis='y', colors='orange')
+    panel_A.set_xlabel('Times', fontsize=12)
+    panel_A.set_ylabel('Total of Seabirds (Large)', color='orange')
+
+    panel_B = fig.add_subplot(2,2,2)
+    panel_B.plot(t, shorts['orange-lg'], 'k', label='short legs')
+    panel_B.plot(t, longs['orange-lg'], color='#AAAAAA', label='long legs')
+    panel_B.legend(loc='best')
+    panel_B.set_xlim([0, 20])
+    panel_B.tick_params(axis='y', colors='orange')
+    panel_B.set_xlabel('Times', fontsize=12)
+    panel_B.set_ylabel('Total of Seabirds (Small)', color='orange')
+
+    panel_C = fig.add_subplot(2,2,3)
+    panel_C.plot(t, shorts['blue'], 'k', label='short legs')
+    panel_C.plot(t, longs['blue'], color='#AAAAAA', label='long legs')
+    panel_C.legend(loc='best')
+    panel_C.set_xlim([0, 20])
+    panel_C.tick_params(axis='y', colors='blue')
+    panel_C.set_xlabel('Times', fontsize=12)
+    panel_C.set_ylabel('Total of Seabirds', color='blue')
+
+    panel_D = fig.add_subplot(2,2,4)
+    panel_D.plot(t, shorts['green'], 'k', label='short legs')
+    panel_D.plot(t, longs['green'], color='#AAAAAA', label='long legs')
+    panel_D.legend(loc='best')
+    panel_D.set_xlim([0, 20])
+    panel_D.tick_params(axis='y', colors='green')
+    panel_D.set_xlabel('Times', fontsize=12)
+    panel_D.set_ylabel('Total of Seabirds', color='green')
+
+    fig.suptitle('Distribution of Seabirds in the Tropics', y=1)
+    fig.set_tight_layout(True) # Avoid panel overlaps
+    # fig.set_size_inches(11, 6.5) # Proper size for the figure
+    fig.savefig(CONST.MAIN_DIRECTORY + 'birds-dist.pdf') # save in pdf format
+
+    # reset store
+    CONST.STORE['agents'] = []
+    CONST.STORE['habitats'] = []
 
 
 # ==============================================================================
