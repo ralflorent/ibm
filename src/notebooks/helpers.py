@@ -130,6 +130,9 @@ def plot_figure():
     """
     t = np.arange(CONST.PROCESSING_TIME)
 
+    ylim = CONST.TOTAL_LONG_LEGGED_SEABIRDS
+    xlim = CONST.PROCESSING_TIME
+
     shorts, longs = dict(), dict()
 
     for regions in CONST.STORE['habitats']:
@@ -142,13 +145,13 @@ def plot_figure():
             longs[k].append(regions[k]['long-legged'])
 
     plt.cla()
-    fig = plt.figure(1, figsize=(11, 6.5))
+    fig = plt.figure(2, figsize=(11, 6.5))
 
     panel_A = fig.add_subplot(2,2,1)
     panel_A.plot(t, shorts['orange-lg'], 'k', label='short legs')
     panel_A.plot(t, longs['orange-lg'], color='#AAAAAA', label='long legs')
     panel_A.legend(loc='best')
-    panel_A.set_xlim([0, 20])
+    panel_A.set_ylim([0, ylim])
     panel_A.tick_params(axis='y', colors='orange')
     panel_A.set_xlabel('Times', fontsize=12)
     panel_A.set_ylabel('Total of Seabirds (Large)', color='orange')
@@ -157,7 +160,7 @@ def plot_figure():
     panel_B.plot(t, shorts['orange-lg'], 'k', label='short legs')
     panel_B.plot(t, longs['orange-lg'], color='#AAAAAA', label='long legs')
     panel_B.legend(loc='best')
-    panel_B.set_xlim([0, 20])
+    panel_B.set_ylim([0, ylim])
     panel_B.tick_params(axis='y', colors='orange')
     panel_B.set_xlabel('Times', fontsize=12)
     panel_B.set_ylabel('Total of Seabirds (Small)', color='orange')
@@ -166,7 +169,7 @@ def plot_figure():
     panel_C.plot(t, shorts['blue'], 'k', label='short legs')
     panel_C.plot(t, longs['blue'], color='#AAAAAA', label='long legs')
     panel_C.legend(loc='best')
-    panel_C.set_xlim([0, 20])
+    panel_C.set_ylim([0, ylim])
     panel_C.tick_params(axis='y', colors='blue')
     panel_C.set_xlabel('Times', fontsize=12)
     panel_C.set_ylabel('Total of Seabirds', color='blue')
@@ -175,7 +178,7 @@ def plot_figure():
     panel_D.plot(t, shorts['green'], 'k', label='short legs')
     panel_D.plot(t, longs['green'], color='#AAAAAA', label='long legs')
     panel_D.legend(loc='best')
-    panel_D.set_xlim([0, 20])
+    panel_D.set_ylim([0, ylim])
     panel_D.tick_params(axis='y', colors='green')
     panel_D.set_xlabel('Times', fontsize=12)
     panel_D.set_ylabel('Total of Seabirds', color='green')

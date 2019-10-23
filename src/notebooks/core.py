@@ -256,6 +256,7 @@ def update(habitats, agents):
         snapshots[habitat.type][updated_agent.type] += 1
 
     CONST.STORE['habitats'].append(snapshots)
+    print('=> process update: {}'.format(len(CONST.STORE['habitats'])))
 
     return updated_agents
 
