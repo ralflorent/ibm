@@ -19,13 +19,42 @@
 SHORT_LEGGED_SEABIRD = 'short-legged'
 LONG_LEGGED_SEABIRD  = 'long-legged'
 
+METADATA = {
+    'agent': {
+        'names': {
+            'short': 'short-legged',
+            'long': 'long-legged'
+        },
+        'colors': {
+            'short': '#000000', # black
+            'long': '#AAAAAA'   # gray
+        },
+        'labels': {
+            'short': 'short legs',
+            'long': 'long legs'
+        }
+    },
+    'patch': {
+        'total': 7,
+        'habitat': {
+
+        },
+        'human_settlement': {
+
+        }
+    }
+}
+
+DEFAULTS = {}
+CONFIG = {}
+
 # Path variables
 MAIN_DIRECTORY = '../../samples/'
 FILEPATH = MAIN_DIRECTORY + 'frame/'
 
 # Miscellaneous variables
 IMAGE_STORAGE = []  # images to become gif
-PROCESSING_TIME = 50 # time limit for the entire process
+PROCESSING_TIME = 10 # time limit for the entire process
 THRESHOLD = 1e-7 # threshold to allow agents' movements driven by the probability
 
 # Matplotlib Patches variables
@@ -44,8 +73,8 @@ HUMAN_STM2_VERTICES = [(0.85, 0.70), (0.85, 0.90), (0.95, 0.90), (0.95, 0.70), (
 HUMAN_STM3_VERTICES = [(0.80, 0.15), (0.80, 0.25), (0.90, 0.25), (0.90, 0.15), (0.80, 0.15)]
 
 # Total of Agents
-TOTAL_LONG_LEGGED_SEABIRDS  = 200
-TOTAL_SHORT_LEGGED_SEABIRDS = 200
+TOTAL_LONG_LEGGED_SEABIRDS  = 20
+TOTAL_SHORT_LEGGED_SEABIRDS = 20
 
 # Seabird can use certain habitats
 LONG_LEGGED_SEABIRD_HABITAT_LIMIT  = ['orange-sm', 'orange-lg', 'blue', 'green']

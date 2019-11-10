@@ -50,7 +50,7 @@ def gen_rand_point(habitats, option=None):
     (x, y): tuple, of shape (x_coord, y_coord)
         a vertex of unit rectangle from (0,0) to (1,1).
     """
-    # Make single element iterable
+    # make single element iterable
     habitats = habitats if isinstance(habitats, list) else [habitats]
 
     # initialize random point(x, y) by generating an array
@@ -152,40 +152,43 @@ def plot_figure():
     panel_A.plot(t, longs['orange-lg'], color='#AAAAAA', label='long legs')
     panel_A.legend(loc='best')
     panel_A.set_ylim([0, ylim])
+    panel_A.set_xlim([0, xlim])
     panel_A.tick_params(axis='y', colors='orange')
     panel_A.set_xlabel('Times', fontsize=12)
-    panel_A.set_ylabel('Total of Seabirds (Large)', color='orange')
+    panel_A.set_ylabel('Total of Waterbirds (Large Lagoon)', color='orange')
 
     panel_B = fig.add_subplot(2,2,2)
     panel_B.plot(t, shorts['orange-lg'], 'k', label='short legs')
     panel_B.plot(t, longs['orange-lg'], color='#AAAAAA', label='long legs')
     panel_B.legend(loc='best')
     panel_B.set_ylim([0, ylim])
+    panel_B.set_xlim([0, xlim])
     panel_B.tick_params(axis='y', colors='orange')
     panel_B.set_xlabel('Times', fontsize=12)
-    panel_B.set_ylabel('Total of Seabirds (Small)', color='orange')
+    panel_B.set_ylabel('Total of Waterbirds (Small Lagoon)', color='orange')
 
     panel_C = fig.add_subplot(2,2,3)
     panel_C.plot(t, shorts['blue'], 'k', label='short legs')
     panel_C.plot(t, longs['blue'], color='#AAAAAA', label='long legs')
     panel_C.legend(loc='best')
     panel_C.set_ylim([0, ylim])
+    panel_C.set_xlim([0, xlim])
     panel_C.tick_params(axis='y', colors='blue')
     panel_C.set_xlabel('Times', fontsize=12)
-    panel_C.set_ylabel('Total of Seabirds', color='blue')
+    panel_C.set_ylabel('Total of Waterbirds', color='blue')
 
     panel_D = fig.add_subplot(2,2,4)
     panel_D.plot(t, shorts['green'], 'k', label='short legs')
     panel_D.plot(t, longs['green'], color='#AAAAAA', label='long legs')
     panel_D.legend(loc='best')
     panel_D.set_ylim([0, ylim])
+    panel_D.set_xlim([0, xlim])
     panel_D.tick_params(axis='y', colors='green')
     panel_D.set_xlabel('Times', fontsize=12)
-    panel_D.set_ylabel('Total of Seabirds', color='green')
+    panel_D.set_ylabel('Total of Waterbirds', color='green')
 
-    fig.suptitle('Distribution of Seabirds in the Tropics', y=1)
+    fig.suptitle('Distribution of Waterbirds in the Tropics', y=1)
     fig.set_tight_layout(True) # Avoid panel overlaps
-    # fig.set_size_inches(11, 6.5) # Proper size for the figure
     fig.savefig(CONST.MAIN_DIRECTORY + 'birds-dist.pdf') # save in pdf format
 
     # reset store

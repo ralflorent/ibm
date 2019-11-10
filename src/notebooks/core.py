@@ -101,6 +101,7 @@ def initialize():
         snapshots[habitat.type][agent.type] += 1
 
     CONST.STORE['habitats'].append(snapshots)
+    print('--- process update: {}'.format(len(CONST.STORE['habitats'])))
     return habitats, agents
 
 
@@ -111,7 +112,7 @@ def observe(habitats, agents, counter=0):
     """
     plt.cla()
 
-    fig = plt.figure(figsize=(11, 6.5)) # define figure size 11x6.5 inches
+    fig = plt.figure(1)
     ax  = fig.add_subplot(111)
 
     for h in habitats:
@@ -126,14 +127,10 @@ def observe(habitats, agents, counter=0):
     ax.plot([ag.x for ag in long], [ag.y for ag in long], 'o', mfc ='w', mec ='k', label='long-legged')
 
     # additional settings for the graph
-    # TODO: relocate in config.py and constants.py to increase performance
-    plt.axis('image')
-    plt.axis([0, 1, 0, 1])
-    plt.xticks(fontsize=12)
-    plt.yticks(fontsize=12)
+    plt.axis('off')
     plt.legend(loc="best")
-    plt.xlabel('Time ' + str(int(counter)), fontsize=15) # Identify which image is plotted
-    plt.title('Virtual Environment', fontsize=15) # Title the graph
+    plt.xlabel('Time ' + str(int(counter))) # Identify which image is plotted
+    plt.title('Virtual Environment') # Title the graph
 
     image_path = CONST.FILEPATH + str(int(counter)) + '.png'
     plt.savefig(image_path, bbox_inches='tight', pad_inches=0)
@@ -256,7 +253,7 @@ def update(habitats, agents):
         snapshots[habitat.type][updated_agent.type] += 1
 
     CONST.STORE['habitats'].append(snapshots)
-    print('=> process update: {}'.format(len(CONST.STORE['habitats'])))
+    print('--- process update: {}'.format(len(CONST.STORE['habitats'])))
 
     return updated_agents
 
