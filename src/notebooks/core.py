@@ -30,12 +30,13 @@ from agent import Agent
 def create_patches():
     habitats = []
     verts = C.DEFAULTS['verts']
+    props = C.DEFAULTS['props']
 
     # prepare static (patch-based) habitats and human settlements
-    habitats.append( Habitat(C.LAGOON_ORANGE_SM, verts[C.LAGOON_ORANGE_SM], 'orange', {'w': 0.05, 's': 80, 'f': 0.3}) )
-    habitats.append( Habitat(C.LAGOON_ORANGE_LG, verts[C.LAGOON_ORANGE_LG], 'orange', {'w': 0.05, 's': 80, 'f': 2.56}) )
-    habitats.append( Habitat(C.LAGOON_BLUE, verts[C.LAGOON_BLUE], 'blue', {'w': 1.0, 's': 10, 'f': 6.41}) )
-    habitats.append( Habitat(C.LAGOON_GREEN, verts[C.LAGOON_GREEN], 'green', {'w': 0.40, 's': 25, 'f': 11.53}) )
+    habitats.append( Habitat(C.LAGOON_ORANGE_SM, verts[C.LAGOON_ORANGE_SM], 'orange', props[C.LAGOON_ORANGE_SM]) )
+    habitats.append( Habitat(C.LAGOON_ORANGE_LG, verts[C.LAGOON_ORANGE_LG], 'orange', props[C.LAGOON_ORANGE_LG]) )
+    habitats.append( Habitat(C.LAGOON_BLUE, verts[C.LAGOON_BLUE], 'blue', props[C.LAGOON_BLUE]) )
+    habitats.append( Habitat(C.LAGOON_GREEN, verts[C.LAGOON_GREEN], 'green', props[C.LAGOON_GREEN]) )
     habitats.append( Habitat(C.HUMAN_SETTLEMENT, verts[C.HUMAN_SETTLEMENT+'1'], 'red') )
     habitats.append( Habitat(C.HUMAN_SETTLEMENT, verts[C.HUMAN_SETTLEMENT+'2'], 'red') )
     habitats.append( Habitat(C.HUMAN_SETTLEMENT, verts[C.HUMAN_SETTLEMENT+'3'], 'red') )
@@ -124,7 +125,7 @@ def observe(habitats, agents, counter=0):
 
     # plot agents' positions
     ax.plot([ag.x for ag in short], [ag.y for ag in short], 'o', mfc='k', mec='k', label=C.SHORT_LEGGED)
-    ax.plot([ag.x for ag in long], [ag.y for ag in long], 'o', mfc='w', mec='k', label=C.LONG_LEGGED)
+    ax.plot([ag.x for ag in long], [ag.y for ag in long], 'o', mfc=C.COLORS[C.LONG_LEGGED], mec='k', label=C.LONG_LEGGED)
 
     # additional settings for the graph
     plt.axis('off')
