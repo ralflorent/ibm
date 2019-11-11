@@ -197,8 +197,8 @@ def update_one(habitats, agent):
         _prob_s = 0.00006 * s**2 + 0.0002 * s + 0.0004
         _prob_f = (0.00673 * f**2) - (0.002936 * f) + 0.5
         prob = _prob_s * _prob_w * _prob_d * _prob_f
-        # print('-- habitat: {}'.format(_habitat.type))
-        # print('---- short: s:{:1.5f}, w:{:1.5f}, d:{:1.5f}, f:{:1.5f}'.format(_prob_s, _prob_w, _prob_d, _prob_f))
+        print('-- habitat: {}'.format(_habitat.type))
+        print('---- short: s:{:1.5f}, w:{:1.5f}, d:{:1.5f}, f:{:1.5f}'.format(_prob_s, _prob_w, _prob_d, _prob_f))
     else:
         _x, _y = gen_rand_point(long_legged_habitat, 'in')
         _habitat = which_habitat((_x, _y), long_legged_habitat)
@@ -213,8 +213,8 @@ def update_one(habitats, agent):
         _prob_s = -0.000004 * s**2 + 0.0004 * s - 0.0002
         _prob_f = (0.00340 * f) + 0.5
         prob = _prob_s * _prob_w * _prob_d * _prob_f
-        # print('-- habitat: {}'.format(_habitat.type))
-        # print('---- long: s:{:1.5f}, w:{:1.5f}, d:{:1.5f}, f:{:1.5f}'.format(_prob_s, _prob_w, _prob_d, _prob_f))
+        print('-- habitat: {}'.format(_habitat.type))
+        print('---- long: s:{:1.5f}, w:{:1.5f}, d:{:1.5f}, f:{:1.5f}'.format(_prob_s, _prob_w, _prob_d, _prob_f))
 
     # print('---- overall prob: {:1.10f}'.format(prob))
     if prob > C.MOVE_THRESHOLD:
@@ -226,7 +226,7 @@ def update_one(habitats, agent):
     # END: update
 
 
-def update(habitats, agents):
+def update(habitats, agents, time):
     """
     This update signifies that, at a time t, some changes should apply to every
     and each single agent of the system.
@@ -241,6 +241,11 @@ def update(habitats, agents):
         C.LAGOON_BLUE: { C.SHORT_LEGGED: 0, C.LONG_LEGGED: 0 },
         C.LAGOON_GREEN: { C.SHORT_LEGGED: 0, C.LONG_LEGGED: 0 }
     }
+
+    if time % C.TIME_DIVISOR == 0: # every ten time steps change the environment
+        rainfall = C.DEFAULTS['rain'].get(time, 0)
+        for h in habitats:
+            update_habitat_water_depth(h, rainfall)
 
     while len(agents) > 0:
         # randomly choose an agent to update its status,
@@ -257,6 +262,31 @@ def update(habitats, agents):
     print('--- process update: {}'.format(len(C.STORE['habitats'])))
 
     return updated_agents
+
+
+def update_habitat_water_depth(h: Habitat, x=0):
+    """
+    Simulate change in habitat's characteristics (water depth) over time
+    TODO: docs
+    """
+    if h.type == C.LAGOON_ORANGE_SM:
+        h.props['w'] = -0.00002*x**2 + 0.064*x + 10.034
+    elif h.type == C.LAGOON_ORANGE_LG:
+        h.props['w'] = -0.0001*x**2 + 0.0987*x + 6.1176
+    elif h.type == C.LAGOON_BLUE:
+        h.props['w'] = -0.00003*x**2 + 0.0636*x + 34.114
+    elif h.type == C.LAGOON_GREEN:
+        h.props['w'] = -0.00005*x**2 + 0.061*x + 97.442
+
+def update_habitat_prop(h: Habitat, prop, fn, arg):
+    """
+    Generic
+    TODO: docs
+    """
+    if prop not in ['w', 's', 'f'] and h.type != C.HUMAN_SETTLEMENT:
+        return
+    h.props[prop] = fn(arg)
+
 
 
 # ==============================================================================

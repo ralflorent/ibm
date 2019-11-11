@@ -18,9 +18,9 @@
 # Core elements
 SHORT_LEGGED = 'short-legged'
 LONG_LEGGED = 'long-legged'
-TOTAL_LONG_LEGGED  = 20
-TOTAL_SHORT_LEGGED = 20
-PROCESSING_TIME = 12 # time limit for the entire process
+TOTAL_LONG_LEGGED  = 10
+TOTAL_SHORT_LEGGED = 10
+PROCESSING_TIME = 50 # time limit for the entire process
 TIME_DIVISOR = 10 # time factor to simulate time steps
 LAGOON_ORANGE_SM = 'orange-sm'
 LAGOON_ORANGE_LG = 'orange-lg'
@@ -69,6 +69,14 @@ DEFAULTS['props'][LAGOON_ORANGE_SM] = {'w': 0.05, 's': 80, 'f': 0.3}
 DEFAULTS['props'][LAGOON_ORANGE_LG] ={'w': 0.05, 's': 80, 'f': 2.56}
 DEFAULTS['props'][LAGOON_BLUE] = {'w': 1.0, 's': 10, 'f': 6.41}
 DEFAULTS['props'][LAGOON_GREEN] = {'w': 0.40, 's': 25, 'f': 11.53}
+
+DEFAULTS['rain'] = dict()
+DEFAULTS['rain'][0] = 20
+DEFAULTS['rain'][10] = 200
+DEFAULTS['rain'][20] = 600
+DEFAULTS['rain'][30] = 30
+DEFAULTS['rain'][40] = 0
+DEFAULTS['rain'][50] = 0
 
 CONFIG = dict() # TODO: should be loaded from yaml
 # ==============================================================================
