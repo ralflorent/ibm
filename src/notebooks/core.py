@@ -18,7 +18,7 @@ import numpy as np # arithmetic computer
 import matplotlib.pyplot as plt # plotter
 import matplotlib.patches as Patches # artist
 import imageio as gm # gif maker
-import constants as CONST
+import constants as C
 import copy as cp
 
 from matplotlib.path import Path # designing field
@@ -29,21 +29,21 @@ from agent import Agent
 
 def create_patches():
     habitats = []
+    verts = C.DEFAULTS['verts']
 
-    # Food availability per habitat: 0.3, 2.56, 6.41, and 11.53
     # prepare static (patch-based) habitats and human settlements
-    habitats.append( Habitat('orange-sm', CONST.HABITAT_1A_VERTICES, 'orange', {'w': 0.05, 's': 80, 'f': 0.3}) )
-    habitats.append( Habitat('orange-lg', CONST.HABITAT_1B_VERTICES, 'orange', {'w': 0.05, 's': 80, 'f': 2.56}) )
-    habitats.append( Habitat('blue', CONST.HABITAT_2_VERTICES, 'blue', {'w': 1.0, 's': 10, 'f': 6.41}) )
-    habitats.append( Habitat('green', CONST.HABITAT_3_VERTICES, 'green', {'w': 0.40, 's': 25, 'f': 11.53}) )
-    habitats.append( Habitat('human', CONST.HUMAN_STM1_VERTICES, 'red') )
-    habitats.append( Habitat('human', CONST.HUMAN_STM2_VERTICES, 'red') )
-    habitats.append( Habitat('human', CONST.HUMAN_STM3_VERTICES, 'red') )
+    habitats.append( Habitat(C.LAGOON_ORANGE_SM, verts[C.LAGOON_ORANGE_SM], 'orange', {'w': 0.05, 's': 80, 'f': 0.3}) )
+    habitats.append( Habitat(C.LAGOON_ORANGE_LG, verts[C.LAGOON_ORANGE_LG], 'orange', {'w': 0.05, 's': 80, 'f': 2.56}) )
+    habitats.append( Habitat(C.LAGOON_BLUE, verts[C.LAGOON_BLUE], 'blue', {'w': 1.0, 's': 10, 'f': 6.41}) )
+    habitats.append( Habitat(C.LAGOON_GREEN, verts[C.LAGOON_GREEN], 'green', {'w': 0.40, 's': 25, 'f': 11.53}) )
+    habitats.append( Habitat(C.HUMAN_SETTLEMENT, verts[C.HUMAN_SETTLEMENT+'1'], 'red') )
+    habitats.append( Habitat(C.HUMAN_SETTLEMENT, verts[C.HUMAN_SETTLEMENT+'2'], 'red') )
+    habitats.append( Habitat(C.HUMAN_SETTLEMENT, verts[C.HUMAN_SETTLEMENT+'3'], 'red') )
 
     # then build patch for each habitat
     for h in habitats:
         filled = False
-        if h.type == 'human':
+        if h.type == C.HUMAN_SETTLEMENT:
             filled = True
         h.build(fill=filled)
 
@@ -58,25 +58,25 @@ def create_agents(habitats):
     agents = []
 
     # build patches for short- and long-legged seabirds
-    short_legged_habitat = [h for h in habitats if h.type in CONST.SHORT_LEGGED_SEABIRD_HABITAT_LIMIT]
-    long_legged_habitat  = [h for h in habitats if h.type in CONST.LONG_LEGGED_SEABIRD_HABITAT_LIMIT]
+    short_legged_habitat = [h for h in habitats if h.type in C.AREA_SHORT_LEGGED]
+    long_legged_habitat  = [h for h in habitats if h.type in C.AREA_LONG_LEGGED]
 
-    for i in range(CONST.TOTAL_SHORT_LEGGED_SEABIRDS + CONST.TOTAL_LONG_LEGGED_SEABIRDS):
+    for i in range(C.TOTAL_SHORT_LEGGED + C.TOTAL_LONG_LEGGED):
         ag = Agent()
         ag.name = str(i + 1) # labelling for analysis
 
         # classify agents as short- and long-legged seabirds
-        if i < CONST.TOTAL_SHORT_LEGGED_SEABIRDS:
-            ag.type = 'short-legged'
+        if i < C.TOTAL_SHORT_LEGGED:
+            ag.type = C.SHORT_LEGGED
             ag.x, ag.y = gen_rand_point(short_legged_habitat, 'in')
         else:
-            ag.type = 'long-legged'
+            ag.type = C.LONG_LEGGED
             ag.x, ag.y = gen_rand_point(long_legged_habitat, 'in')
 
         agents.append(ag) # store in-memory agents
 
         # create a dict-based structure to store and run analytics
-        CONST.STORE['agents'].append({ ag.name: { 'hab': [], 'pos': [], 'pdf': [] }})
+        C.STORE['agents'].append({ ag.name: { 'hab': [], 'pos': [], 'pdf': [] }})
 
     return agents
 
@@ -90,18 +90,18 @@ def initialize():
 
     # initialize stats for first run
     snapshots = {
-        'orange-sm': { 'short-legged': 0, 'long-legged': 0 },
-        'orange-lg': { 'short-legged': 0, 'long-legged': 0 },
-        'blue': { 'short-legged': 0, 'long-legged': 0 },
-        'green': { 'short-legged': 0, 'long-legged': 0 }
+        C.LAGOON_ORANGE_SM: { C.SHORT_LEGGED: 0, C.LONG_LEGGED: 0 },
+        C.LAGOON_ORANGE_LG: { C.SHORT_LEGGED: 0, C.LONG_LEGGED: 0 },
+        C.LAGOON_BLUE: { C.SHORT_LEGGED: 0, C.LONG_LEGGED: 0 },
+        C.LAGOON_GREEN: { C.SHORT_LEGGED: 0, C.LONG_LEGGED: 0 }
     }
 
     for agent in agents:
         habitat = which_habitat((agent.x, agent.y), habitats)
         snapshots[habitat.type][agent.type] += 1
 
-    CONST.STORE['habitats'].append(snapshots)
-    print('--- process update: {}'.format(len(CONST.STORE['habitats'])))
+    C.STORE['habitats'].append(snapshots)
+    print('--- process update: {}'.format(len(C.STORE['habitats'])))
     return habitats, agents
 
 
@@ -119,12 +119,12 @@ def observe(habitats, agents, counter=0):
         ax.add_patch( cp.copy(h.artist) ) # add artists (patches) to display rectangles
 
     # distribute agents according their types
-    short = [ag for ag in agents if ag.type == 'short-legged']
-    long = [ag for ag in agents if ag.type == 'long-legged']
+    short = [ag for ag in agents if ag.type == C.SHORT_LEGGED]
+    long = [ag for ag in agents if ag.type == C.LONG_LEGGED]
 
     # plot agents' positions
-    ax.plot([ag.x for ag in short], [ag.y for ag in short], 'o', mfc ='k', mec ='k', label='short-legged')
-    ax.plot([ag.x for ag in long], [ag.y for ag in long], 'o', mfc ='w', mec ='k', label='long-legged')
+    ax.plot([ag.x for ag in short], [ag.y for ag in short], 'o', mfc='k', mec='k', label=C.SHORT_LEGGED)
+    ax.plot([ag.x for ag in long], [ag.y for ag in long], 'o', mfc='w', mec='k', label=C.LONG_LEGGED)
 
     # additional settings for the graph
     plt.axis('off')
@@ -132,13 +132,13 @@ def observe(habitats, agents, counter=0):
     plt.xlabel('Time ' + str(int(counter))) # Identify which image is plotted
     plt.title('Virtual Environment') # Title the graph
 
-    image_path = CONST.FILEPATH + str(int(counter)) + '.png'
+    image_path = C.SAMPLE_DIR + str(int(counter)) + '.png'
     plt.savefig(image_path, bbox_inches='tight', pad_inches=0)
     plt.close(fig)
 
     # storing image for final gif
     image = gm.imread(image_path)
-    CONST.IMAGE_STORAGE.append(image)
+    C.STORE['images'].append(image)
     # END: observe
 
 
@@ -151,9 +151,9 @@ def update_one(habitats, agent):
     # habitats = create_patches()
 
     # build patches for short- and long-legged seabirds, human settlements
-    short_legged_habitat = [h for h in habitats if h.type in CONST.SHORT_LEGGED_SEABIRD_HABITAT_LIMIT]
-    long_legged_habitat  = [h for h in habitats if h.type in CONST.LONG_LEGGED_SEABIRD_HABITAT_LIMIT]
-    human_settlements = [h for h in habitats if h.type == 'human']
+    short_legged_habitat = [h for h in habitats if h.type in C.AREA_SHORT_LEGGED]
+    long_legged_habitat  = [h for h in habitats if h.type in C.AREA_LONG_LEGGED]
+    human_settlements = [h for h in habitats if h.type == C.HUMAN_SETTLEMENT]
 
     # simulating random movements
     """ Algorithm to move agents
@@ -180,7 +180,7 @@ def update_one(habitats, agent):
     f: food availability in the current habitat
     """
 
-    if agent.type == 'short-legged':
+    if agent.type == C.SHORT_LEGGED:
         # [_variable_name] means variables within this scope
         _x, _y = gen_rand_point(short_legged_habitat, 'in')
         _habitat = which_habitat((_x, _y), short_legged_habitat)
@@ -216,11 +216,11 @@ def update_one(habitats, agent):
         # print('---- long: s:{:1.5f}, w:{:1.5f}, d:{:1.5f}, f:{:1.5f}'.format(_prob_s, _prob_w, _prob_d, _prob_f))
 
     # print('---- overall prob: {:1.10f}'.format(prob))
-    if prob > CONST.THRESHOLD:
+    if prob > C.MOVE_THRESHOLD:
         agent.x, agent.y = _x, _y
 
     # store agent's position and probs
-    update_store(CONST.STORE['agents'], agent, prob, _habitat.type)
+    update_store(C.STORE['agents'], agent, prob, _habitat.type)
     return agent, _habitat
     # END: update
 
@@ -235,10 +235,10 @@ def update(habitats, agents):
     updated_agents = [] # temporary for the new agents' positions
 
     snapshots = {
-        'orange-sm': { 'short-legged': 0, 'long-legged': 0 },
-        'orange-lg': { 'short-legged': 0, 'long-legged': 0 },
-        'blue': { 'short-legged': 0, 'long-legged': 0 },
-        'green': { 'short-legged': 0, 'long-legged': 0 }
+        C.LAGOON_ORANGE_SM: { C.SHORT_LEGGED: 0, C.LONG_LEGGED: 0 },
+        C.LAGOON_ORANGE_LG: { C.SHORT_LEGGED: 0, C.LONG_LEGGED: 0 },
+        C.LAGOON_BLUE: { C.SHORT_LEGGED: 0, C.LONG_LEGGED: 0 },
+        C.LAGOON_GREEN: { C.SHORT_LEGGED: 0, C.LONG_LEGGED: 0 }
     }
 
     while len(agents) > 0:
@@ -252,8 +252,8 @@ def update(habitats, agents):
         # save stats for each agent: regions -> blue -> short-legged: value
         snapshots[habitat.type][updated_agent.type] += 1
 
-    CONST.STORE['habitats'].append(snapshots)
-    print('--- process update: {}'.format(len(CONST.STORE['habitats'])))
+    C.STORE['habitats'].append(snapshots)
+    print('--- process update: {}'.format(len(C.STORE['habitats'])))
 
     return updated_agents
 

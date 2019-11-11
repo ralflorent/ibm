@@ -15,10 +15,11 @@
 
 # -*- coding: utf-8 -*-
 
+import uuid
 import numpy as np # arithmetic computations
 import imageio as gm # gif maker
 import matplotlib.pyplot as plt
-import constants as CONST
+import constants as C
 
 
 def make_gif(dirname='./', gifname='image.gif', storage=[]):
@@ -128,72 +129,73 @@ def plot_figure():
     """
     TODO: proper docs
     """
-    t = np.arange(CONST.PROCESSING_TIME)
+    t = np.arange(C.PROCESSING_TIME)
 
-    ylim = CONST.TOTAL_LONG_LEGGED_SEABIRDS
-    xlim = CONST.PROCESSING_TIME
+    xlim = [0, C.PROCESSING_TIME]
+    ylim = [0, C.TOTAL_LONG_LEGGED]
 
     shorts, longs = dict(), dict()
 
-    for regions in CONST.STORE['habitats']:
+    for regions in C.STORE['habitats']:
         for k in regions.keys():
             if k not in shorts:
                 shorts[k] = []
             if k not in longs:
                 longs[k] = []
-            shorts[k].append(regions[k]['short-legged'])
-            longs[k].append(regions[k]['long-legged'])
+            shorts[k].append(regions[k][C.SHORT_LEGGED])
+            longs[k].append(regions[k][C.LONG_LEGGED])
 
     plt.cla()
+    plt.clf()
     fig = plt.figure(2, figsize=(11, 6.5))
 
     panel_A = fig.add_subplot(2,2,1)
-    panel_A.plot(t, shorts['orange-lg'], 'k', label='short legs')
-    panel_A.plot(t, longs['orange-lg'], color='#AAAAAA', label='long legs')
+    panel_A.plot(t, shorts['orange-lg'], color=C.COLORS[C.SHORT_LEGGED], label=C.SHORT_LEGGED)
+    panel_A.plot(t, longs['orange-lg'], color=C.COLORS[C.LONG_LEGGED], label=C.LONG_LEGGED)
     panel_A.legend(loc='best')
-    panel_A.set_ylim([0, ylim])
-    panel_A.set_xlim([0, xlim])
+    panel_A.set_xlim(xlim)
+    panel_A.set_ylim(ylim)
     panel_A.tick_params(axis='y', colors='orange')
     panel_A.set_xlabel('Times', fontsize=12)
     panel_A.set_ylabel('Total of Waterbirds (Large Lagoon)', color='orange')
 
     panel_B = fig.add_subplot(2,2,2)
-    panel_B.plot(t, shorts['orange-lg'], 'k', label='short legs')
-    panel_B.plot(t, longs['orange-lg'], color='#AAAAAA', label='long legs')
+    panel_B.plot(t, shorts['orange-lg'], color=C.COLORS[C.SHORT_LEGGED], label=C.SHORT_LEGGED)
+    panel_B.plot(t, longs['orange-lg'], color=C.COLORS[C.LONG_LEGGED], label=C.LONG_LEGGED)
     panel_B.legend(loc='best')
-    panel_B.set_ylim([0, ylim])
-    panel_B.set_xlim([0, xlim])
+    panel_B.set_xlim(xlim)
+    panel_B.set_ylim(ylim)
     panel_B.tick_params(axis='y', colors='orange')
     panel_B.set_xlabel('Times', fontsize=12)
     panel_B.set_ylabel('Total of Waterbirds (Small Lagoon)', color='orange')
 
     panel_C = fig.add_subplot(2,2,3)
-    panel_C.plot(t, shorts['blue'], 'k', label='short legs')
-    panel_C.plot(t, longs['blue'], color='#AAAAAA', label='long legs')
+    panel_C.plot(t, shorts['blue'], color=C.COLORS[C.SHORT_LEGGED], label=C.SHORT_LEGGED)
+    panel_C.plot(t, longs['blue'], color=C.COLORS[C.LONG_LEGGED], label=C.LONG_LEGGED)
     panel_C.legend(loc='best')
-    panel_C.set_ylim([0, ylim])
-    panel_C.set_xlim([0, xlim])
+    panel_C.set_xlim(xlim)
+    panel_C.set_ylim(ylim)
     panel_C.tick_params(axis='y', colors='blue')
     panel_C.set_xlabel('Times', fontsize=12)
     panel_C.set_ylabel('Total of Waterbirds', color='blue')
 
     panel_D = fig.add_subplot(2,2,4)
-    panel_D.plot(t, shorts['green'], 'k', label='short legs')
-    panel_D.plot(t, longs['green'], color='#AAAAAA', label='long legs')
+    panel_D.plot(t, shorts['green'], color=C.COLORS[C.SHORT_LEGGED], label=C.SHORT_LEGGED)
+    panel_D.plot(t, longs['green'], color=C.COLORS[C.LONG_LEGGED], label=C.LONG_LEGGED)
     panel_D.legend(loc='best')
-    panel_D.set_ylim([0, ylim])
-    panel_D.set_xlim([0, xlim])
+    panel_D.set_xlim(xlim)
+    panel_D.set_ylim(ylim)
     panel_D.tick_params(axis='y', colors='green')
     panel_D.set_xlabel('Times', fontsize=12)
     panel_D.set_ylabel('Total of Waterbirds', color='green')
 
     fig.suptitle('Distribution of Waterbirds in the Tropics', y=1)
     fig.set_tight_layout(True) # Avoid panel overlaps
-    fig.savefig(CONST.MAIN_DIRECTORY + 'birds-dist.pdf') # save in pdf format
+    fig.savefig(C.ROOT_DIR + uuid.uuid4().hex +'.pdf') # save in pdf format
 
     # reset store
-    CONST.STORE['agents'] = []
-    CONST.STORE['habitats'] = []
+    C.STORE['agents'] = []
+    C.STORE['habitats'] = []
 
 
 # ==============================================================================

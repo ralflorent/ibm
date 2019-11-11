@@ -16,77 +16,52 @@
 # -*- coding: utf-8 -*-
 
 # Core elements
-SHORT_LEGGED_SEABIRD = 'short-legged'
-LONG_LEGGED_SEABIRD  = 'long-legged'
+SHORT_LEGGED = 'short-legged'
+LONG_LEGGED = 'long-legged'
+TOTAL_LONG_LEGGED  = 20
+TOTAL_SHORT_LEGGED = 20
+PROCESSING_TIME = 12 # time limit for the entire process
+LAGOON_ORANGE_SM = 'orange-sm'
+LAGOON_ORANGE_LG = 'orange-lg'
+LAGOON_BLUE = 'blue'
+LAGOON_GREEN = 'green'
+HUMAN_SETTLEMENT = 'human'
+MOVE_THRESHOLD = 1e-7 # threshold to allow agents' movements driven by the probability
 
-METADATA = {
-    'agent': {
-        'names': {
-            'short': 'short-legged',
-            'long': 'long-legged'
-        },
-        'colors': {
-            'short': '#000000', # black
-            'long': '#AAAAAA'   # gray
-        },
-        'labels': {
-            'short': 'short legs',
-            'long': 'long legs'
-        }
-    },
-    'patch': {
-        'total': 7,
-        'habitat': {
+AREA_SHORT_LEGGED = list()
+AREA_SHORT_LEGGED.append(LAGOON_ORANGE_SM)
+AREA_SHORT_LEGGED.append(LAGOON_ORANGE_LG)
+AREA_SHORT_LEGGED.append(LAGOON_BLUE)
+AREA_SHORT_LEGGED.append(LAGOON_GREEN)
 
-        },
-        'human_settlement': {
+AREA_LONG_LEGGED = list()
+AREA_LONG_LEGGED.append(LAGOON_ORANGE_SM)
+AREA_LONG_LEGGED.append(LAGOON_ORANGE_LG)
 
-        }
-    }
-}
+COLORS = dict()
+COLORS[SHORT_LEGGED] = '#000000'
+COLORS[LONG_LEGGED] = '#AAAAAA'
 
-DEFAULTS = {}
-CONFIG = {}
+ROOT_DIR = '../../samples/' # TODO: handle file system
+SAMPLE_DIR = ROOT_DIR + 'frame/'
 
-# Path variables
-MAIN_DIRECTORY = '../../samples/'
-FILEPATH = MAIN_DIRECTORY + 'frame/'
+STORE = dict() # in-memory store for sensitivity analysis
+STORE['env'] = list()
+STORE['agents'] = list()
+STORE['habitats'] = list()
+STORE['images'] = list()
 
-# Miscellaneous variables
-IMAGE_STORAGE = []  # images to become gif
-PROCESSING_TIME = 10 # time limit for the entire process
-THRESHOLD = 1e-7 # threshold to allow agents' movements driven by the probability
+DEFAULTS = dict()
+DEFAULTS['verts'] = dict()
+DEFAULTS['verts'][LAGOON_ORANGE_SM] = [(0.70, 0.51),(0.70, 0.86),(0.79, 0.86),(0.79, 0.51),(0.70, 0.51)]
+DEFAULTS['verts'][LAGOON_ORANGE_LG] = [(0.20, 0.50), (0.20, 0.81), (0.42, 0.81), (0.42, 0.50), (0.20, 0.50)]
+DEFAULTS['verts'][LAGOON_BLUE] = [(0.10, 0.20), (0.10, 0.40), (0.40, 0.40), (0.40, 0.20), (0.10, 0.40)]
+DEFAULTS['verts'][LAGOON_GREEN] = [(0.60, 0.05), (0.60, 0.25), (0.70, 0.25), (0.70, 0.05), (0.60, 0.05)]
+DEFAULTS['verts'][HUMAN_SETTLEMENT+'1'] = [(0.42, 0.67), (0.42, 0.86), (0.61, 0.86), (0.61, 0.67), (0.42, 0.67)]
+DEFAULTS['verts'][HUMAN_SETTLEMENT+'2'] = [(0.85, 0.70), (0.85, 0.90), (0.95, 0.90), (0.95, 0.70), (0.85, 0.70)]
+DEFAULTS['verts'][HUMAN_SETTLEMENT+'3'] = [(0.80, 0.15), (0.80, 0.25), (0.90, 0.25), (0.90, 0.15), (0.80, 0.15)]
 
-# Matplotlib Patches variables
-HABITAT_1A_VERTICES = [
-    (0.70, 0.51), # left, bottom
-    (0.70, 0.86), # left, top
-    (0.79, 0.86), # right, top
-    (0.79, 0.51), # right, bottom
-    (0.70, 0.51)  # ignored (end of polyline)
-]
-HABITAT_1B_VERTICES = [(0.20, 0.50), (0.20, 0.81), (0.42, 0.81), (0.42, 0.50), (0.20, 0.50)]
-HABITAT_2_VERTICES  = [(0.10, 0.20), (0.10, 0.40), (0.40, 0.40), (0.40, 0.20), (0.10, 0.40)]
-HABITAT_3_VERTICES  = [(0.60, 0.05), (0.60, 0.25), (0.70, 0.25), (0.70, 0.05), (0.60, 0.05)]
-HUMAN_STM1_VERTICES = [(0.42, 0.67), (0.42, 0.86), (0.61, 0.86), (0.61, 0.67), (0.42, 0.67)]
-HUMAN_STM2_VERTICES = [(0.85, 0.70), (0.85, 0.90), (0.95, 0.90), (0.95, 0.70), (0.85, 0.70)]
-HUMAN_STM3_VERTICES = [(0.80, 0.15), (0.80, 0.25), (0.90, 0.25), (0.90, 0.15), (0.80, 0.15)]
-
-# Total of Agents
-TOTAL_LONG_LEGGED_SEABIRDS  = 20
-TOTAL_SHORT_LEGGED_SEABIRDS = 20
-
-# Seabird can use certain habitats
-LONG_LEGGED_SEABIRD_HABITAT_LIMIT  = ['orange-sm', 'orange-lg', 'blue', 'green']
-SHORT_LEGGED_SEABIRD_HABITAT_LIMIT = ['orange-sm', 'orange-lg']
-
-# dictionary-based, in-memory Store for sensitivity analysis
-STORE = {
-    'env': {},
-    'agents': [],
-    'habitats': []
-}
-
+CONFIG = dict() # TODO: should be loaded from yaml
 # ==============================================================================
 # END: Constants
 # ==============================================================================
