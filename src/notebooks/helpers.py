@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+#
 # Individual-Based Modeling (IBM)
 #
 # Created on October 12, 2019
@@ -14,7 +16,7 @@
 # ==============================================================================
 
 # -*- coding: utf-8 -*-
-
+import os
 import uuid
 import numpy as np # arithmetic computations
 import imageio as gm # gif maker
@@ -28,7 +30,7 @@ def make_gif(dirname='./', gifname='image.gif', storage=[]):
 
     TODO: proper docs
     """
-    filename = dirname + gifname
+    filename = os.path.join(dirname, gifname)
     gm.mimsave(filename, storage)
 
 
@@ -191,7 +193,8 @@ def plot_figure():
 
     fig.suptitle('Distribution of Waterbirds in the Tropics', y=1)
     fig.set_tight_layout(True) # Avoid panel overlaps
-    fig.savefig(C.ROOT_DIR + uuid.uuid4().hex +'.pdf') # save in pdf format
+    filename = os.path.join(C.GRAPH_DIR, uuid.uuid4().hex +'.pdf') # save in pdf format
+    fig.savefig(filename)
 
     # reset store
     C.STORE['agents'] = []

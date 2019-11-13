@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+#
 # Individual-Based Modeling (IBM)
 #
 # Created on October 12, 2019
@@ -15,6 +17,11 @@
 
 # -*- coding: utf-8 -*-
 
+import os
+import sys
+import yaml
+import shutil
+import warnings
 import matplotlib.pyplot as plotter # plotter
 import matplotlib.pylab as pylab
 
@@ -32,8 +39,73 @@ pylab.rcParams['font.family'] = 'STIXGeneral'
 
 def init():
     plotter.ioff() # turn off interactive plotting mode
+    warnings.filterwarnings('ignore')
+
+def clean():
+    pass
 
 
+def reset():
+    pass
+
+
+def has_file(filename, basepath='.'):
+    return os.path.isfile(os.path.join(basepath, filename))
+
+
+def has_dir(dirpath, basepath='.'):
+    return os.path.isdir(os.path.join(basepath, dirpath))
+
+
+def get_dirname(dirname):
+    if not os.path.isdir(dirname):
+        # make the directory if not exits
+        print(f'The directory <{dirname}> does not exist yet.')
+        os.mkdir(dirname) # FIXME: not considering user permissions
+        print(f'The directory <{dirname}> has been created.')
+    return dirname
+
+
+def mkdir(dirname, basepath='.'):
+    fullpath = os.path.join(basepath, dirname)
+    if not has_dir(dirname, basepath):
+        os.mkdir(fullpath)
+        print(f'The directory <{fullpath}> has been created.')
+    else:
+        try:
+            shutil.rmtree(fullpath) # remove old one and its contents, then create a new one
+            os.mkdir(fullpath) # FIXME: not considering user permissions
+        except OSError as e:
+            print ('Error: %s - %s.' % (e.filename, e.strerror)) # not handling :(
+    return fullpath
+
+
+def load_config(filename='config.yml'):
+    # make sure the config file exists
+    if not os.path.isfile(filename):
+        raise IOError(f'the filename <{filename}> does not exists.')
+
+    with open('config.yml', 'r') as configfile:
+        config = yaml.load(configfile)
+    return config
+
+
+CONFIG = load_config()
+rootDir = get_dirname(CONFIG['app']['rootDir'])
+outDir = get_dirname(CONFIG['app']['outDir'])
+sampleDir = mkdir(CONFIG['app']['paths']['sample'], outDir)
+graphDir = mkdir(CONFIG['app']['paths']['graph'], outDir)
+
+processing_time = CONFIG['app']['props']['processing_time']
+time_divisor = CONFIG['app']['props']['time_divisor']
+
+CNF_AGENT = CONFIG['app']['props']['agent']
+name_short_legged  = CNF_AGENT['names']['short']
+name_long_legged   = CNF_AGENT['names']['long']
+total_short_legged = CNF_AGENT['total']['short']
+total_long_legged  = CNF_AGENT['total']['long']
+color_short_legged = CNF_AGENT['colors']['short']
+color_long_legged  = CNF_AGENT['colors']['long']
 # ==============================================================================
 # END: Config
 # ==============================================================================

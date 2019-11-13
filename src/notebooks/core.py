@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+#
 # Individual-Based Modeling (IBM)
 #
 # Created on October 12, 2019
@@ -14,6 +16,7 @@
 # ==============================================================================
 
 # -*- coding: utf-8 -*-
+import os
 import numpy as np # arithmetic computer
 import matplotlib.pyplot as plt # plotter
 import matplotlib.patches as Patches # artist
@@ -33,10 +36,12 @@ def create_patches():
     props = C.DEFAULTS['props']
 
     # prepare static (patch-based) habitats and human settlements
-    habitats.append( Habitat(C.LAGOON_ORANGE_SM, verts[C.LAGOON_ORANGE_SM], 'orange', props[C.LAGOON_ORANGE_SM]) )
-    habitats.append( Habitat(C.LAGOON_ORANGE_LG, verts[C.LAGOON_ORANGE_LG], 'orange', props[C.LAGOON_ORANGE_LG]) )
+    habitats.append( Habitat(C.LAGOON_ORANGE_SM, verts[C.LAGOON_ORANGE_SM], 'orange',
+            props[C.LAGOON_ORANGE_SM]) )
+    habitats.append( Habitat(C.LAGOON_ORANGE_LG, verts[C.LAGOON_ORANGE_LG], 'orange',
+            props[C.LAGOON_ORANGE_LG]) )
     habitats.append( Habitat(C.LAGOON_BLUE, verts[C.LAGOON_BLUE], 'blue', props[C.LAGOON_BLUE]) )
-    habitats.append( Habitat(C.LAGOON_GREEN, verts[C.LAGOON_GREEN], 'green', props[C.LAGOON_GREEN]) )
+    habitats.append( Habitat(C.LAGOON_GREEN, verts[C.LAGOON_GREEN], 'green', props[C.LAGOON_GREEN]))
     habitats.append( Habitat(C.HUMAN_SETTLEMENT, verts[C.HUMAN_SETTLEMENT+'1'], 'red') )
     habitats.append( Habitat(C.HUMAN_SETTLEMENT, verts[C.HUMAN_SETTLEMENT+'2'], 'red') )
     habitats.append( Habitat(C.HUMAN_SETTLEMENT, verts[C.HUMAN_SETTLEMENT+'3'], 'red') )
@@ -124,8 +129,10 @@ def observe(habitats, agents, counter=0):
     long = [ag for ag in agents if ag.type == C.LONG_LEGGED]
 
     # plot agents' positions
-    ax.plot([ag.x for ag in short], [ag.y for ag in short], 'o', mfc='k', mec='k', label=C.SHORT_LEGGED)
-    ax.plot([ag.x for ag in long], [ag.y for ag in long], 'o', mfc=C.COLORS[C.LONG_LEGGED], mec='k', label=C.LONG_LEGGED)
+    ax.plot([ag.x for ag in short], [ag.y for ag in short], 'o',
+            mfc='k', mec='k', label=C.SHORT_LEGGED)
+    ax.plot([ag.x for ag in long], [ag.y for ag in long], 'o',
+            mfc=C.COLORS[C.LONG_LEGGED], mec='k', label=C.LONG_LEGGED)
 
     # additional settings for the graph
     plt.axis('off')
@@ -133,7 +140,7 @@ def observe(habitats, agents, counter=0):
     plt.xlabel('Time ' + str(int(counter))) # Identify which image is plotted
     plt.title('Virtual Environment') # Title the graph
 
-    image_path = C.SAMPLE_DIR + str(int(counter)) + '.png'
+    image_path = os.path.join(C.SAMPLE_DIR, str(int(counter)) + '.png')
     plt.savefig(image_path, bbox_inches='tight', pad_inches=0)
     plt.close(fig)
 
@@ -153,7 +160,7 @@ def update_one(habitats, agent):
 
     # build patches for short- and long-legged seabirds, human settlements
     short_legged_habitat = [h for h in habitats if h.type in C.AREA_SHORT_LEGGED]
-    long_legged_habitat  = [h for h in habitats if h.type in C.AREA_LONG_LEGGED]
+    long_legged_habitat = [h for h in habitats if h.type in C.AREA_LONG_LEGGED]
     human_settlements = [h for h in habitats if h.type == C.HUMAN_SETTLEMENT]
 
     # simulating random movements
@@ -168,14 +175,14 @@ def update_one(habitats, agent):
     P(large_wading_birds) = -0.0003 * w + 0.0087
     P(large_wading_birds) = -0.0004 * d + 0.0064
     P(large_wading_birds) = -0.000004 * (s^2) + 0.0004 * s - 0.0002
-    P(large_wading_birds) = (3.40 * food_availability) + 0.9239
+    P(large_wading_birds) = (3.40 * f) + 0.9239
 
     P(small_wading_birds) = 0.00002 * (w^2) - 0.0009 * w + 0.0114
     P(small_wading_birds) = -0.0013 * (d^2) + 0.0074 * d - 0.0001
     P(small_wading_birds) = 0.00006 * (s^2) + 0.0002 * s + 0.0004
-    P(small_wading_birds) = (6.73 * food_availability^2) – (29.36 * food_availability) + 14.35
+    P(small_wading_birds) = (6.73 * f^2) – (29.36 * f) + 14.35
 
-    d: distance between current habitat and closest human settlement
+    d: distance between the current habitat and the closest human settlement
     w: water depth of the current habitat
     s: salinity of the current habitat
     f: food availability in the current habitat
@@ -197,8 +204,6 @@ def update_one(habitats, agent):
         _prob_s = 0.00006 * s**2 + 0.0002 * s + 0.0004
         _prob_f = (0.00673 * f**2) - (0.002936 * f) + 0.5
         prob = _prob_s * _prob_w * _prob_d * _prob_f
-        print('-- habitat: {}'.format(_habitat.type))
-        print('---- short: s:{:1.5f}, w:{:1.5f}, d:{:1.5f}, f:{:1.5f}'.format(_prob_s, _prob_w, _prob_d, _prob_f))
     else:
         _x, _y = gen_rand_point(long_legged_habitat, 'in')
         _habitat = which_habitat((_x, _y), long_legged_habitat)
@@ -213,8 +218,6 @@ def update_one(habitats, agent):
         _prob_s = -0.000004 * s**2 + 0.0004 * s - 0.0002
         _prob_f = (0.00340 * f) + 0.5
         prob = _prob_s * _prob_w * _prob_d * _prob_f
-        print('-- habitat: {}'.format(_habitat.type))
-        print('---- long: s:{:1.5f}, w:{:1.5f}, d:{:1.5f}, f:{:1.5f}'.format(_prob_s, _prob_w, _prob_d, _prob_f))
 
     # print('---- overall prob: {:1.10f}'.format(prob))
     if prob > C.MOVE_THRESHOLD:
@@ -277,16 +280,6 @@ def update_habitat_water_depth(h: Habitat, x=0):
         h.props['w'] = -0.00003*x**2 + 0.0636*x + 34.114
     elif h.type == C.LAGOON_GREEN:
         h.props['w'] = -0.00005*x**2 + 0.061*x + 97.442
-
-def update_habitat_prop(h: Habitat, prop, fn, arg):
-    """
-    Generic
-    TODO: docs
-    """
-    if prop not in ['w', 's', 'f'] and h.type != C.HUMAN_SETTLEMENT:
-        return
-    h.props[prop] = fn(arg)
-
 
 
 # ==============================================================================

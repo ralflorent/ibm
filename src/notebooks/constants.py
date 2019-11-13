@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+#
 # Individual-Based Modeling (IBM)
 #
 # Created on October 12, 2019
@@ -14,14 +16,18 @@
 # ==============================================================================
 
 # -*- coding: utf-8 -*-
+import config
+
+# Loaded configurations
+CONFIG = config.CONFIG
 
 # Core elements
-SHORT_LEGGED = 'short-legged'
-LONG_LEGGED = 'long-legged'
-TOTAL_LONG_LEGGED  = 10
-TOTAL_SHORT_LEGGED = 10
-PROCESSING_TIME = 50 # time limit for the entire process
-TIME_DIVISOR = 10 # time factor to simulate time steps
+SHORT_LEGGED = config.name_short_legged
+LONG_LEGGED = config.name_long_legged
+TOTAL_SHORT_LEGGED = config.total_short_legged
+TOTAL_LONG_LEGGED = config.total_long_legged
+PROCESSING_TIME = config.processing_time # time limit for the entire process
+TIME_DIVISOR = config.time_divisor # time factor to simulate time steps
 LAGOON_ORANGE_SM = 'orange-sm'
 LAGOON_ORANGE_LG = 'orange-lg'
 LAGOON_BLUE = 'blue'
@@ -31,22 +37,24 @@ MOVE_THRESHOLD = 1e-7 # threshold to allow agents' movements driven by the proba
 
 AREA_SHORT_LEGGED = (
     LAGOON_ORANGE_SM,
+    LAGOON_ORANGE_LG
+)
+
+AREA_LONG_LEGGED = (
+    LAGOON_ORANGE_SM,
     LAGOON_ORANGE_LG,
     LAGOON_BLUE,
     LAGOON_GREEN
 )
 
-AREA_LONG_LEGGED = (
-    LAGOON_ORANGE_SM,
-    LAGOON_ORANGE_LG
-)
-
 COLORS = dict()
-COLORS[SHORT_LEGGED] = '#000000'
-COLORS[LONG_LEGGED] = '#AAAAAA'
+COLORS[SHORT_LEGGED] = config.color_short_legged
+COLORS[LONG_LEGGED] = config.color_long_legged
 
-ROOT_DIR = '../../samples/' # TODO: handle file system
-SAMPLE_DIR = ROOT_DIR + 'frame/'
+ROOT_DIR = config.rootDir
+OUT_DIR = config.outDir
+SAMPLE_DIR = config.sampleDir
+GRAPH_DIR = config.graphDir
 
 STORE = dict() # in-memory store for sensitivity analysis
 STORE['env'] = list()
@@ -77,8 +85,6 @@ DEFAULTS['rain'][20] = 600
 DEFAULTS['rain'][30] = 30
 DEFAULTS['rain'][40] = 0
 DEFAULTS['rain'][50] = 0
-
-CONFIG = dict() # TODO: should be loaded from yaml
 # ==============================================================================
 # END: Constants
 # ==============================================================================

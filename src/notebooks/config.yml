@@ -1,0 +1,30 @@
+version: 0.1.0
+metadata:
+app:
+  name: ve-abm
+  description: Virtual Environment for Individual-Based Modeling
+  rootDir: .
+  outDir: ../../
+  paths:
+    sample: samples
+    graph: graphs
+  props:
+    processing_time: 10
+    time_divisor: 10
+    agent:
+      names:
+        short: short-legged
+        long: long-legged
+      colors:
+        short: '#000000'
+        long: '#AAAAAA'
+      labels:
+        short: short legs
+        long: long legs
+      total:
+        short: 20
+        long: 20
+    patch:
+      habitat:
+      human:
+
