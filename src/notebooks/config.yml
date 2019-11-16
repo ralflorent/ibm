@@ -1,4 +1,4 @@
-version: 0.1.0
+version: 0.2.0
 metadata:
 app:
   name: ve-abm
@@ -9,15 +9,15 @@ app:
     sample: samples
     graph: graphs
   props:
-    processing_time: 10
+    processing_time: 5
     time_divisor: 10
     agent:
       names:
         short: short-legged
         long: long-legged
       colors:
-        short: '#000000'
-        long: '#AAAAAA'
+        short: '#AAAAAA'
+        long: '#000000'
       labels:
         short: short legs
         long: long legs

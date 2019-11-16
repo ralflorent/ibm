@@ -162,8 +162,8 @@ def plot_figure():
     panel_A.set_ylabel('Total of Waterbirds (Large Lagoon)', color='orange')
 
     panel_B = fig.add_subplot(2,2,2)
-    panel_B.plot(t, shorts['orange-lg'], color=C.COLORS[C.SHORT_LEGGED], label=C.SHORT_LEGGED)
-    panel_B.plot(t, longs['orange-lg'], color=C.COLORS[C.LONG_LEGGED], label=C.LONG_LEGGED)
+    panel_B.plot(t, shorts['orange-sm'], color=C.COLORS[C.SHORT_LEGGED], label=C.SHORT_LEGGED)
+    panel_B.plot(t, longs['orange-sm'], color=C.COLORS[C.LONG_LEGGED], label=C.LONG_LEGGED)
     panel_B.legend(loc='best')
     panel_B.set_xlim(xlim)
     panel_B.set_ylim(ylim)

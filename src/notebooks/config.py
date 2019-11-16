@@ -39,7 +39,7 @@ pylab.rcParams['font.family'] = 'STIXGeneral'
 
 def init():
     plotter.ioff() # turn off interactive plotting mode
-    warnings.filterwarnings('ignore')
+    warnings.filterwarnings('ignore') # turn off warnings
 
 def clean():
     pass

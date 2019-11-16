@@ -106,6 +106,7 @@ def initialize():
         habitat = which_habitat((agent.x, agent.y), habitats)
         snapshots[habitat.type][agent.type] += 1
 
+    print('--- snapshot stats: {}'.format(snapshots))
     C.STORE['habitats'].append(snapshots)
     print('--- process update: {}'.format(len(C.STORE['habitats'])))
     return habitats, agents
@@ -125,22 +126,22 @@ def observe(habitats, agents, counter=0):
         ax.add_patch( cp.copy(h.artist) ) # add artists (patches) to display rectangles
 
     # distribute agents according their types
-    short = [ag for ag in agents if ag.type == C.SHORT_LEGGED]
-    long = [ag for ag in agents if ag.type == C.LONG_LEGGED]
+    shorts = [ag for ag in agents if ag.type == C.SHORT_LEGGED]
+    longs = [ag for ag in agents if ag.type == C.LONG_LEGGED]
 
     # plot agents' positions
-    ax.plot([ag.x for ag in short], [ag.y for ag in short], 'o',
-            mfc='k', mec='k', label=C.SHORT_LEGGED)
-    ax.plot([ag.x for ag in long], [ag.y for ag in long], 'o',
+    ax.plot([ag.x for ag in shorts], [ag.y for ag in shorts], 'o',
+            mfc=C.COLORS[C.SHORT_LEGGED], mec='k', label=C.SHORT_LEGGED)
+    ax.plot([ag.x for ag in longs], [ag.y for ag in longs], 'o',
             mfc=C.COLORS[C.LONG_LEGGED], mec='k', label=C.LONG_LEGGED)
 
     # additional settings for the graph
     plt.axis('off')
-    plt.legend(loc="best")
-    plt.xlabel('Time ' + str(int(counter))) # Identify which image is plotted
+    plt.legend(loc='lower left')
+    plt.xlabel('Time ' + str(counter + 1)) # Identify which image is plotted
     plt.title('Virtual Environment') # Title the graph
 
-    image_path = os.path.join(C.SAMPLE_DIR, str(int(counter)) + '.png')
+    image_path = os.path.join(C.SAMPLE_DIR, str(counter + 1) + '.png')
     plt.savefig(image_path, bbox_inches='tight', pad_inches=0)
     plt.close(fig)
 
@@ -245,7 +246,7 @@ def update(habitats, agents, time):
         C.LAGOON_GREEN: { C.SHORT_LEGGED: 0, C.LONG_LEGGED: 0 }
     }
 
-    if time % C.TIME_DIVISOR == 0: # every ten time steps change the environment
+    if time % C.TIME_DIVISOR == 0: # every t time steps, change the environment
         rainfall = C.DEFAULTS['rain'].get(time, 0)
         for h in habitats:
             update_habitat_water_depth(h, rainfall)
@@ -254,13 +255,17 @@ def update(habitats, agents, time):
         # randomly choose an agent to update its status,
         # approach for asynchronous updates: see Davi's ref.
         agent = agents[ np.random.randint( len(agents) ) ]
+        # old_habitat = which_habitat((agent.x, agent.y), habitats) # diogo
         updated_agent, habitat = update_one(habitats, cp.copy(agent))
         updated_agents.append( updated_agent )
         agents.remove(agent)
 
-        # save stats for each agent: regions -> blue -> short-legged: value
-        snapshots[habitat.type][updated_agent.type] += 1
+    # TODO: (can be improved) save stats for each agent: regions -> blue -> short-legged: 0+
+    for agent in updated_agents:
+        habitat = which_habitat((agent.x, agent.y), habitats)
+        snapshots[habitat.type][agent.type] += 1
 
+    print('--- snapshot stats: {}'.format(snapshots))
     C.STORE['habitats'].append(snapshots)
     print('--- process update: {}'.format(len(C.STORE['habitats'])))
 
