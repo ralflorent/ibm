@@ -1,0 +1,111 @@
+% Individual-Based Modeling (IBM)
+%
+% Advanced Project I - Jacobs University Bremen
+% Supervisor: Dr. Stefan Kettemann
+%
+% Created on May 29, 2019
+%
+% Authors:
+%   Ralph Florent <r.florent@jacobs-university.de>
+%   Davi Tavares <davi.tavares@leibniz-zmt.de>
+%   Agostino Merico <a.merico@jacobs-university.de>
+%
+% Main entry for the documentation
+
+% ==============================================================================
+% START: Preamble
+% ==============================================================================
+\documentclass{article}
+
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage[title]{appendix}
+\usepackage{array}
+\usepackage[british,UKenglish,USenglish]{babel}
+\usepackage[backend=biber,style=numeric,sorting=none]{biblatex}
+\usepackage[utf8]{inputenc} % required to load before csquotes
+\usepackage{csquotes}
+\usepackage[dvipsnames]{xcolor}
+\usepackage{graphicx}
+\usepackage[inner=3cm,outer=3cm,top=3cm,bottom=3cm]{geometry}
+\usepackage{hyperref}
+\usepackage{minted}
+\usepackage{subcaption}
+\usepackage{url}
+
+% Override line interspace default configurations
+\renewcommand{\baselinestretch}{1.5}
+
+% Override Table default configurations
+\setlength{\tabcolsep}{18pt}
+\renewcommand{\arraystretch}{1.5}
+
+% Override hyper reference default configurations
+\hypersetup{
+    colorlinks = true,
+    linkcolor = blue,
+    anchorcolor = blue,
+    citecolor = blue,
+    filecolor = blue,
+    urlcolor = blue
+}
+\urlstyle{same}
+
+\addbibresource{references.bib} % Input references by file
+\graphicspath{{images/}} % Set path for image preloading
+
+% set default color and style sheets for the scripts
+\usemintedstyle{monokai}
+
+\title{
+    {\includegraphics[scale=0.15]{logo-black.png}} \\
+    \vspace{1.4cm}
+    {\large \textbf{ADVANCED PROJECT II}} \\
+    {\large \textbf{Project Report}} \\
+    {\large Supervisor: Prof. Dr. Agostino Merico} \\
+    {\large Contributor: Dr. Davi Tavares} \\
+    \vspace{1.4cm}
+    {\large \textbf{Virtual Environment for Individual-Based Modeling - Part II}}
+}
+
+\vspace{1.4cm}
+\author{ \textit{By Ralph Florent}}
+\date{January 10, 2019}
+
+% \vspace{1.4cm}
+% ==============================================================================
+% END: Preamble
+% ==============================================================================
+
+% ==============================================================================
+% START: Scripts
+% ==============================================================================
+\begin{document}
+\maketitle
+
+% Abstract
+\input{sections/abstract}
+\newpage
+
+% Introduction
+\input{sections/intro}
+
+% Theory review
+\input{sections/theory}
+
+% Contents
+\input{sections/contents}
+
+% References
+% \clearpage
+% \newpage
+% \printbibliography
+
+% Appendices
+\clearpage
+\input{sections/appendix}
+
+\end{document}
+% ==============================================================================
+% END: Scripts
+% ==============================================================================
