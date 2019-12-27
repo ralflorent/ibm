@@ -4,5 +4,5 @@
 The general model concept is illustrated in the figure below.
 
 <p align="center">
-  <img src="docs/latex/images/docs/concept_1v.png" width="650">
+  <img src="docs/v1/images/docs/concept_1v.png" width="650">
 </p>
