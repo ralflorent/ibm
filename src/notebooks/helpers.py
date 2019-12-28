@@ -211,7 +211,7 @@ def plot_figure():
     fig.set_tight_layout(True) # Avoid panel overlaps
     fig.suptitle('Simulation of Waterbirds in the Tropics', y=1.1, fontsize=14, fontweight='bold')
     filename = os.path.join(C.GRAPH_DIR, uuid.uuid4().hex +'.pdf') # save in pdf format
-    plt.savefig(filename)
+    plt.savefig(filename, bbox_inches='tight', pad_inches=0.1)
     plt.show()
 
     # reset store

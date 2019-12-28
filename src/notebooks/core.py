@@ -139,34 +139,6 @@ def initialize():
     return habitats, agents
 
 
-def get_pos_indicator(habitat, pos='left', offset=-0.04):
-    A, B, C, D, _ = habitat.verts
-    x_b = (A[0] + D[0]) / 2 # bottom-side width (center)
-    y_b = (A[1] + D[1]) / 2 # bottom-side width (center)
-    x_t = (B[0] + C[0]) / 2 # top-side width (center)
-    y_t = (B[1] + C[1]) / 2 # top-side width (center)
-
-    x_l = (A[0] + B[0]) / 2 # left-side height (center)
-    y_l = (A[1] + B[1]) / 2 # left-side height (center)
-    x_r = (C[0] + D[0]) / 2 # right-side height (center)
-    y_r = (C[1] + D[1]) / 2 # right-side height (center)
-
-    if pos == 'left':
-        x = x_l
-        y = y_l
-    elif pos == 'top':
-        x = x_t
-        y = y_t
-    elif pos == 'right':
-        x = x_r
-        y = y_r
-    else:
-        x = x_b
-        y = y_b
-
-    return (x + offset, y + offset)
-
-
 def observe(habitats, agents, counter=0):
     """
     Create and plot figure
@@ -181,15 +153,6 @@ def observe(habitats, agents, counter=0):
 
     # artists to display (with indicator)
     for h in habitats:
-        # if h.id != C.HUMAN_SETTLEMENT:
-        #     if h.id == C.LAGOON_TYPE_BLUE:
-        #         cx, cy = get_pos_indicator(h, pos='top')
-        #     else:
-        #         cx, cy = get_pos_indicator(h)
-        #     ax.text(
-        #         cx, cy, h.type,
-        #         bbox=dict(boxstyle='circle', facecolor='wheat', alpha=0.5),
-        #         fontsize=12)
         ax.add_patch( cp.copy(h.artist) )
 
     # distribute agents according their types
@@ -219,7 +182,6 @@ def observe(habitats, agents, counter=0):
     # additional settings for the plot
     ax.get_xaxis().set_visible(False)
     ax.get_yaxis().set_visible(False)
-    # plt.axis('off')
     plt.legend(handles=handler_artists, loc='upper left', bbox_to_anchor=(1.02, 1), borderaxespad=0.)
     plt.xlabel('Time ' + str(counter + 1))
     plt.title('Snapshot in time ' + str(counter + 1), fontsize=12) # Identify which image is plotted
