@@ -19,12 +19,15 @@ from matplotlib.path import Path
 
 # This class will represent the habitats or patches of the system
 class Habitat:
-    def __init__(self, _type, verts, color='orange', props=None):
-        self.type  = _type # type is a reserved word in Python
-        self.verts = verts
-        self.color = color
-        self.props = props
+    def __init__(self, _id, _type, _color):
+        self.id = _id
+        self.type = _type
+        self.color = _color
 
+        self.label = ''
+        self.verts = ()
+        self.desc = ''
+        self.props = {}
         self.codes = [
             Path.MOVETO,    # start polycurve here (top-left)
             Path.LINETO,    # draw line to (top-right)
@@ -43,7 +46,10 @@ class Habitat:
         """
         c = color if color is not None else self.color
         path = Path(self.verts, self.codes)
-        self.artist = Patches.PathPatch(path, ec=c, fc=c, fill=fill, alpha=0.5)
+        self.artist = Patches.PathPatch(
+            path, label=self.label,
+            ec=c, fc=c, fill=fill, alpha=0.5
+        )
         return self.artist
 
 
@@ -55,15 +61,6 @@ class Habitat:
         return path.contains_point(point)
 
 
-    def contains_points(self, points):
-        """ Check if a set of points belongs to this specific patch
-
-        TODO: proper docs
-        """
-        path = self.artist.get_path()
-        return path.contains_points(points)
-
-
     def get_center(self):
         """ Compute the center point of the rectangle
 
@@ -72,9 +69,13 @@ class Habitat:
 
         TODO: proper docs
         """
-        A, B, C, D, _ = self.verts # ignore last vertex
-        _x = (A[0] + D[0]) / 2 # width side
-        _y = (A[1] + B[1]) / 2 # height side
+        _x, _y = 0, 0
+        if len(self.verts) < 4:
+            return (_x, _y)
+
+        A, B, D = self.verts[0], self.verts[1], self.verts[3]
+        _x = (A[0] + D[0]) / 2 # width
+        _y = (A[1] + B[1]) / 2 # height
         return (_x, _y)
 
 # ==============================================================================

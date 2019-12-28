@@ -32,40 +32,67 @@ from agent import Agent
 
 def create_patches():
     habitats = []
-    verts = C.DEFAULTS['verts']
-    props = C.DEFAULTS['props']
+    verts, props = C.DEFAULTS['verts'], C.DEFAULTS['props']
 
-    # prepare static (patch-based) habitats and human settlements
-    habitats.append( Habitat(C.LAGOON_ORANGE_SM, verts[C.LAGOON_ORANGE_SM], 'orange',
-            props[C.LAGOON_ORANGE_SM]) )
-    habitats.append( Habitat(C.LAGOON_ORANGE_LG, verts[C.LAGOON_ORANGE_LG], 'orange',
-            props[C.LAGOON_ORANGE_LG]) )
-    habitats.append( Habitat(C.LAGOON_BLUE, verts[C.LAGOON_BLUE], 'blue', props[C.LAGOON_BLUE]) )
-    habitats.append( Habitat(C.LAGOON_GREEN, verts[C.LAGOON_GREEN], 'green', props[C.LAGOON_GREEN]))
-    habitats.append( Habitat(C.HUMAN_SETTLEMENT, verts[C.HUMAN_SETTLEMENT+'1'], 'red') )
-    habitats.append( Habitat(C.HUMAN_SETTLEMENT, verts[C.HUMAN_SETTLEMENT+'2'], 'red') )
-    habitats.append( Habitat(C.HUMAN_SETTLEMENT, verts[C.HUMAN_SETTLEMENT+'3'], 'red') )
+    # prepare static patches (habitats and human settlements)
+    orange_sm = Habitat(C.LAGOON_ORANGE_SM, C.LAGOON_TYPE_ORANGE, C.COLORS[C.LAGOON_ORANGE_SM])
+    orange_sm.verts = verts[C.LAGOON_ORANGE_SM]
+    orange_sm.props = props[C.LAGOON_ORANGE_SM]
+    orange_sm.label = C.LABELS[C.LAGOON_ORANGE_SM]
+    orange_sm.build()
+    habitats.append(orange_sm)
 
-    # then build patch for each habitat
-    for h in habitats:
-        filled = False
-        if h.type == C.HUMAN_SETTLEMENT:
-            filled = True
-        h.build(fill=filled)
+    orange_lg = Habitat(C.LAGOON_ORANGE_LG, C.LAGOON_TYPE_ORANGE, C.COLORS[C.LAGOON_ORANGE_LG])
+    orange_lg.verts = verts[C.LAGOON_ORANGE_LG]
+    orange_lg.props = props[C.LAGOON_ORANGE_LG]
+    orange_lg.label = C.LABELS[C.LAGOON_ORANGE_LG]
+    orange_lg.build()
+    habitats.append(orange_lg)
+
+    blue = Habitat(C.LAGOON_BLUE, C.LAGOON_TYPE_BLUE, C.COLORS[C.LAGOON_BLUE])
+    blue.verts = verts[C.LAGOON_BLUE]
+    blue.props = props[C.LAGOON_BLUE]
+    blue.label = C.LABELS[C.LAGOON_BLUE]
+    blue.build()
+    habitats.append(blue)
+
+    green = Habitat(C.LAGOON_GREEN, C.LAGOON_TYPE_GREEN, C.COLORS[C.LAGOON_GREEN])
+    green.verts = verts[C.LAGOON_GREEN]
+    green.props = props[C.LAGOON_GREEN]
+    green.label = C.LABELS[C.LAGOON_GREEN]
+    green.build()
+    habitats.append(green)
+
+    human1 = Habitat(C.HUMAN_SETTLEMENT, C.HUMAN_SETTLEMENT, C.COLORS[C.HUMAN_SETTLEMENT])
+    human1.verts = verts[C.HUMAN_SETTLEMENT+'1']
+    human1.label = C.LABELS[C.HUMAN_SETTLEMENT]
+    human1.build(fill=True)
+    habitats.append(human1)
+
+    human2 = Habitat(C.HUMAN_SETTLEMENT, C.HUMAN_SETTLEMENT, C.COLORS[C.HUMAN_SETTLEMENT])
+    human2.verts = verts[C.HUMAN_SETTLEMENT+'2']
+    human2.label = C.LABELS[C.HUMAN_SETTLEMENT]
+    human2.build(fill=True)
+    habitats.append(human2)
+
+    human3 = Habitat(C.HUMAN_SETTLEMENT, C.HUMAN_SETTLEMENT, C.COLORS[C.HUMAN_SETTLEMENT])
+    human3.verts = verts[C.HUMAN_SETTLEMENT+'3']
+    human3.label = C.LABELS[C.HUMAN_SETTLEMENT]
+    human3.build(fill=True)
+    habitats.append(human3)
 
     return habitats
 
 
-# create agents once
 def create_agents(habitats):
-    """
+    """Create agents once
     TODO: docs
     """
     agents = []
 
     # build patches for short- and long-legged seabirds
-    short_legged_habitat = [h for h in habitats if h.type in C.AREA_SHORT_LEGGED]
-    long_legged_habitat  = [h for h in habitats if h.type in C.AREA_LONG_LEGGED]
+    short_legged_habitat = [h for h in habitats if h.id in C.AREA_SHORT_LEGGED]
+    long_legged_habitat  = [h for h in habitats if h.id in C.AREA_LONG_LEGGED]
 
     for i in range(C.TOTAL_SHORT_LEGGED + C.TOTAL_LONG_LEGGED):
         ag = Agent()
@@ -104,12 +131,40 @@ def initialize():
 
     for agent in agents:
         habitat = which_habitat((agent.x, agent.y), habitats)
-        snapshots[habitat.type][agent.type] += 1
+        snapshots[habitat.id][agent.type] += 1
 
     print('--- snapshot stats: {}'.format(snapshots))
     C.STORE['habitats'].append(snapshots)
     print('--- process update: {}'.format(len(C.STORE['habitats'])))
     return habitats, agents
+
+
+def get_pos_indicator(habitat, pos='left', offset=-0.04):
+    A, B, C, D, _ = habitat.verts
+    x_b = (A[0] + D[0]) / 2 # bottom-side width (center)
+    y_b = (A[1] + D[1]) / 2 # bottom-side width (center)
+    x_t = (B[0] + C[0]) / 2 # top-side width (center)
+    y_t = (B[1] + C[1]) / 2 # top-side width (center)
+
+    x_l = (A[0] + B[0]) / 2 # left-side height (center)
+    y_l = (A[1] + B[1]) / 2 # left-side height (center)
+    x_r = (C[0] + D[0]) / 2 # right-side height (center)
+    y_r = (C[1] + D[1]) / 2 # right-side height (center)
+
+    if pos == 'left':
+        x = x_l
+        y = y_l
+    elif pos == 'top':
+        x = x_t
+        y = y_t
+    elif pos == 'right':
+        x = x_r
+        y = y_r
+    else:
+        x = x_b
+        y = y_b
+
+    return (x + offset, y + offset)
 
 
 def observe(habitats, agents, counter=0):
@@ -118,51 +173,76 @@ def observe(habitats, agents, counter=0):
     TODO: docs
     """
     plt.cla()
-
+    plt.rcParams['lines.linewidth'] = 1
+    plt.rcParams['lines.markersize'] = 3
+    plt.rcParams['legend.fontsize'] = 10
     fig = plt.figure(1)
     ax  = fig.add_subplot(111)
 
+    # artists to display (with indicator)
     for h in habitats:
-        ax.add_patch( cp.copy(h.artist) ) # add artists (patches) to display rectangles
+        # if h.id != C.HUMAN_SETTLEMENT:
+        #     if h.id == C.LAGOON_TYPE_BLUE:
+        #         cx, cy = get_pos_indicator(h, pos='top')
+        #     else:
+        #         cx, cy = get_pos_indicator(h)
+        #     ax.text(
+        #         cx, cy, h.type,
+        #         bbox=dict(boxstyle='circle', facecolor='wheat', alpha=0.5),
+        #         fontsize=12)
+        ax.add_patch( cp.copy(h.artist) )
 
     # distribute agents according their types
     shorts = [ag for ag in agents if ag.type == C.SHORT_LEGGED]
     longs = [ag for ag in agents if ag.type == C.LONG_LEGGED]
 
     # plot agents' positions
-    ax.plot([ag.x for ag in shorts], [ag.y for ag in shorts], 'o',
-            mfc=C.COLORS[C.SHORT_LEGGED], mec='k', label=C.SHORT_LEGGED)
-    ax.plot([ag.x for ag in longs], [ag.y for ag in longs], 'o',
-            mfc=C.COLORS[C.LONG_LEGGED], mec='k', label=C.LONG_LEGGED)
+    handler_shorts, = ax.plot(
+        [ag.x for ag in shorts],
+        [ag.y for ag in shorts],
+        'o', mec=C.COLORS[C.SHORT_LEGGED],
+        mfc=C.COLORS[C.SHORT_LEGGED],
+        label=C.LABELS[C.SHORT_LEGGED]
+    )
+    handler_longs, = ax.plot(
+        [ag.x for ag in longs],
+        [ag.y for ag in longs],
+        'o', mec=C.COLORS[C.LONG_LEGGED],
+        mfc=C.COLORS[C.LONG_LEGGED],
+        label=C.LABELS[C.LONG_LEGGED]
+    )
 
-    # additional settings for the graph
-    plt.axis('off')
-    plt.legend(loc='lower left')
-    plt.xlabel('Time ' + str(counter + 1)) # Identify which image is plotted
-    plt.title('Virtual Environment') # Title the graph
+    # legends for the plot through handlers
+    handler_artists = [h.artist for h in habitats[1:5]] # hard-coded order
+    handler_artists.extend([handler_shorts, handler_longs])
+
+    # additional settings for the plot
+    ax.get_xaxis().set_visible(False)
+    ax.get_yaxis().set_visible(False)
+    # plt.axis('off')
+    plt.legend(handles=handler_artists, loc='upper left', bbox_to_anchor=(1.02, 1), borderaxespad=0.)
+    plt.xlabel('Time ' + str(counter + 1))
+    plt.title('Snapshot in time ' + str(counter + 1), fontsize=12) # Identify which image is plotted
 
     image_path = os.path.join(C.SAMPLE_DIR, str(counter + 1) + '.png')
-    plt.savefig(image_path, bbox_inches='tight', pad_inches=0)
+    plt.savefig(image_path, bbox_inches='tight', pad_inches=0.1)
     plt.close(fig)
 
     # storing image for final gif
     image = gm.imread(image_path)
-    C.STORE['images'].append(image)
+    C.STORE['images'].append(image) # FIXME: read it when necessary
     # END: observe
 
 
 def update_one(habitats, agent):
-    """
+    """ Update agent in one unit of time
     TODO: docs
     """
 
-    # FIXME: Cannot put single artist in more than one figure
-    # habitats = create_patches()
-
     # build patches for short- and long-legged seabirds, human settlements
-    short_legged_habitat = [h for h in habitats if h.type in C.AREA_SHORT_LEGGED]
-    long_legged_habitat = [h for h in habitats if h.type in C.AREA_LONG_LEGGED]
-    human_settlements = [h for h in habitats if h.type == C.HUMAN_SETTLEMENT]
+    short_legged_habitat = [h for h in habitats if h.id in C.AREA_SHORT_LEGGED]
+    long_legged_habitat = [h for h in habitats if h.id in C.AREA_LONG_LEGGED]
+    human_settlements = [h for h in habitats if h.id == C.HUMAN_SETTLEMENT]
 
     # simulating random movements
     """ Algorithm to move agents
@@ -225,7 +305,7 @@ def update_one(habitats, agent):
         agent.x, agent.y = _x, _y
 
     # store agent's position and probs
-    update_store(C.STORE['agents'], agent, prob, _habitat.type)
+    update_store(C.STORE['agents'], agent, prob, _habitat.id)
     return agent, _habitat
     # END: update
 
@@ -263,7 +343,7 @@ def update(habitats, agents, time):
     # TODO: (can be improved) save stats for each agent: regions -> blue -> short-legged: 0+
     for agent in updated_agents:
         habitat = which_habitat((agent.x, agent.y), habitats)
-        snapshots[habitat.type][agent.type] += 1
+        snapshots[habitat.id][agent.type] += 1
 
     print('--- snapshot stats: {}'.format(snapshots))
     C.STORE['habitats'].append(snapshots)
@@ -277,13 +357,13 @@ def update_habitat_water_depth(h: Habitat, x=0):
     Simulate change in habitat's characteristics (water depth) over time
     TODO: docs
     """
-    if h.type == C.LAGOON_ORANGE_SM:
+    if h.id == C.LAGOON_ORANGE_SM:
         h.props['w'] = -0.00002*x**2 + 0.064*x + 10.034
-    elif h.type == C.LAGOON_ORANGE_LG:
+    elif h.id == C.LAGOON_ORANGE_LG:
         h.props['w'] = -0.0001*x**2 + 0.0987*x + 6.1176
-    elif h.type == C.LAGOON_BLUE:
+    elif h.id == C.LAGOON_BLUE:
         h.props['w'] = -0.00003*x**2 + 0.0636*x + 34.114
-    elif h.type == C.LAGOON_GREEN:
+    elif h.id == C.LAGOON_GREEN:
         h.props['w'] = -0.00005*x**2 + 0.061*x + 97.442
 
 

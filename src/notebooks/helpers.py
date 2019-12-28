@@ -57,7 +57,7 @@ def gen_rand_point(habitats, option=None):
     habitats = habitats if isinstance(habitats, list) else [habitats]
 
     # initialize random point(x, y) by generating an array
-    # of 2 random values between 0 and 1: [0.1..., 0.4...]
+    # of 2 random values between 0 and 1:: [0.1..., 0.4...]
     x, y = np.random.rand(2)
 
     # flag up a condition to assess points within, or out of the patches
@@ -131,10 +131,19 @@ def plot_figure():
     """
     TODO: proper docs
     """
+    plt.rcParams['axes.grid'] = True
+    plt.rcParams['grid.alpha'] = 0.5
+    plt.rcParams['figure.titlesize'] = 12
+    plt.rcParams['font.size'] = 12
+    plt.rcParams['lines.linewidth'] = 1
+    plt.rcParams['lines.markersize'] = 3
+
     t = np.arange(C.PROCESSING_TIME)
 
     xlim = [0, C.PROCESSING_TIME]
     ylim = [0, C.TOTAL_LONG_LEGGED]
+    sh_label = C.LABELS[C.SHORT_LEGGED]
+    lg_label = C.LABELS[C.LONG_LEGGED]
 
     shorts, longs = dict(), dict()
 
@@ -152,49 +161,58 @@ def plot_figure():
     fig = plt.figure(2, figsize=(11, 6.5))
 
     panel_A = fig.add_subplot(2,2,1)
-    panel_A.plot(t, shorts['orange-lg'], color=C.COLORS[C.SHORT_LEGGED], label=C.SHORT_LEGGED)
-    panel_A.plot(t, longs['orange-lg'], color=C.COLORS[C.LONG_LEGGED], label=C.LONG_LEGGED)
-    panel_A.legend(loc='best')
+    panel_A.plot(t, shorts[C.LAGOON_ORANGE_LG], '-o', color=C.COLORS[C.SHORT_LEGGED])
+    panel_A.plot(t, longs[C.LAGOON_ORANGE_LG], '-o', color=C.COLORS[C.LONG_LEGGED])
     panel_A.set_xlim(xlim)
     panel_A.set_ylim(ylim)
     panel_A.tick_params(axis='y', colors='orange')
-    panel_A.set_xlabel('Times', fontsize=12)
-    panel_A.set_ylabel('Total of Waterbirds (Large Lagoon)', color='orange')
+    panel_A.set_xlabel('Times')
+    panel_A.set_ylabel('Waterbirds', color='orange')
+    panel_A.set_title('Distribution in Habitat 1 (Large Lagoon)', fontsize=13)
 
     panel_B = fig.add_subplot(2,2,2)
-    panel_B.plot(t, shorts['orange-sm'], color=C.COLORS[C.SHORT_LEGGED], label=C.SHORT_LEGGED)
-    panel_B.plot(t, longs['orange-sm'], color=C.COLORS[C.LONG_LEGGED], label=C.LONG_LEGGED)
-    panel_B.legend(loc='best')
+    panel_B.plot(t, shorts[C.LAGOON_ORANGE_SM], '-o', color=C.COLORS[C.SHORT_LEGGED])
+    panel_B.plot(t, longs[C.LAGOON_ORANGE_SM], '-o', color=C.COLORS[C.LONG_LEGGED])
     panel_B.set_xlim(xlim)
     panel_B.set_ylim(ylim)
     panel_B.tick_params(axis='y', colors='orange')
-    panel_B.set_xlabel('Times', fontsize=12)
-    panel_B.set_ylabel('Total of Waterbirds (Small Lagoon)', color='orange')
+    panel_B.set_xlabel('Times')
+    panel_B.set_ylabel('Waterbirds', color='orange')
+    panel_B.set_title('Distribution in Habitat 1 (Small Lagoon)', fontsize=13)
 
     panel_C = fig.add_subplot(2,2,3)
-    panel_C.plot(t, shorts['blue'], color=C.COLORS[C.SHORT_LEGGED], label=C.SHORT_LEGGED)
-    panel_C.plot(t, longs['blue'], color=C.COLORS[C.LONG_LEGGED], label=C.LONG_LEGGED)
-    panel_C.legend(loc='best')
+    panel_C.plot(t, shorts[C.LAGOON_BLUE], '-o', color=C.COLORS[C.SHORT_LEGGED])
+    panel_C.plot(t, longs[C.LAGOON_BLUE], '-o', color=C.COLORS[C.LONG_LEGGED])
     panel_C.set_xlim(xlim)
     panel_C.set_ylim(ylim)
     panel_C.tick_params(axis='y', colors='blue')
-    panel_C.set_xlabel('Times', fontsize=12)
-    panel_C.set_ylabel('Total of Waterbirds', color='blue')
+    panel_C.set_xlabel('Times')
+    panel_C.set_ylabel('Waterbirds', color='blue')
+    panel_C.set_title('Distribution in Habitat 2 (Blue Lagoon)', fontsize=13)
 
     panel_D = fig.add_subplot(2,2,4)
-    panel_D.plot(t, shorts['green'], color=C.COLORS[C.SHORT_LEGGED], label=C.SHORT_LEGGED)
-    panel_D.plot(t, longs['green'], color=C.COLORS[C.LONG_LEGGED], label=C.LONG_LEGGED)
-    panel_D.legend(loc='best')
+    handler_shorts, = panel_D.plot(t, shorts[C.LAGOON_GREEN], '-o', color=C.COLORS[C.SHORT_LEGGED], label=sh_label)
+    handler_longs, = panel_D.plot(t, longs[C.LAGOON_GREEN], '-o', color=C.COLORS[C.LONG_LEGGED], label=lg_label)
     panel_D.set_xlim(xlim)
     panel_D.set_ylim(ylim)
     panel_D.tick_params(axis='y', colors='green')
-    panel_D.set_xlabel('Times', fontsize=12)
-    panel_D.set_ylabel('Total of Waterbirds', color='green')
+    panel_D.set_xlabel('Times')
+    panel_D.set_ylabel('Waterbirds', color='green')
+    panel_D.set_title('Distribution in Habitat 3 (Green Lagoon)', fontsize=13)
 
-    fig.suptitle('Distribution of Waterbirds in the Tropics', y=1)
+    fig.legend(
+        handles=[handler_shorts, handler_longs],
+        loc='lower left',
+        bbox_to_anchor=(0.05, 0.98, 0.92, .102),
+        ncol=2, mode='expand',
+        borderaxespad=0., fancybox=True, shadow=True
+    )
+
     fig.set_tight_layout(True) # Avoid panel overlaps
+    fig.suptitle('Simulation of Waterbirds in the Tropics', y=1.1, fontsize=14, fontweight='bold')
     filename = os.path.join(C.GRAPH_DIR, uuid.uuid4().hex +'.pdf') # save in pdf format
-    fig.savefig(filename)
+    plt.savefig(filename)
+    plt.show()
 
     # reset store
     C.STORE['agents'] = []
