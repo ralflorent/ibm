@@ -25,7 +25,7 @@ import warnings
 import matplotlib.pyplot as plotter # plotter
 import matplotlib.pylab as pylab
 
-# TODO: plotter, env, sys, file, common config
+# TODO: plotter, env, sys
 
 # Default parameters for the graphs
 pylab.rcParams['figure.figsize'] = (11, 6.5)
@@ -40,6 +40,7 @@ pylab.rcParams['font.family'] = 'STIXGeneral'
 def init():
     plotter.ioff() # turn off interactive plotting mode
     warnings.filterwarnings('ignore') # turn off warnings
+
 
 def clean():
     pass
@@ -73,10 +74,11 @@ def mkdir(dirname, basepath='.'):
         print(f'The directory <{fullpath}> has been created.')
     else:
         try:
-            shutil.rmtree(fullpath) # remove old one and its contents, then create a new one
+            # remove old one and its contents, then create a new one
+            shutil.rmtree(fullpath)
             os.mkdir(fullpath) # FIXME: not considering user permissions
         except OSError as e:
-            print ('Error: %s - %s.' % (e.filename, e.strerror)) # not handling :(
+            print ('Error: %s - %s.' % (e.filename, e.strerror)) # not handled :(
     return fullpath
 
 
@@ -85,27 +87,16 @@ def load_config(filename='config.yml'):
     if not os.path.isfile(filename):
         raise IOError(f'the filename <{filename}> does not exists.')
 
-    with open('config.yml', 'r') as configfile:
+    with open(filename, 'r') as configfile:
         config = yaml.load(configfile)
     return config
 
 
 CONFIG = load_config()
-rootDir = get_dirname(CONFIG['app']['rootDir'])
-outDir = get_dirname(CONFIG['app']['outDir'])
-sampleDir = mkdir(CONFIG['app']['paths']['sample'], outDir)
-graphDir = mkdir(CONFIG['app']['paths']['graph'], outDir)
-
-processing_time = CONFIG['app']['props']['processing_time']
-time_divisor = CONFIG['app']['props']['time_divisor']
-
-CNF_AGENT = CONFIG['app']['props']['agent']
-name_short_legged  = CNF_AGENT['names']['short']
-name_long_legged   = CNF_AGENT['names']['long']
-total_short_legged = CNF_AGENT['total']['short']
-total_long_legged  = CNF_AGENT['total']['long']
-color_short_legged = CNF_AGENT['colors']['short']
-color_long_legged  = CNF_AGENT['colors']['long']
+rootDir = get_dirname(CONFIG['rootDir'])
+outDir = get_dirname(CONFIG['outDir'])
+sampleDir = mkdir(CONFIG['paths']['sample'], outDir)
+graphDir = mkdir(CONFIG['paths']['graph'], outDir)
 # ==============================================================================
 # END: Config
 # ==============================================================================

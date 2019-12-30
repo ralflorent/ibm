@@ -17,6 +17,7 @@
 
 # -*- coding: utf-8 -*-
 import os
+import math
 import numpy as np # arithmetic computer
 import matplotlib.pyplot as plt # plotter
 import matplotlib.patches as Patches # artist
@@ -85,32 +86,25 @@ def create_patches():
 
 
 def create_agents(habitats):
-    """Create agents once
-    TODO: docs
-    """
     agents = []
 
-    # build patches for short- and long-legged seabirds
-    short_legged_habitat = [h for h in habitats if h.id in C.AREA_SHORT_LEGGED]
-    long_legged_habitat  = [h for h in habitats if h.id in C.AREA_LONG_LEGGED]
+    for ag_cnf in C.CNF_AG:
+        restricted_habs = []
 
-    for i in range(C.TOTAL_SHORT_LEGGED + C.TOTAL_LONG_LEGGED):
-        ag = Agent()
-        ag.name = str(i + 1) # labelling for analysis
+        for _type in ag_cnf['habs']:
+            for hab in habitats:
+                if _type == hab.type:
+                    restricted_habs.append(hab)
+                    break
 
-        # classify agents as short- and long-legged seabirds
-        if i < C.TOTAL_SHORT_LEGGED:
-            ag.type = C.SHORT_LEGGED
-            ag.x, ag.y = gen_rand_point(short_legged_habitat, 'in')
-        else:
-            ag.type = C.LONG_LEGGED
-            ag.x, ag.y = gen_rand_point(long_legged_habitat, 'in')
-
-        agents.append(ag) # store in-memory agents
-
-        # create a dict-based structure to store and run analytics
-        C.STORE['agents'].append({ ag.name: { 'hab': [], 'pos': [], 'pdf': [] }})
-
+        for i in range(ag_cnf['quantity']):
+            x, y = gen_rand_point(restricted_habs, 'in')
+            ag = Agent(ag_cnf['type'], x, y)
+            ag.name = '{}-{}'.format(i + 1, ag_cnf['type']) # name: 1-30cm
+            ag.color = ag_cnf['color']
+            agents.append(ag)
+            # create a dict-based structure to store and run analytics
+            # C.STORE['agents'].append({ ag.name: { 'hab': [], 'pos': [], 'pdf': [] }})
     return agents
 
 
@@ -119,23 +113,29 @@ def initialize():
     TODO: docs
     """
     habitats = create_patches()
+    print('==> :) All habitats have been created successfully!')
     agents = create_agents(habitats)
+    print('==> :) All agents have been created successfully!')
 
     # initialize stats for first run
     snapshots = {
-        C.LAGOON_ORANGE_SM: { C.SHORT_LEGGED: 0, C.LONG_LEGGED: 0 },
-        C.LAGOON_ORANGE_LG: { C.SHORT_LEGGED: 0, C.LONG_LEGGED: 0 },
-        C.LAGOON_BLUE: { C.SHORT_LEGGED: 0, C.LONG_LEGGED: 0 },
-        C.LAGOON_GREEN: { C.SHORT_LEGGED: 0, C.LONG_LEGGED: 0 }
+        C.LAGOON_ORANGE_SM: {},
+        C.LAGOON_ORANGE_LG: {},
+        C.LAGOON_BLUE: {},
+        C.LAGOON_GREEN: {}
     }
+    for ag_cnf in C.CNF_AG:
+        for k in snapshots.keys():
+            snapshots[k][ag_cnf['type']] = 0
 
     for agent in agents:
-        habitat = which_habitat((agent.x, agent.y), habitats)
+        point = agent.get_point()
+        habitat = which_habitat(point, habitats)
         snapshots[habitat.id][agent.type] += 1
 
-    print('--- snapshot stats: {}'.format(snapshots))
     C.STORE['habitats'].append(snapshots)
-    print('--- process update: {}'.format(len(C.STORE['habitats'])))
+    print('--- initial snapshot created')
+    print('--- updating agents will start processing')
     return habitats, agents
 
 
@@ -150,34 +150,31 @@ def observe(habitats, agents, counter=0):
     plt.rcParams['legend.fontsize'] = 10
     fig = plt.figure(1)
     ax  = fig.add_subplot(111)
+    leg_handlers = []
 
     # artists to display (with indicator)
     for h in habitats:
         ax.add_patch( cp.copy(h.artist) )
 
-    # distribute agents according their types
-    shorts = [ag for ag in agents if ag.type == C.SHORT_LEGGED]
-    longs = [ag for ag in agents if ag.type == C.LONG_LEGGED]
+    # group by agent's type: { '5cm': [...agents] }
+    grouped_agents = dict()
+    for ag in agents:
+        if ag.type in grouped_agents:
+            grouped_agents[ag.type].append(ag)
+        else:
+            grouped_agents[ag.type] = [ag]
 
-    # plot agents' positions
-    handler_shorts, = ax.plot(
-        [ag.x for ag in shorts],
-        [ag.y for ag in shorts],
-        'o', mec=C.COLORS[C.SHORT_LEGGED],
-        mfc=C.COLORS[C.SHORT_LEGGED],
-        label=C.LABELS[C.SHORT_LEGGED]
-    )
-    handler_longs, = ax.plot(
-        [ag.x for ag in longs],
-        [ag.y for ag in longs],
-        'o', mec=C.COLORS[C.LONG_LEGGED],
-        mfc=C.COLORS[C.LONG_LEGGED],
-        label=C.LABELS[C.LONG_LEGGED]
-    )
+    for _type, g_ags in grouped_agents.items():
+        points = [ag.get_point() for ag in g_ags] # get all points: [(x1, y1), (x2, y2), ...]
+        x, y = list(zip(*points)) # unzip them: [(x1, x2, ...), (y1, y2, ...)]
+        c = C.get_agentp(_type, 'color')
+        l = C.get_agentp(_type, 'label')
+        leg_handle, = ax.plot(x, y, 'o', mec=c,mfc=c, label=l)
+        leg_handlers.append(leg_handle)
 
     # legends for the plot through handlers
     handler_artists = [h.artist for h in habitats[1:5]] # hard-coded order
-    handler_artists.extend([handler_shorts, handler_longs])
+    handler_artists.extend(leg_handlers)
 
     # additional settings for the plot
     ax.get_xaxis().set_visible(False)
@@ -190,7 +187,7 @@ def observe(habitats, agents, counter=0):
     plt.savefig(image_path, bbox_inches='tight', pad_inches=0.1)
     plt.close(fig)
 
-    # storing image for final gif
+    # store image for final gif
     image = gm.imread(image_path)
     C.STORE['images'].append(image) # FIXME: read it when necessary
     # END: observe
@@ -198,78 +195,68 @@ def observe(habitats, agents, counter=0):
 
 def update_one(habitats, agent):
     """ Update agent in one unit of time
-    TODO: docs
-    """
-
-    # build patches for short- and long-legged seabirds, human settlements
-    short_legged_habitat = [h for h in habitats if h.id in C.AREA_SHORT_LEGGED]
-    long_legged_habitat = [h for h in habitats if h.id in C.AREA_LONG_LEGGED]
-    human_settlements = [h for h in habitats if h.id == C.HUMAN_SETTLEMENT]
-
-    # simulating random movements
-    """ Algorithm to move agents
-    0: given a selected agent
-    1: randomly choose a new destination (point)
-    2: compute probability of habitat use for the destination
-    3: move agent if doable (available, resourceful, unthreatening)
-
-    Formulas to compute respective probabilities:
-
-    P(large_wading_birds) = -0.0003 * w + 0.0087
-    P(large_wading_birds) = -0.0004 * d + 0.0064
-    P(large_wading_birds) = -0.000004 * (s^2) + 0.0004 * s - 0.0002
-    P(large_wading_birds) = (3.40 * f) + 0.9239
-
-    P(small_wading_birds) = 0.00002 * (w^2) - 0.0009 * w + 0.0114
-    P(small_wading_birds) = -0.0013 * (d^2) + 0.0074 * d - 0.0001
-    P(small_wading_birds) = 0.00006 * (s^2) + 0.0002 * s + 0.0004
-    P(small_wading_birds) = (6.73 * f^2) – (29.36 * f) + 14.35
+    Algorithm for simulating random movements
+    - given a randomly-selected agent
+    - randomly choose a new destination (point: x, y)
+    - compute probability of habitat use for the new destination
+    - move agent if doable (available, resourceful, unthreatening)
 
     d: distance between the current habitat and the closest human settlement
     w: water depth of the current habitat
     s: salinity of the current habitat
     f: food availability in the current habitat
     """
+    human_settlements = [h for h in habitats if h.id == C.HUMAN_SETTLEMENT]
 
-    if agent.type == C.SHORT_LEGGED:
-        # [_variable_name] means variables within this scope
-        _x, _y = gen_rand_point(short_legged_habitat, 'in')
-        _habitat = which_habitat((_x, _y), short_legged_habitat)
-        _d = compute_dist(_habitat, human_settlements)
-        min_index = _d.index( min(_d) ) # consider minimal distance
+    for ag_cnf in C.CNF_AG: # for each category of agent (e.g., 15cm legged)
+        restricted_habs = [] # this agent can use certain areas only
 
-        d = _d[min_index] # distance to human settlement
-        w, s, f = _habitat.props.values() # water depth, salinity, food availability
+        for _type in ag_cnf['habs']:
+            for hab in habitats:
+                if hab.type == _type:
+                    restricted_habs.append(hab) # are these limited areas
+                    break
 
-        # TODO: avoid magic numbers and string values
-        _prob_w = 0.00002 * w**2 - 0.0009 * w + 0.0114
-        _prob_d = -0.0013 * d**2 + 0.0074 * d - 0.0001
-        _prob_s = 0.00006 * s**2 + 0.0002 * s + 0.0004
-        _prob_f = (0.00673 * f**2) - (0.002936 * f) + 0.5
-        prob = _prob_s * _prob_w * _prob_d * _prob_f
-    else:
-        _x, _y = gen_rand_point(long_legged_habitat, 'in')
-        _habitat = which_habitat((_x, _y), long_legged_habitat)
-        _d = compute_dist(_habitat, human_settlements)
-        min_index = _d.index( min(_d) ) # consider minimal distance
+        if agent.type == ag_cnf['type']: # do's and dont's specific to this agent
+            _x, _y = gen_rand_point(restricted_habs, 'in')
+            _habitat = which_habitat((_x, _y), restricted_habs)
+            _d = compute_dist(_habitat, human_settlements)
+            min_index = _d.index( min(_d) ) # consider minimal distance
 
-        d = _d[min_index] # distance to human settlement
-        w, s, f = _habitat.props.values() # water depth, salinity
+            # specific characteristics (props) of the selected habitat
+            d = _d[min_index] # distance to human settlement
+            w, s, f = _habitat.props.values() # water depth, salinity, food availability
 
-        _prob_w = -0.0003 * w + 0.0087
-        _prob_d = -0.0004 * d + 0.0064
-        _prob_s = -0.000004 * s**2 + 0.0004 * s - 0.0002
-        _prob_f = (0.00340 * f) + 0.5
-        prob = _prob_s * _prob_w * _prob_d * _prob_f
+            # this agent knows a specific way to compute certain operations
+            w_meta_fn = C.get_agentp(agent.type, 'fn')
 
-    # print('---- overall prob: {:1.10f}'.format(prob))
-    if prob > C.MOVE_THRESHOLD:
-        agent.x, agent.y = _x, _y
+            # compute the probability of moving to this habitat
+            _prob_w = eval_fn(w_meta_fn, w)
+            _prob_d = -0.0013 * d**2 + 0.0074 * d - 0.0001
+            _prob_s = 0.00006 * s**2 + 0.0002 * s + 0.0004
+            _prob_f = (0.00673 * f**2) - (0.002936 * f) + 0.5
+            prob = _prob_s * _prob_w * _prob_d * _prob_f
+        # so, can the agent finally move?
+        if prob > C.THRESHOLD:
+            agent.set_point((_x, _y))
 
     # store agent's position and probs
     update_store(C.STORE['agents'], agent, prob, _habitat.id)
     return agent, _habitat
     # END: update
+
+
+def eval_fn(meta_fn, *args):
+    fn_def, fn_args = meta_fn['def'], meta_fn['args']
+    fn = eval(fn_def)
+
+    if not isinstance(fn_args, list) or len(fn_args) == 0: # no args required
+        return fn()
+    elif len(fn_args) == len(args):
+        kwargs = dict(zip(fn_args, args)) # zip into keyworded args: {'k': v, ...}
+        return fn(**kwargs)
+    else:
+        raise RuntimeError(f'Cannot evaluate this function <{fn_def}>. Check required arguments')
 
 
 def update(habitats, agents, time):
@@ -282,11 +269,14 @@ def update(habitats, agents, time):
     updated_agents = [] # temporary for the new agents' positions
 
     snapshots = {
-        C.LAGOON_ORANGE_SM: { C.SHORT_LEGGED: 0, C.LONG_LEGGED: 0 },
-        C.LAGOON_ORANGE_LG: { C.SHORT_LEGGED: 0, C.LONG_LEGGED: 0 },
-        C.LAGOON_BLUE: { C.SHORT_LEGGED: 0, C.LONG_LEGGED: 0 },
-        C.LAGOON_GREEN: { C.SHORT_LEGGED: 0, C.LONG_LEGGED: 0 }
+        C.LAGOON_ORANGE_SM: {},
+        C.LAGOON_ORANGE_LG: {},
+        C.LAGOON_BLUE: {},
+        C.LAGOON_GREEN: {}
     }
+    for ag_cnf in C.CNF_AG:
+        for k in snapshots.keys():
+            snapshots[k][ag_cnf['type']] = 0
 
     if time % C.TIME_DIVISOR == 0: # every t time steps, change the environment
         rainfall = C.DEFAULTS['rain'].get(time, 0)
@@ -307,10 +297,8 @@ def update(habitats, agents, time):
         habitat = which_habitat((agent.x, agent.y), habitats)
         snapshots[habitat.id][agent.type] += 1
 
-    print('--- snapshot stats: {}'.format(snapshots))
     C.STORE['habitats'].append(snapshots)
-    print('--- process update: {}'.format(len(C.STORE['habitats'])))
-
+    print('--- snapshot for time {}'.format(time))
     return updated_agents
 
 

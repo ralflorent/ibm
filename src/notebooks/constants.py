@@ -21,13 +21,14 @@ import config
 # Loaded configurations
 CONFIG = config.CONFIG
 
+# Agents' configurations
+CNF_AG = CONFIG['app']['agents']
+TOTAL_AGENTS = sum([ag_cnf['quantity'] for ag_cnf in CNF_AG])
+
 # Core elements: unique (used as key identifier)
-SHORT_LEGGED = config.name_short_legged
-LONG_LEGGED = config.name_long_legged
-TOTAL_SHORT_LEGGED = config.total_short_legged
-TOTAL_LONG_LEGGED = config.total_long_legged
-PROCESSING_TIME = config.processing_time # time limit for the entire process
-TIME_DIVISOR = config.time_divisor # time factor to simulate time steps
+PROCESSING_TIME = CONFIG['app']['counter'] # time limit for the entire process
+TIME_DIVISOR = CONFIG['app']['rain']['divisor']
+
 LAGOON_ORANGE_SM = 'lagoon-orange-sm'
 LAGOON_ORANGE_LG = 'lagoon-orange-lg'
 LAGOON_BLUE = 'lagoon-blue'
@@ -37,25 +38,10 @@ LAGOON_TYPE_ORANGE = '1'
 LAGOON_TYPE_BLUE = '2'
 LAGOON_TYPE_GREEN = '3'
 
-MOVE_THRESHOLD = 1e-7 # threshold to allow agents' movements driven by the probability
-
-# Restricted areas
-AREA_SHORT_LEGGED = (
-    LAGOON_ORANGE_SM,
-    LAGOON_ORANGE_LG
-)
-
-AREA_LONG_LEGGED = (
-    LAGOON_ORANGE_SM,
-    LAGOON_ORANGE_LG,
-    LAGOON_BLUE,
-    LAGOON_GREEN
-)
+THRESHOLD = CONFIG['app']['threshold'] # threshold to allow agents' movements driven by the probability
 
 # Color palette definition
 COLORS = dict()
-COLORS[SHORT_LEGGED] = config.color_short_legged
-COLORS[LONG_LEGGED] = config.color_long_legged
 COLORS[LAGOON_ORANGE_LG] = 'orange'
 COLORS[LAGOON_ORANGE_SM] = 'orange'
 COLORS[LAGOON_BLUE] = 'blue'
@@ -64,13 +50,13 @@ COLORS[HUMAN_SETTLEMENT] = 'red'
 
 # Labels for patches
 LABELS = dict()
-LABELS[SHORT_LEGGED] = '{} short legged'.format(TOTAL_SHORT_LEGGED)
-LABELS[LONG_LEGGED] = '{} long legged'.format(TOTAL_LONG_LEGGED)
 LABELS[LAGOON_ORANGE_SM] = 'Habitat {} (5cm)'.format(LAGOON_TYPE_ORANGE)
 LABELS[LAGOON_ORANGE_LG] = 'Habitat {} (5cm)'.format(LAGOON_TYPE_ORANGE)
 LABELS[LAGOON_BLUE] = 'Habitat {} (1m)'.format(LAGOON_TYPE_BLUE)
 LABELS[LAGOON_GREEN] = 'Habitat {} (40cm)'.format(LAGOON_TYPE_GREEN)
 LABELS[HUMAN_SETTLEMENT] = 'Humans'
+for ag_cnf in CNF_AG:
+    LABELS[ag_cnf['type']] = ag_cnf['label']
 
 # Directories (paths)
 ROOT_DIR = config.rootDir
@@ -109,6 +95,12 @@ DEFAULTS['rain'][20] = 600
 DEFAULTS['rain'][30] = 30
 DEFAULTS['rain'][40] = 0
 DEFAULTS['rain'][50] = 0
+
+# helpers
+def get_agentp(_type, prop):
+    for ag_cnf in CNF_AG:
+        if ag_cnf['type'] == _type:
+            return ag_cnf[prop]
 # ==============================================================================
 # END: Constants
 # ==============================================================================

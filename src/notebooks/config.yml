@@ -1,30 +1,119 @@
-version: 0.2.0
+version: 1.0.0
 metadata:
-app:
-  name: ve-abm
+  profile: development
+  name: ve-ibm
   description: Virtual Environment for Individual-Based Modeling
-  rootDir: .
-  outDir: ../../
-  paths:
-    sample: samples
-    graph: graphs
-  props:
-    processing_time: 5
-    time_divisor: 10
-    agent:
-      names:
-        short: short-legged
-        long: long-legged
-      colors:
-        short: '#AAAAAA'
-        long: '#000000'
-      labels:
-        short: short legs
-        long: long legs
-      total:
-        short: 20
-        long: 20
-    patch:
-      habitat:
-      human:
-
+rootDir: .
+outDir: ../../
+paths:
+  sample: samples
+  graph: graphs
+app:
+  threshold: 1e-7
+  counter: 5
+  rain:
+      divisor: 10
+      values:
+        - 20
+        - 200
+        - 600
+        - 30
+        - 0
+        - 0
+  habitats: # not being used yet
+    # - id: orange_sm
+    #   name: lagoon-orange-sm
+    #   type: 1
+    #   capacity: 20
+    #   label: ~
+    #   props:
+    #     water: ~
+    #     salinity: ~
+    #     food: ~
+    #   design:
+    #     color: ~
+    #     filled: ~
+    #     verts: ~
+    # - id: orange_lg
+    #   name: lagoon-orange-sm
+    #   type: 1
+    #   capacity: 20
+    #   props:
+    #     water: ~
+    #     salinity: ~
+    #     food: ~
+    #   design:
+    #     color: ~
+    #     filled: ~
+    #     verts: ~
+    # - id: blue
+    #   name: lagoon-orange-sm
+    #   type: 2
+    #   capacity: 20
+    #   props:
+    #     water: ~
+    #     salinity: ~
+    #     food: ~
+    #   design:
+    #     color: ~
+    #     filled: ~
+    #     verts: ~
+    # - id: green
+    #   name: lagoon-orange-sm
+    #   type: 3
+    #   capacity: 20
+    # - id: human1
+    #   name: human-settlement
+    #   type: human
+    #   capacity: ~
+    #   props:
+    #     water: ~
+    #     salinity: ~
+    #     food: ~
+    #   design:
+    #     color: ~
+    #     filled: ~
+    #     verts: ~
+  agents:
+    - type: 5cm
+      quantity: 2
+      color: '#6CC2BD'
+      label: 5cm-legged
+      fn:
+        def: 'lambda x: -0.00002*x**5 + 0.0028*x**4 - 0.1551*x**3 + 4.0552*x**2 - 48.806*x + 213.64'
+        args:
+          - x
+      habs:
+      - 1
+    - type: 10cm
+      quantity: 2
+      color: '#5A809E'
+      label: 10cm-legged
+      fn:
+        def: 'lambda x: 0.00009*x**4 - 0.0129*x**3 + 0.6696*x**2 - 14.75*x + 114.18'
+        args:
+          - x
+      habs:
+        - 1
+    - type: 30cm
+      quantity: 2
+      color: '#7C79A2'
+      label: 30cm-legged
+      fn:
+        def: 'lambda x: -10.89*math.log(x) + 44.71'
+        args:
+          - x
+      habs:
+        - 1
+        - 2
+    - type: 60cm
+      quantity: 2
+      color: '#F57D7C'
+      label: 60cm-legged
+      fn:
+        def: 'lambda: 12.5'
+        args:
+      habs:
+        - 1
+        - 2
+        - 3

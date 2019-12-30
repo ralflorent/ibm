@@ -141,28 +141,27 @@ def plot_figure():
     t = np.arange(C.PROCESSING_TIME)
 
     xlim = [0, C.PROCESSING_TIME]
-    ylim = [0, C.TOTAL_LONG_LEGGED]
-    sh_label = C.LABELS[C.SHORT_LEGGED]
-    lg_label = C.LABELS[C.LONG_LEGGED]
+    ylim = [0, C.TOTAL_AGENTS]
 
-    shorts, longs = dict(), dict()
+    grouped_agents = dict()
+    for ag_cnf in C.CNF_AG:
+        grouped_agents[ag_cnf['type']] = dict()
 
-    for regions in C.STORE['habitats']:
-        for k in regions.keys():
-            if k not in shorts:
-                shorts[k] = []
-            if k not in longs:
-                longs[k] = []
-            shorts[k].append(regions[k][C.SHORT_LEGGED])
-            longs[k].append(regions[k][C.LONG_LEGGED])
+    for regions in C.STORE['habitats']: # snapshot
+        for region_key in regions.keys(): # area key: 'orange-sm'
+            for grouped_key in grouped_agents: # by agent key: '15cm'
+                if region_key not in grouped_agents[grouped_key]:
+                    grouped_agents[grouped_key][region_key] = [] # make sure key exist
+                # final thread: { '15cm': { 'orange-sm': [4, ...] } } ::
+                # of this agent in region for each time t processing
+                grouped_agents[grouped_key][region_key].append(regions[region_key][grouped_key])
 
     plt.cla()
     plt.clf()
     fig = plt.figure(2, figsize=(11, 6.5))
+    handlers = []
 
     panel_A = fig.add_subplot(2,2,1)
-    panel_A.plot(t, shorts[C.LAGOON_ORANGE_LG], '-o', color=C.COLORS[C.SHORT_LEGGED])
-    panel_A.plot(t, longs[C.LAGOON_ORANGE_LG], '-o', color=C.COLORS[C.LONG_LEGGED])
     panel_A.set_xlim(xlim)
     panel_A.set_ylim(ylim)
     panel_A.tick_params(axis='y', colors='orange')
@@ -171,8 +170,6 @@ def plot_figure():
     panel_A.set_title('Distribution in Habitat 1 (Large Lagoon)', fontsize=13)
 
     panel_B = fig.add_subplot(2,2,2)
-    panel_B.plot(t, shorts[C.LAGOON_ORANGE_SM], '-o', color=C.COLORS[C.SHORT_LEGGED])
-    panel_B.plot(t, longs[C.LAGOON_ORANGE_SM], '-o', color=C.COLORS[C.LONG_LEGGED])
     panel_B.set_xlim(xlim)
     panel_B.set_ylim(ylim)
     panel_B.tick_params(axis='y', colors='orange')
@@ -181,8 +178,6 @@ def plot_figure():
     panel_B.set_title('Distribution in Habitat 1 (Small Lagoon)', fontsize=13)
 
     panel_C = fig.add_subplot(2,2,3)
-    panel_C.plot(t, shorts[C.LAGOON_BLUE], '-o', color=C.COLORS[C.SHORT_LEGGED])
-    panel_C.plot(t, longs[C.LAGOON_BLUE], '-o', color=C.COLORS[C.LONG_LEGGED])
     panel_C.set_xlim(xlim)
     panel_C.set_ylim(ylim)
     panel_C.tick_params(axis='y', colors='blue')
@@ -191,8 +186,6 @@ def plot_figure():
     panel_C.set_title('Distribution in Habitat 2 (Blue Lagoon)', fontsize=13)
 
     panel_D = fig.add_subplot(2,2,4)
-    handler_shorts, = panel_D.plot(t, shorts[C.LAGOON_GREEN], '-o', color=C.COLORS[C.SHORT_LEGGED], label=sh_label)
-    handler_longs, = panel_D.plot(t, longs[C.LAGOON_GREEN], '-o', color=C.COLORS[C.LONG_LEGGED], label=lg_label)
     panel_D.set_xlim(xlim)
     panel_D.set_ylim(ylim)
     panel_D.tick_params(axis='y', colors='green')
@@ -200,8 +193,17 @@ def plot_figure():
     panel_D.set_ylabel('Waterbirds', color='green')
     panel_D.set_title('Distribution in Habitat 3 (Green Lagoon)', fontsize=13)
 
+    for gk in grouped_agents.keys():
+        color = C.get_agentp(gk, 'color')
+        label = C.get_agentp(gk, 'label')
+        panel_A.plot(t, grouped_agents[gk][C.LAGOON_ORANGE_LG], '-o', color=color)
+        panel_B.plot(t, grouped_agents[gk][C.LAGOON_ORANGE_SM], '-o', color=color)
+        panel_C.plot(t, grouped_agents[gk][C.LAGOON_BLUE], '-o', color=color)
+        leg_handler, = panel_D.plot(t, grouped_agents[gk][C.LAGOON_GREEN], '-o', color=color, label=label)
+        handlers.append(leg_handler)
+
     fig.legend(
-        handles=[handler_shorts, handler_longs],
+        handles=handlers,
         loc='lower left',
         bbox_to_anchor=(0.05, 0.98, 0.92, .102),
         ncol=2, mode='expand',
