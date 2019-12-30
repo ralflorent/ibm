@@ -206,7 +206,7 @@ def plot_figure():
         handles=handlers,
         loc='lower left',
         bbox_to_anchor=(0.05, 0.98, 0.92, .102),
-        ncol=2, mode='expand',
+        ncol=C.TOTAL_AGENT_TYPE, mode='expand',
         borderaxespad=0., fancybox=True, shadow=True
     )
 

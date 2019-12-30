@@ -95,7 +95,6 @@ def create_agents(habitats):
             for hab in habitats:
                 if _type == hab.type:
                     restricted_habs.append(hab)
-                    break
 
         for i in range(ag_cnf['quantity']):
             x, y = gen_rand_point(restricted_habs, 'in')
@@ -113,9 +112,9 @@ def initialize():
     TODO: docs
     """
     habitats = create_patches()
-    print('==> :) All habitats have been created successfully!')
+    print('==> {} habitats have been created successfully!'.format(len(habitats)))
     agents = create_agents(habitats)
-    print('==> :) All agents have been created successfully!')
+    print('==> {} agents have been created successfully!'.format(len(agents)))
 
     # initialize stats for first run
     snapshots = {
@@ -134,8 +133,7 @@ def initialize():
         snapshots[habitat.id][agent.type] += 1
 
     C.STORE['habitats'].append(snapshots)
-    print('--- initial snapshot created')
-    print('--- updating agents will start processing')
+    print('--- updating agents will start processing...')
     return habitats, agents
 
 
@@ -207,6 +205,7 @@ def update_one(habitats, agent):
     f: food availability in the current habitat
     """
     human_settlements = [h for h in habitats if h.id == C.HUMAN_SETTLEMENT]
+    prob = 0.0
 
     for ag_cnf in C.CNF_AG: # for each category of agent (e.g., 15cm legged)
         restricted_habs = [] # this agent can use certain areas only
@@ -236,12 +235,12 @@ def update_one(habitats, agent):
             _prob_s = 0.00006 * s**2 + 0.0002 * s + 0.0004
             _prob_f = (0.00673 * f**2) - (0.002936 * f) + 0.5
             prob = _prob_s * _prob_w * _prob_d * _prob_f
-        # so, can the agent finally move?
+
         if prob > C.THRESHOLD:
             agent.set_point((_x, _y))
 
     # store agent's position and probs
-    update_store(C.STORE['agents'], agent, prob, _habitat.id)
+    # update_store(C.STORE['agents'], agent, prob, _habitat.id)
     return agent, _habitat
     # END: update
 
@@ -287,14 +286,12 @@ def update(habitats, agents, time):
         # randomly choose an agent to update its status,
         # approach for asynchronous updates: see Davi's ref.
         agent = agents[ np.random.randint( len(agents) ) ]
-        # old_habitat = which_habitat((agent.x, agent.y), habitats) # diogo
         updated_agent, habitat = update_one(habitats, cp.copy(agent))
         updated_agents.append( updated_agent )
         agents.remove(agent)
 
-    # TODO: (can be improved) save stats for each agent: regions -> blue -> short-legged: 0+
     for agent in updated_agents:
-        habitat = which_habitat((agent.x, agent.y), habitats)
+        habitat = which_habitat(agent.get_point(), habitats)
         snapshots[habitat.id][agent.type] += 1
 
     C.STORE['habitats'].append(snapshots)

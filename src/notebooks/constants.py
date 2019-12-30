@@ -23,6 +23,7 @@ CONFIG = config.CONFIG
 
 # Agents' configurations
 CNF_AG = CONFIG['app']['agents']
+TOTAL_AGENT_TYPE = len(CNF_AG)
 TOTAL_AGENTS = sum([ag_cnf['quantity'] for ag_cnf in CNF_AG])
 
 # Core elements: unique (used as key identifier)
@@ -34,11 +35,11 @@ LAGOON_ORANGE_LG = 'lagoon-orange-lg'
 LAGOON_BLUE = 'lagoon-blue'
 LAGOON_GREEN = 'lagoon-green'
 HUMAN_SETTLEMENT = 'human-settlement'
-LAGOON_TYPE_ORANGE = '1'
-LAGOON_TYPE_BLUE = '2'
-LAGOON_TYPE_GREEN = '3'
+LAGOON_TYPE_ORANGE = 1
+LAGOON_TYPE_BLUE = 2
+LAGOON_TYPE_GREEN = 3
 
-THRESHOLD = CONFIG['app']['threshold'] # threshold to allow agents' movements driven by the probability
+THRESHOLD = float(CONFIG['app']['threshold']) # threshold to allow agents' movements driven by the probability
 
 # Color palette definition
 COLORS = dict()

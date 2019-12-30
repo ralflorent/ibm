@@ -76,7 +76,7 @@ app:
     #     verts: ~
   agents:
     - type: 5cm
-      quantity: 2
+      quantity: 5
       color: '#6CC2BD'
       label: 5cm-legged
       fn:
@@ -86,7 +86,7 @@ app:
       habs:
       - 1
     - type: 10cm
-      quantity: 2
+      quantity: 4
       color: '#5A809E'
       label: 10cm-legged
       fn:
@@ -96,7 +96,7 @@ app:
       habs:
         - 1
     - type: 30cm
-      quantity: 2
+      quantity: 7
       color: '#7C79A2'
       label: 30cm-legged
       fn:
@@ -107,7 +107,7 @@ app:
         - 1
         - 2
     - type: 60cm
-      quantity: 2
+      quantity: 6
       color: '#F57D7C'
       label: 60cm-legged
       fn:
