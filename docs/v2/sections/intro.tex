@@ -15,7 +15,33 @@
 % ==============================================================================
 
 \section{Introduction}
+The \emph{Virtual Environment for Individual-Based Modeling - Part II} is a continuation of the first release of the project whose purpose is to study the habitat use by waterbirds in coastal lagoons of the tropics while using the Agent-Based Modeling (ABM) techniques \cite{rflorent2019veibm1}. As mentioned in the outlook for the first version, we see space for additional features that will supposedly give a considerably fair understanding of the system, including its components. Hence, we have decided to implement new features to help conceive a dynamical system and simulate more physical characteristics of an interactive environment. But before going deep into more details concerning the newly-implemented features, namely their technical aspects, that are considered for the second release, let us first raise some relevant points about this project report.
 
+\subsection{Assumptions}
+Being the second part of the project defined to achieve a \emph{Virtual Environment (VE)} using ABM techniques to characterize the waterbirds behaviors, adaptation, and evolution within a set of habitats with distinguishable properties \cite{rflorent2019veibm1}, this report is indeed addressed to an audience with some practical understanding of the previous carried-out work\footnote{It is highly recommended to check out the documentation of the \emph{Virtual Environment for Individual-Based Modeling - Part I} project to grasp specific tightly-related concepts and understand certain decision-making when it comes to choosing between two(2) or more options. Refer to Appendix \ref{sec:code-repo} for more details on how to access this documentation.}. Additionally, it is expected that the reader possesses some knowledge on the following concepts: \emph{basic Python programming, descriptive statistics}.
+
+Considering the statements mentioned above, it is assumed that the reader is already familiar with these concepts and therefore any mention of them will not be enforced through further detailed explanation in this document. However, although that broader explanation will not be provided throughout the following sections, particular notes and references will be intentionally used as a form of guidance for further readings.
+
+\subsection{Motivation}
+The idea of having a virtual environment for ABM systems is quite innovative. It attracts many social science disciplines and looks very promising from an end-user perspective. As for ecological systems, being able to replicate into the computing world a specific real-world environmental context or situation while considering all (or the major part) of its complexities and implications is an opportunity knocking for alliviating some research projects (accounting for bugdets, expenses, resources, etc.). This project itself is a good example to illustrate the importance of having a virtual environment for further analysis on ecological systems.
+
+In addition to that, the realization of this project will provide the following benefits:
+\begin{itemize}
+    \item \textbf{Contribution to life science}: given that computational resources and equipment can be taken advantage of for heavy calculations, having the proper tools to carry out successfully related experiments is considered as an asset to the science community.
+    \item \textbf{Contribution to waterbirds' lifestyle}: by simulating the waterbirds' life in a virtual environment, predictive analyses can help to determine factors that cause natural resources (food availabilty, drought) exhaustion or any other similar negative consequences, and take anticipated decisions to limit or mitigate them.
+    \item \textbf{Intellectual Property}: not only the tool can contribute to a large community that supports advanced techniques to improve life science work, but the author of such a tool can also benefit from worldwide recognition and publications.
+\end{itemize}
+
+\subsection{General Comments}
+Recalling that the following document is about the tool used to describe the interactions of the waterbirds within some habitats in the tropics, it is done in a very highly technical way. That is, since the key concepts of the virtual environment tool is explained in the first part of the project, the following sections dive deep down into the programming techniques used to implement it. With the purpose of providing an easy-to-follow guide to grasp the main idea behind the writing of this report, an overview of its structure is outlined below:
+\begin{itemize}
+    \item \textbf{Overview}: though it is not necessarily a concern, yet it is relevant to retake some of the notions discussed in the past work to facilitate the understanding of the terms that are used across the document. Parts of these notions are the basic theoretical background, the previous methods to operate the virtual environment, the obtained results and discussions, and the reasons for having a part two (2).
+    \item \textbf{Features}: right after explaining the reasons of defining new goals and how to reach them, we discuss the new features considered for the VE. The most relevant features are the application of a dynamical environment (involving more environmental characteristics/properties), the increase of the number of species (waterbirds), the one-unit time processing implementation, and some techniques for further analyses.
+    \item \textbf{Methodology}: Obviously, the procedural methods used in the past suffer some breaking changes while adding the new features and these changes are discussed in the corresponding section. Besides that, it is important to highlight certain points taken into account to ease up the development speed and productivity from a programmer's perspective.
+    \item \textbf{Results}: the reported results vary as the environment changes. Hence, we expose and assess them while maintaining the scope closed and simple, and we provide some outlook given the impediments we have confronted.
+\end{itemize}
+
+Keep in mind that for each subtopic mentioned above, we break them down into smaller points to facilitate an easy-to-understand structure and elaborate supporting details. This report is also available on \href{https://github.com/}{GitHub} under a public repository: \href{https://github.com/systemsecologygroup/BirdsABM}{github.com/systemsecologygroup/BirdsABM}. Please refer to Appendix \ref{sec:code-repo} to know how to walk through the repository and contribute to this project in the future.
 % ==============================================================================
 % END: Introduction
 % ==============================================================================
