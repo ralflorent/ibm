@@ -10,20 +10,73 @@
 %   Davi Tavares <davi.tavares@leibniz-zmt.de>
 %   Agostino Merico <a.merico@jacobs-university.de>
 %
-% 1) Introduction
-% 2) Theoretical background
-% 3) Instrumentation (software and tools)
-% 4) Methods (Procedure)
-% 5) Results, Discussions
-% 6) Conclusion
-% 7) References
+% - Overview
+% - Features
+% - Methods (Procedure)
+% - Results, Discussions
+% - Conclusion
+% - References
 
 % ==============================================================================
 % START: Methods, Results, Discussions, Conclusion
 % ==============================================================================
+\section{Additional Features}
+As discussed in previous sections, the first part of the project leaves a lot of rooms for improvement. As a matter of fact, that is the reason why we have decided to come up with additional features and augment the functional capabilities for both end-users and developers. Thus, we introduce in the section the set of chosen features and their importance across the application.
 
-\section{Instrumentation}
+For the second version of the project, we have selected carefully  a set of features to gradually integrate into the first version as we maintain the same workflow scheme (see Figure \ref{fig:workflow-scheme}). These additional features are:
+\begin{enumerate}
+    \item \textit{File structure}
+    \item \textit{More types of agents}
+    \item \textit{Multiple-agent updates per processing unit}
+    \item \textit{Dynamical environment.}
+\end{enumerate}
 
+\noindent
+Next, we detail each one of them and their importance for the project.
+
+\subsection{A new file structure}
+Though it should not be seen as a proper\footnote{Obviously, there are many definitions of a software feature, however, this action seems more like a refactoring than a new capability to the project. Proposing a new approach for file organization is yet questionable as it does not represent a distinguishable characteristic/capability of the project.} feature for the project, yet it remains an essential factor for the refactoring of the code implementation. Renewing the file structure of the project is the first step considered before anything.
+
+Recall that the first code implementation was done in a single Python file (basically, a Jupyter Notebook). The implementation itself was good because it follows a standard programming workflow, which implies that the code should be at least \textit{architected, standardized, structured, scalable, collaborative, documented}, and so forth \cite{rflorent2019veibm1, smashingmagazine}. However, that is not the best approach to keep up as we are adding more features and therefore increasing the degree of complexity of the project. With that being said, restructuring the file organization by breaking the main code into small chunks of code plays an important role in the project maintenance and scalability. The open source community names this decision: \say{a near-term view of implementation and a long-term vision}. Observe in the scheme below the compliant's folder and the new file structure used for the current implementation.
+
+\input{sections/file-struct}
+
+\noindent
+Being out of the scope of this document, we will not discuss here other related topics such as \textit{file structure convention, file naming, single responsibility principle}, among others. These topics are quite engaging and require further readings. Please feel free to refer to the \emph{Coding Style Guide} for Python programming at \href{https://www.python.org/dev/peps/pep-0008/}{python.org/dev/peps/pep-0008} or \href{http://google.github.io/styleguide/pyguide.html}{google.github.io/styleguide/pyguide.html} for more details.
+
+Note that, besides the file structure, we also follow an application structure commonly called LIFT:
+\begin{itemize}
+    \item L: locate quickly the code
+    \item I: identify the code at a glance
+    \item F: keep the flattest structure possible
+    \item T: try to be DRY | Don't Repeat Yourself \textit{(avoid being so DRY that it sacrifices readability).}
+\end{itemize}
+\noindent
+Needless to say, having a good file structure along with a LIFT structure makes the project more robust and undoubtedly scalable. Now that we have a clear understanding of the file structure, let us see how we integrate the actual features with it.
+
+\subsection{More than 2 types of agents}
+In the previous version of the project, we hardcoded two (2) types of agents: \emph{short-legged} and \emph{long-legged} waterbirds. Recall as we discussed in Section \ref{sec:overview} that in the real world there are more than just two categories of waterbirds. This short- and long-legged way of categorizing the agents was a simple approach as we intend to firstly create a pilot test and then built upon it something more complex. So, based on the assumption that the belly of birds cannot touch the water because it would contradict the homeostasis theory\footnote{Birds would lose temperature rapidly.}, we involve a set of four (4) bird species, with legs sizes of 5 cm (small shorebirds), 10 cm (big shore birds), 30 cm (small herons) and 60 cm (big herons). As for their virtual representation in the VE, we discuss the implementation in Section \ref{sec:methodology}.
+
+\subsection{Multiple-agent updates per processing unit}
+Going a bit more technical, the previous implementation was lacking the functional capability of processing all the agents separately for a single update. That is to say, for $n$ processing times, only $n$ agents were randomly selected and processed\footnote{Processed: update an agent geometric position if the criteria for moving it were met.} with possibility of replacement. For instance, in a setting of 10 agents and 5 processing times, it is possible that the same exact bird gets selected and processed 5 times.
+
+This new feature, \emph{Multiple-agent updates per processing unit}, refers to adding the capability of processing every single agent for every processing unit.
+
+\noindent
+\textbf{Important}: \textit{Be aware that we use the term \emph{process} in lieu of \emph{update} when referring to moving an agent randomly to another position. There is a little nuance and we want to keep a clear cut. It occurs that the term \emph{process} is more global and avoids the confusion that will always move. As a matter of fact, process means to try to update. An agent will move if and only if the conditions for moving to another place are met.}
+
+\subsection{Make the environment more dynamical}
+Finally, we opt for using a dynamical environment, that is, by varying certain characteristics of the environment. One of the most relevant environmental factors in the VE setting is the water depth. By tweaking this parameter, we can simulate environmental changes (not in the VE though) over time and observe how the waterbirds evolve with those changes. Why? Because in real-life situations, the waterbirds' interactions and evolution are highly correlated to environmental changes.
+
+Simulating an environment change within the virtual environment is a bit tricky and requires to tweak some variables to obtain the desired results. So, we provide more details on this specific case scenario in Section \ref{sec:methodology}.
+
+% \subsection{Data tracking for sensitivity analysis}
+
+\section{Methodology}\label{sec:methodology}
+
+\section{Results \& Discussions}
+
+\section{Conclusion}
 % ==============================================================================
 % END: Methods, Results, Discussions, Conclusion
 % ==============================================================================
