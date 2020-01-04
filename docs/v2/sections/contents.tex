@@ -20,7 +20,7 @@
 % ==============================================================================
 % START: Methods, Results, Discussions, Conclusion
 % ==============================================================================
-\section{Additional Features}
+\section{Additional Features}\label{sec:features}
 As discussed in previous sections, the first part of the project leaves a lot of rooms for improvement. As a matter of fact, that is the reason why we have decided to come up with additional features and augment the functional capabilities for both end-users and developers. Thus, we introduce in the section the set of chosen features and their importance across the application.
 
 For the second version of the project, we have selected carefully  a set of features to gradually integrate into the first version as we maintain the same workflow scheme (see Figure \ref{fig:workflow-scheme}). These additional features are:
@@ -73,6 +73,73 @@ Simulating an environment change within the virtual environment is a bit tricky 
 % \subsection{Data tracking for sensitivity analysis}
 
 \section{Methodology}\label{sec:methodology}
+The methods used in the first version are still applicable for this version of the project, with the exception of employing some key changes without losing the main focus. So, we describe in the following section what has been changed and how these changes were implemented.
+
+\subsection{The application}
+What is happening now when the application runs? Recall the workflow scheme in Figure \ref{fig:workflow-scheme} that indicates the three (3) main steps \textit{Initialize, Observe, Update} used in the first part VE simulation. The idea is still the same, except that we include now more internal processes. As illustrated in line number \emph{3} of Listing \ref{lst:app}, the core methods imported to operate the simulation are exactly the same. In other words, the application runs and does the following:
+\begin{itemize}
+    \item first, initializes some internal configurations (we detail more about it later)
+    \item next, creates $m$ number of habitats and $n$ number of agents
+    \item then, snapshots the current state of the environment
+    \item finally, runs the update process per time unit $t$.
+\end{itemize}
+
+\noindent
+We omit for now the \emph{post-condition} operations (scripts) since they are not part of the main idea but simply helper functionalities for future analyses.
+
+\subsection{External configuration}
+Although it implies the utilization of intensive programming to implement it, we proceed this time by adding a configuration file to load the external setup for the program to run. The two files in charge of such a task are \emph{config.yml} and \emph{config.py} and are located under the \emph{src/notebooks} folder. For best practice and for human-readability reasons \cite{mthoma2014cfgyml}, the \emph{config.yml} file is used, among other suitable options, to pass an application profile along with the parameters required by the system to operate. The profile is useful for meta operations like file system handling, for example, whereas the parameters are a way to load the core values such habitat and/or agent information for the simulation. For example, loading dynamically the types of agents is made quite practical with the external setup. That is, an array of agents with the format shown below is expected and will be internally handled and represented as-is in the virtual environment.
+\begin{minted}
+    [
+        baselinestretch=1.2,
+        bgcolor=bg-mint,
+        fontsize=\footnotesize,
+    ]
+    {yaml}
+agents:
+    - type: 30cm # unique identifier to categorize an agent
+    quantity: 7  # total of agents of this kind to create
+    color: '#7C79A2' # color representation of this type of agent
+    label: 30cm-legged # descriptive label for the plots
+    fn: # runnable function (definition, dependencies, arguments)
+        def: 'lambda x: -10.89 * math.log(x) + 44.71'
+        deps:
+            - 'import math'
+        args:
+            - x
+    habs: # types of habitats allowed for use
+        - 1
+        - 2
+\end{minted}
+
+On the other hand, the \emph{config.py} file is applied to load the main configuration in memory and apply it when it is necessary. The file serves also as basis to set some constants values as they are frequently used across the application.
+
+\begin{listing}[H]
+    \inputminted
+    [
+        baselinestretch=1.2, % interspace size
+        bgcolor=bg-mint,
+        fontsize=\footnotesize,
+        linenos % show line numbers
+    ]
+    {python}{scripts/app.py}
+    \caption{Main entry point of the application}
+    \label{lst:app}
+\end{listing}
+
+\subsection{File system handling}
+The initial setup involves additional settings besides loading the external configuration. These settings are the file system handling, the operating system check, and the python environment (kernel). They help to prepare a sanitized workspace to run the application without crossing some surprising exceptions at the time of execution.
+
+The application is made smart enough to create, remove, and check the existence of files within the scope of the project. The folders \emph{samples} and \emph{graphs} are used for this purpose and contain respectively snapshots and plots files. Keep in mind that for the file system handling, certain use cases (e.g., user permissions) are considered.
+
+\subsection{The constants}
+The constants are useful when it comes to avoiding magic strings and numbers. As mentioned before, the loaded configuration is part of the constants used throughout the application. Besides that, we use constants for core elements (e.g., key identifier for the static habitats), directory and file paths, in-memory storage, and default values.
+
+\subsection{The helpers}
+As we mention in previous sections, the core functionalities \emph{Initialize, Observe, Update} include some internal operations. For reusability reasons, we use helper functions to handle these operations such as random points generation, euclidean distance, gif maker, and so on.
+
+\subsection{The \emph{Update} algorithm}
+
 
 \section{Results \& Discussions}
 
