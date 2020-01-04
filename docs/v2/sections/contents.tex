@@ -65,7 +65,7 @@ This new feature, \emph{Multiple-agent updates per processing unit}, refers to a
 \noindent
 \textbf{Important}: \textit{Be aware that we use the term \emph{process} in lieu of \emph{update} when referring to moving an agent randomly to another position. There is a little nuance and we want to keep a clear cut. It occurs that the term \emph{process} is more global and avoids the confusion that will always move. As a matter of fact, process means to try to update. An agent will move if and only if the conditions for moving to another place are met.}
 
-\subsection{Make the environment more dynamical}
+\subsection{Make the environment dynamical}
 Finally, we opt for using a dynamical environment, that is, by varying certain characteristics of the environment. One of the most relevant environmental factors in the VE setting is the water depth. By tweaking this parameter, we can simulate environmental changes (not in the VE though) over time and observe how the waterbirds evolve with those changes. Why? Because in real-life situations, the waterbirds' interactions and evolution are highly correlated to environmental changes.
 
 Simulating an environment change within the virtual environment is a bit tricky and requires to tweak some variables to obtain the desired results. So, we provide more details on this specific case scenario in Section \ref{sec:methodology}.
@@ -73,22 +73,21 @@ Simulating an environment change within the virtual environment is a bit tricky 
 % \subsection{Data tracking for sensitivity analysis}
 
 \section{Methodology}\label{sec:methodology}
-The methods used in the first version are still applicable for this version of the project, with the exception of employing some key changes without losing the main focus. So, we describe in the following section what has been changed and how these changes were implemented.
+The methods used in the first version are still applicable for this version of the project, with the exception of employing some key changes without losing the main focus. So, we describe in the following section what has been changed and how these changes are implemented.
 
 \subsection{The application}
-What is happening now when the application runs? Recall the workflow scheme in Figure \ref{fig:workflow-scheme} that indicates the three (3) main steps \textit{Initialize, Observe, Update} used in the first part VE simulation. The idea is still the same, except that we include now more internal processes. As illustrated in line number \emph{3} of Listing \ref{lst:app}, the core methods imported to operate the simulation are exactly the same. In other words, the application runs and does the following:
-\begin{itemize}
-    \item first, initializes some internal configurations (we detail more about it later)
-    \item next, creates $m$ number of habitats and $n$ number of agents
-    \item then, snapshots the current state of the environment
-    \item finally, runs the update process per time unit $t$.
-\end{itemize}
-
-\noindent
+What is happening now when the application runs? Recall the workflow scheme in Figure \ref{fig:workflow-scheme} that indicates the three (3) main steps \textit{Initialize, Observe, Update} used in the first part of the VE simulation. The idea is still the same, except that we include now more internal processes. As illustrated in line number \textcolor{blue}{3} of \textcolor{blue}{Listing} \ref{lst:app}, the core methods imported to operate the simulation are exactly the same. In other words, the application runs and does the following:
+\begin{enumerate}
+    \item first, initializes some internal configurations (we detail more about it later);
+    \item next, creates $m$ number of habitats and $n$ number of agents;
+    \item then, snapshots the current state of the virtual environment;
+    \item then, runs the update process per time unit $t$;
+    \item finally, repeat the bullet points (3) and (4) for $p$ times.
+\end{enumerate}
 We omit for now the \emph{post-condition} operations (scripts) since they are not part of the main idea but simply helper functionalities for future analyses.
 
 \subsection{External configuration}
-Although it implies the utilization of intensive programming to implement it, we proceed this time by adding a configuration file to load the external setup for the program to run. The two files in charge of such a task are \emph{config.yml} and \emph{config.py} and are located under the \emph{src/notebooks} folder. For best practice and for human-readability reasons \cite{mthoma2014cfgyml}, the \emph{config.yml} file is used, among other suitable options, to pass an application profile along with the parameters required by the system to operate. The profile is useful for meta operations like file system handling, for example, whereas the parameters are a way to load the core values such habitat and/or agent information for the simulation. For example, loading dynamically the types of agents is made quite practical with the external setup. That is, an array of agents with the format shown below is expected and will be internally handled and represented as-is in the virtual environment.
+Although it implies the utilization of intensive programming to implement it, we proceed this time by adding a configuration file to load the external setup for the physical environment setting to run or simulate. The two files in charge of such a task are \emph{config.yml} and \emph{config.py} and are located under the \emph{src/notebooks} folder. For best practice and human-readability reasons \cite{mthoma2014cfgyml}, the \emph{config.yml} file is used, among other suitable options, to pass an application profile along with the parameters required by the system to operate. The profile is useful for meta operations like file system handling, for example, whereas the parameters are a way to load the core values such as habitat and/or agent information for the simulation. For example, loading dynamically the types of agents is made quite practical with the external setup. That is, an array of agents with the format shown below is expected and will be internally handled and represented as-is in the virtual environment.
 \begin{minted}
     [
         baselinestretch=1.2,
@@ -128,17 +127,69 @@ On the other hand, the \emph{config.py} file is applied to load the main configu
 \end{listing}
 
 \subsection{File system handling}
-The initial setup involves additional settings besides loading the external configuration. These settings are the file system handling, the operating system check, and the python environment (kernel). They help to prepare a sanitized workspace to run the application without crossing some surprising exceptions at the time of execution.
+The initial setup involves additional settings besides loading the external configuration. These settings are the file system handling, the operating system status check, and the python environment (kernel). They help to prepare a sanitized workspace to run the application without crossing some surprising exceptions (e.g., memory leaks or overflow) at the time of execution.
 
-The application is made smart enough to create, remove, and check the existence of files within the scope of the project. The folders \emph{samples} and \emph{graphs} are used for this purpose and contain respectively snapshots and plots files. Keep in mind that for the file system handling, certain use cases (e.g., user permissions) are considered.
+The application is made smart enough to create, remove, and check the existence of files within the scope of the project. The folders \emph{samples} and \emph{graphs} are used for this purpose and contain respectively snapshots and plots files. Keep in mind that, for the file system handling, specific use cases (e.g., user permissions) are not taken into account.
 
 \subsection{The constants}
 The constants are useful when it comes to avoiding magic strings and numbers. As mentioned before, the loaded configuration is part of the constants used throughout the application. Besides that, we use constants for core elements (e.g., key identifier for the static habitats), directory and file paths, in-memory storage, and default values.
 
 \subsection{The helpers}
-As we mention in previous sections, the core functionalities \emph{Initialize, Observe, Update} include some internal operations. For reusability reasons, we use helper functions to handle these operations such as random points generation, euclidean distance, gif maker, and so on.
+As we mention in the previous sections, the core functionalities \emph{Initialize, Observe, Update} include some internal operations. For reusability reasons, we use helper functions to handle these operations such as random points generation, euclidean distance, gif maker, and so on.
+
+\subsection{The \emph{Agent} class definition}
+In the first place, the \emph{Agent} class was defined such that it accepts on-the-fly attributes. Normally, we kept it simple:
+\begin{itemize}
+    \item \textbf{\textit{type}}: the category name of the waterbird species;
+    \item \textbf{\textit{x, y}}: the x- and y-coordinate of the agent's position within the VE.
+\end{itemize}
+For this implementation, we define properly the attributes for the class and add the \emph{color} and \emph{name} attributes. These represent respectively the color of an agent's specific type and a unique identifier for data tracking. Moreover, we make the \textbf{\textit{x}}- and \textbf{\textit{y}}-coordinate attributes private and combine them into a single private property called \textbf{\textit{point}} | point(x, y), a 1-dimensional tuple of shape (2,) representing a geometric position in a Cartesian plane. Being a private property, we provide the methods \emph{get\_point()} and \emph{set\_point((x, y))} acting respectively as \emph{getter} and \emph{setter} for such a property.
 
 \subsection{The \emph{Update} algorithm}
+Roughly speaking, the instructions, as referred in \textcolor{blue}{Algorithm} \ref{algo:update-ve1}, define a synchronous approach for allocating randomly a new position \emph{x, y} to an agent if the criteria for moving are met. This was the basic idea of the \emph{update} algorithm.
+
+\vspace{0.4cm}
+\begin{algorithm}[H]
+    \SetAlgoLined
+    \KwData{Given a randomly selected agent}
+    \KwResult{Update an agent's position when doable}
+    Randomly choose a new destination within an \say{acceptable} habitat\;
+    Compute the probability of that new destination use for this agent \;
+    \eIf{the calculated probability complies with the threshold}{
+        move the selected agent to that new destination\;
+    }{
+       maintain the same position\;
+    }
+    \caption{Update (VE Part I)}
+    \label{algo:update-ve1}
+\end{algorithm}
+\vspace{0.4cm}
+
+Recalling that this algorithm above is defined in its most simplistic model, we had already anticipated that some changes would be necessary to make the virtual environment dynamical. As a result, to implement additional functionalities like \emph{multiple-agent update per processing unit}, we break down the general idea into 2 pieces (or callable functions): \emph{update} and \emph{update\_one}.
+\begin{itemize}
+    \item \textbf{\textit{update}}: (short for update all) is an iteration over all the existing agents and apply some changes;
+    \item \textbf{\textit{update\_one}}: is the same \emph{update} procedure defined in \textcolor{blue}{Algorithm} \ref{algo:update-ve1}.
+\end{itemize}
+\noindent
+\textbf{Important}: \textit{For this version of the VE prototype, we will refer to \texttt{update} as \texttt{update\_all} to avoid confusion.}
+
+\subsection{The criteria for allocating new positions}
+The criteria for allocating new positions to an agent are defined by the following characteristics: water depth, lagoon salinity, food availability, and minimal distance to human settlements. These characteristics are used to calculate the probability of moving to a new allowed destination (habitat), along with a chosen threshold\footnote{Valid for sensitivity analysis by tuning its value.}. In other words, the movement is considered adequate when the overall probability surpasses the chosen threshold.
+
+Because of these criteria, we use internally a set of helpers to compute specific operations like the minimal distance to the human settlements, for example. Observe the lines \textcolor{blue}{22, 23, 24, 35} in \textcolor{blue}{Listing} \ref{lst:update-one} the respective helper functions \emph{gen\_rand\_point(), which\_habitat(), compute\_dist(), eval\_fn()}. Keep in mind that the calculations in lines \textcolor{blue}{36, 37, 38} are statically set, and therefore, overly apply to any type of agents. That is because the specific functions for these probability calculations are still missing.
+
+\begin{listing}[H]
+    \inputminted
+    [
+        baselinestretch=1.2, % interspace size
+        bgcolor=bg-mint,
+        fontsize=\footnotesize,
+        linenos % show line numbers
+    ]
+    {python}{scripts/update-one.py}
+    \caption{Update agent in one unit of time}
+    \label{lst:update-one}
+\end{listing}
 
 
 \section{Results \& Discussions}

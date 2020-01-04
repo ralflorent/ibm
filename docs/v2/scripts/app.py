@@ -1,6 +1,7 @@
 import config
 import constants
 from core import initialize, observe, update
+# omit other imports for post-conditions
 
 # main entry point for the application
 def application():
