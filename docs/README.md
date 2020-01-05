@@ -1,7 +1,5 @@
-## About the documentation
-
+# About the documentation
 The documentation (of both versions `v1` and `v2`) is written using the [LaTeX](https://www.latex-project.org/about/) framework. Read more about it [here](https://www.latex-project.org/) to have a big picture.
----
 
 ### Why LaTeX?
 As their official webpage states, it is a high-quality typesetting system. It has incredible features and allows flexibility for technical and scientific documentation. As the document is mainly technical, we understand that it fits better to write it using such a system.
