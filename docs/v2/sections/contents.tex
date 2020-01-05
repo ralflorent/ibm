@@ -191,10 +191,78 @@ Because of these criteria, we use internally a set of helpers to compute specifi
     \label{lst:update-one}
 \end{listing}
 
-
 \section{Results \& Discussions}
+To test out the second version of the VE prototype, we prepare a setting with these values shown in Table \ref{table:test-setting}. Obviously, this setting is configured using the YAML file, \emph{config.yml}, which, in turn, is loaded via the \emph{config.py} for future use.
 
+\begin{table}[!ht]
+    \begin{center}
+        \begin{tabular}{ ||l|l|l|| }
+            \hline
+            \multicolumn{3}{ ||c|| }{ \textbf{Setting for Testing}} \\
+            \hline \hline
+            \textbf{\textit{Processing times}} & \multicolumn{2}{c||}{25} \\
+            \hline
+            \textbf{\textit{Threshold}} & \multicolumn{2}{c||}{$1 * e^{-7}$}\\
+            \hline
+            \multirow{4}{*}{\textbf{\textit{Waterbirds species}}}& 5 cm & 5 in Habitat 1 \\\cline{2-3}
+            & 10cm & 4 in Habitat 1\\\cline{2-3}
+            & 30cm & 7 in Habitat 1, 2\\\cline{2-3}
+            & 60cm & 5 in Habitat 1, 2, 3\\\cline{2-3}
+            \hline
+            \multirow{4}{*}{\textbf{\textit{Rainfall distribution}}}& time: 1-10 & 20 units \\\cline{2-3}
+            & time: 11-20 & 200 units\\\cline{2-3}
+            & time: 21-30 & 600 units\\\cline{2-3}
+            & time: 31-40 & 30 units\\\cline{2-3}
+            & time: 41-50 & 0 \\
+            \hline
+        \end{tabular}
+        \caption{Values and parameters used to load the configuration for the initial setup of the VE prototype. The results are shaped in accordance with these preset values, but not necessarily the same due to the randomness the initial state.}
+        \label{table:test-setting}
+    \end{center}
+\end{table}
+
+Note that there is no external configuration format for the habitats yet. That is because the code implementation is tightly coupled to the existing design (and geometry) initially set. Automating the design setting for the VE prototype would add more complexity to the current virtual environment, hence, it can be tackled down in a future release of the prototype. Similarly, be aware that the specific probability functions used to compute the overall probability of moving an agent are not normalized yet. That is the reasons why the chosen threshold is so relatively low. Otherwise, the agent would never get updated. Fair tuning values for the threshold should be in the range of two (2) decimals (e.g., 0.10; 0.25; 0.50, etc.).
+
+The feature, \emph{multiple-agent updates per processing unit}, makes the VE computations expensive and time-consuming. Given the handheld device\footnote{Laptop with limited computational resources (RAM + CPU).} used to try out the setting, we choose a considerably fair processing times value, which is twenty-five (25) to run our tests. That is, for a total number of twenty-one (21) agents, the \emph{update\_one} function will be executed $21 * 25$ times. That is just the tip of the iceberg. Deep down within the \emph{update\_one()} function is the \emph{gen\_rand\_one()} called to generate a randomly \say{acceptable} position. Depending on the habitat's capacity, this \emph{gen\_rand\_one()} function can be quite time- and memory-consuming due to its infinite search for new positions.
+
+
+Now that we have explained the reasons of our values and parameters choices, let us present the obtained results that correspond to the chosen setting.
+\begin{figure}[!ht]
+    \centering
+    \frame{\includegraphics[width=\textwidth]{results/sample.png}}
+    \caption{Example of a snapshot sample. Taken at the very first processing time, this snapshot displays the physical environment setting and distribution of agents within the simulation.}
+    \label{fig:snapshot-sample}
+\end{figure}
+
+In Figure \ref{fig:snapshot-sample}, we present an example of a snapshot when running the VE simulation. This snapshot is taken in time 1 during the execution, which is the initial state of the components within the VE. Then, for every processing unit, a new snapshot will be generated and saved. Recall that this preview illustrated in Figure \ref{fig:snapshot-sample} is simply a visual aid for observations. But, in reality, we use a dictionary-based data format to hold in memory a summary of each state after processing, which is later on used for other purposes such as generating plots, data tracking, and sensitivity analysis.
+
+The graph shown in Figure \ref{fig:graph-distribution} is actually a graphical representation of that summary mentioned above. For example, each subplot displays the distribution of the waterbirds' frequency in each lagoon.
+\begin{figure}[!ht]
+    \centering
+    \frame{\includegraphics[width=\textwidth]{results/graph.pdf}}
+    \caption{Summary of the simulation of the waterbirds in the tropics. This simulation corresponds to the setting used in Table \ref{table:test-setting}.}
+    \label{fig:graph-distribution}
+\end{figure}
+
+Despite the new changes brought up to this version of the simulation, there is still room for improvement. Roughly speaking, we can enumerate the following flaws:
+\begin{itemize}
+    \item the units need to be double-checked and standardized;
+    \item the probability functions need to be double-checked and normalized;
+    \item the real-world values must mapped correctly the values used in the virtual environment;
+    \item the habitats' capacity are not taken into account, yet it remains an essential criterion for moving;
+    \item the current code implementation is not unit-tested;
+    \item the application is partially documented;
+    \item among other considerations.
+\end{itemize}
+
+\clearpage
+\newpage
 \section{Conclusion}
+In this document, the main changes performed on the first version of the virtual environment have been highlighted and described. These changes are the main aspects that characterize the second version of this project. This version of the simulation is technically more robust and partly automated through external configurations.
+
+This VE prototype is now capable of simulating a dynamical environment along with different waterbirds species. Meanwhile, it lacks some implementation regarding the probability functions that are specific to the waterbird species and the characteristics (salinity, food) of the given physical environment.
+
+A test setting is chosen to try out the core functionalities of the prototype. The simulation works as expected and the test results surely prove it. Unfortunately, no conclusion concerning the waterbirds' evolution or interactions can be drawn yet as the assumptions from the coastal lagoons are still in their analysis stage.
 % ==============================================================================
 % END: Methods, Results, Discussions, Conclusion
 % ==============================================================================
