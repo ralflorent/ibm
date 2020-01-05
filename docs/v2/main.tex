@@ -3,7 +3,7 @@
 % Advanced Project II - Jacobs University Bremen
 % Supervisor: Dr. Stefan Kettemann
 %
-% Created on January 10, 2019
+% Created on January 10, 2020
 %
 % Authors:
 %   Ralph Florent <r.florent@jacobs-university.de>
@@ -25,6 +25,7 @@
 \usepackage[british,UKenglish,USenglish]{babel}
 \usepackage[backend=biber,style=numeric,sorting=none]{biblatex}
 \usepackage[utf8]{inputenc} % required to load before csquotes
+\usepackage{caption}
 \usepackage{csquotes}
 \usepackage{dirtree}
 \usepackage{dirtytalk}
@@ -54,6 +55,9 @@
     urlcolor = blue
 }
 \urlstyle{same}
+
+% Override caption default configurations
+\captionsetup{labelfont={color=blue}}
 
 \addbibresource{references.bib} % Input references by file
 \graphicspath{{images/}} % Set path for image preloading
