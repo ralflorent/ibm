@@ -1,4 +1,4 @@
-# About the documentation
+## About the documentation
 
 The documentation (of both versions `v1` and `v2`) is written using the [LaTeX](https://www.latex-project.org/about/) framework. Read more about it [here](https://www.latex-project.org/) to have a big picture.
 ---
@@ -9,7 +9,7 @@ As their official webpage states, it is a high-quality typesetting system. It ha
 Additionally, it can be control-versioned.
 
 ### How to compile
-We use [Visual Studio Code](https://code.visualstudio.com/) editor, combined with the [Latex-Workshop](https://marketplace.visualstudio.com/items?itemName=James-Yu.latex-workshop) extension and the alreeady-installed `pdflatex` engine, to compile the entire project.
+We use [Visual Studio Code](https://code.visualstudio.com/) editor, combined with the [Latex-Workshop](https://marketplace.visualstudio.com/items?itemName=James-Yu.latex-workshop) extension and the already-installed `pdflatex` engine, to compile the entire project.
 
 ### Overleaf
 [Overleaf](https://www.overleaf.com/) is an easy-to-use, online, collaborative LaTeX editor. In case it cannot be compiled on your machine, this remains a suitable alternative to end up with the same results. Though it is a simple task, we do not provide an already-available collaborative documentation. However, anyone willing to proceed is welcome to do so.
