@@ -25,9 +25,10 @@ CONFIG = config.CONFIG
 CNF_AG = CONFIG['app']['agents']
 TOTAL_AGENT_TYPE = len(CNF_AG)
 TOTAL_AGENTS = sum([ag_cnf['quantity'] for ag_cnf in CNF_AG])
+MAX_AGENT_QTY = max([ag_cnf['quantity'] for ag_cnf in CNF_AG]) + 1
 
 # Core elements: unique (used as key identifier)
-PROCESSING_TIME = CONFIG['app']['counter'] # time limit for the entire process
+PROCESSING_TIME = int(CONFIG['app']['counter']) # time limit for the entire process
 TIME_DIVISOR = CONFIG['app']['rain']['divisor']
 
 LAGOON_ORANGE_SM = 'lagoon-orange-sm'
@@ -68,9 +69,24 @@ GRAPH_DIR = config.graphDir
 # In-memory storage
 STORE = dict()
 STORE['env'] = list()
-STORE['agents'] = list()
-STORE['habitats'] = list()
-STORE['images'] = list()
+STORE['stats'] = {
+    'processing_unit': [],
+    'agent_name': [],
+    'agent_x': [],
+    'agent_y': [],
+    'hab_name': [],
+    'hab_type': [],
+    'hab_water_depth': [],
+    'hab_salinity': [],
+    'hab_food': [],
+    'hab_distance': [],
+    'prob_overall': [],
+    'prob_water': [],
+    'prob_salinity': [],
+    'prob_food': [],
+    'prob_distance': [],
+    'has_moved': []
+}
 
 # Default values for habitats
 DEFAULTS = dict()

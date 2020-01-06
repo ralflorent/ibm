@@ -16,36 +16,7 @@
 # ==============================================================================
 
 # -*- coding: utf-8 -*-
-import os
-import uuid
 import numpy as np # arithmetic computations
-import imageio as gm # gif maker
-import matplotlib.pyplot as plt
-import constants as C
-
-
-def make_gif(gifname='image.gif', dirname=C.SAMPLE_DIR, storage=[]):
-    """
-    Store or dump all generated png images on disk
-
-    TODO: proper docs
-    """
-    IMG_EXT = '.png'
-    filename = os.path.join(dirname, gifname)
-    if len(storage) == 0:
-        imgnames = [f for f in os.listdir(dirname) if f.lower().endswith(IMG_EXT)]
-        sorted_imgnames = sort_imgnames(imgnames, IMG_EXT)
-        for imgname in sorted_imgnames:
-            image = gm.imread(os.path.join(dirname, imgname))
-            storage.append(image)
-    gm.mimsave(filename, storage)
-    print(f'=> Snapshots combined and saved as GIF at <{filename}>')
-
-
-def sort_imgnames(imgnames, ext='.png', reverse=False):
-    names = list(map(int, [p.split(ext)[0] for p in imgnames]))# convert to integers
-    names.sort(reverse=reverse) # proper sorting for integers
-    return list(map(lambda n: str(n) + ext, names)) # restore names
 
 
 def gen_rand_point(habitats, option=None):
@@ -128,112 +99,19 @@ def which_habitat(point, habitats):
     return None
 
 
-def update_store(objects, agent, prob, hab):
-    """"""
-    objects = objects if isinstance(objects, list) else [objects]
+def eval_fn(meta_fn, *args):
+    fn_def, fn_args, fn_deps = meta_fn['def'], meta_fn['args'], meta_fn['deps']
+    if isinstance(fn_deps, list):
+        for dep in fn_deps: exec(dep, globals()) # execute deps if any
+    fn = eval(fn_def)
 
-    for o in objects:
-        for k in o.keys():
-            if k == agent.name:
-                o[k]['hab'].append(hab)
-                o[k]['pos'].append( (agent.x, agent.y) )
-                o[k]['pdf'].append(prob)
-                break
-
-
-def plot_figure():
-    """
-    TODO: proper docs
-    """
-    plt.rcParams['axes.grid'] = True
-    plt.rcParams['grid.alpha'] = 0.5
-    plt.rcParams['figure.titlesize'] = 12
-    plt.rcParams['font.size'] = 12
-    plt.rcParams['lines.linewidth'] = 1
-    plt.rcParams['lines.markersize'] = 3
-
-    t = np.arange(C.PROCESSING_TIME)
-
-    xlim = [0, C.PROCESSING_TIME]
-    ylim = [0, C.TOTAL_AGENTS]
-
-    grouped_agents = dict()
-    for ag_cnf in C.CNF_AG:
-        grouped_agents[ag_cnf['type']] = dict()
-
-    for regions in C.STORE['habitats']: # snapshot
-        for region_key in regions.keys(): # area key: 'orange-sm'
-            for grouped_key in grouped_agents: # by agent key: '15cm'
-                if region_key not in grouped_agents[grouped_key]:
-                    grouped_agents[grouped_key][region_key] = [] # make sure key exist
-                # final thread: { '15cm': { 'orange-sm': [4, ...] } } ::
-                # of this agent in region for each time t processing
-                grouped_agents[grouped_key][region_key].append(regions[region_key][grouped_key])
-
-    plt.cla()
-    plt.clf()
-    fig = plt.figure(2, figsize=(11, 6.5))
-    handlers = []
-
-    panel_A = fig.add_subplot(2,2,1)
-    panel_A.set_xlim(xlim)
-    panel_A.set_ylim(ylim)
-    panel_A.tick_params(axis='y', colors='orange')
-    panel_A.set_xlabel('Times')
-    panel_A.set_ylabel('Waterbirds', color='orange')
-    panel_A.set_title('Distribution in Habitat 1 (Large Lagoon)', fontsize=13)
-
-    panel_B = fig.add_subplot(2,2,2)
-    panel_B.set_xlim(xlim)
-    panel_B.set_ylim(ylim)
-    panel_B.tick_params(axis='y', colors='orange')
-    panel_B.set_xlabel('Times')
-    panel_B.set_ylabel('Waterbirds', color='orange')
-    panel_B.set_title('Distribution in Habitat 1 (Small Lagoon)', fontsize=13)
-
-    panel_C = fig.add_subplot(2,2,3)
-    panel_C.set_xlim(xlim)
-    panel_C.set_ylim(ylim)
-    panel_C.tick_params(axis='y', colors='blue')
-    panel_C.set_xlabel('Times')
-    panel_C.set_ylabel('Waterbirds', color='blue')
-    panel_C.set_title('Distribution in Habitat 2 (Blue Lagoon)', fontsize=13)
-
-    panel_D = fig.add_subplot(2,2,4)
-    panel_D.set_xlim(xlim)
-    panel_D.set_ylim(ylim)
-    panel_D.tick_params(axis='y', colors='green')
-    panel_D.set_xlabel('Times')
-    panel_D.set_ylabel('Waterbirds', color='green')
-    panel_D.set_title('Distribution in Habitat 3 (Green Lagoon)', fontsize=13)
-
-    for gk in grouped_agents.keys():
-        color = C.get_agentp(gk, 'color')
-        label = C.get_agentp(gk, 'label')
-        panel_A.plot(t, grouped_agents[gk][C.LAGOON_ORANGE_LG], '-o', color=color)
-        panel_B.plot(t, grouped_agents[gk][C.LAGOON_ORANGE_SM], '-o', color=color)
-        panel_C.plot(t, grouped_agents[gk][C.LAGOON_BLUE], '-o', color=color)
-        leg_handler, = panel_D.plot(t, grouped_agents[gk][C.LAGOON_GREEN], '-o', color=color, label=label)
-        handlers.append(leg_handler)
-
-    fig.legend(
-        handles=handlers,
-        loc='lower left',
-        bbox_to_anchor=(0.05, 0.98, 0.92, .102),
-        ncol=C.TOTAL_AGENT_TYPE, mode='expand',
-        borderaxespad=0., fancybox=True, shadow=True
-    )
-
-    fig.set_tight_layout(True) # Avoid panel overlaps
-    fig.suptitle('Simulation of Waterbirds in the Tropics', y=1.1, fontsize=14, fontweight='bold')
-    filename = os.path.join(C.GRAPH_DIR, uuid.uuid4().hex +'.pdf') # save in pdf format
-    plt.savefig(filename, bbox_inches='tight', pad_inches=0.1)
-    plt.show()
-
-    # reset store
-    C.STORE['agents'] = []
-    C.STORE['habitats'] = []
-
+    if not isinstance(fn_args, list) or len(fn_args) == 0: # no args required
+        return fn()
+    elif len(fn_args) == len(args):
+        kwargs = dict(zip(fn_args, args)) # zip into keyworded args: {'k': v, ...}
+        return fn(**kwargs)
+    else:
+        raise RuntimeError(f'Cannot evaluate this function <{fn_def}>. Check required arguments')
 
 # ==============================================================================
 # END: Helpers

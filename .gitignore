@@ -12,7 +12,7 @@
 dist/**/*.png
 dist/**/*.gif
 samples/**/*.png
-samples/**/*.gif
+#samples/**/*.gif
 
 # documentation
 docs/**/*.pdf

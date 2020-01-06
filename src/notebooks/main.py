@@ -49,7 +49,7 @@ def application():
     print('=> END: Processing random movements based on prob dist')
 
     # post-conditions
-    make_gif(CONST.SAMPLE_DIR, 'image.gif', CONST.STORE['images'])
+    make_gif('snapshots.gif')
     plot_figure()
 
 

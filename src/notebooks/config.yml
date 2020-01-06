@@ -10,7 +10,7 @@ paths:
   graph: graphs
 app:
   threshold: 1e-7
-  counter: 5
+  counter: 35
   rain:
       divisor: 10
       values:
