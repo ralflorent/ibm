@@ -26,6 +26,7 @@ import constants as C
 import copy as cp
 
 from matplotlib.path import Path # designing field
+from functools import reduce
 from helpers import gen_rand_point, which_habitat, compute_dist, update_store
 from habitat import Habitat
 from agent import Agent
@@ -184,10 +185,6 @@ def observe(habitats, agents, counter=0):
     image_path = os.path.join(C.SAMPLE_DIR, str(counter + 1) + '.png')
     plt.savefig(image_path, bbox_inches='tight', pad_inches=0.1)
     plt.close(fig)
-
-    # store image for final gif
-    image = gm.imread(image_path)
-    C.STORE['images'].append(image) # FIXME: read it when necessary
     # END: observe
 
 
@@ -237,9 +234,8 @@ def update_one(habitats, agent):
                 elif penv == 'f': probs['f'] = eval_fn(meta_fn, f)
                 else: probs['d'] = eval_fn(meta_fn, d)
 
-            # compute the probability of moving to this habitat
-            prob = 1.0
-            for p in probs.values(): prob *= p # a reducer fits better / prod():::sum()
+            # compute the overall probability of moving to this habitat
+            prob = reduce(lambda acc, val: acc * val, probs.values())
 
         if prob > C.THRESHOLD:
             agent.set_point((x, y))

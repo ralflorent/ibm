@@ -24,14 +24,28 @@ import matplotlib.pyplot as plt
 import constants as C
 
 
-def make_gif(dirname='./', gifname='image.gif', storage=[]):
+def make_gif(gifname='image.gif', dirname=C.SAMPLE_DIR, storage=[]):
     """
     Store or dump all generated png images on disk
 
     TODO: proper docs
     """
+    IMG_EXT = '.png'
     filename = os.path.join(dirname, gifname)
+    if len(storage) == 0:
+        imgnames = [f for f in os.listdir(dirname) if f.lower().endswith(IMG_EXT)]
+        sorted_imgnames = sort_imgnames(imgnames, IMG_EXT)
+        for imgname in sorted_imgnames:
+            image = gm.imread(os.path.join(dirname, imgname))
+            storage.append(image)
     gm.mimsave(filename, storage)
+    print(f'=> Snapshots combined and saved as GIF at <{filename}>')
+
+
+def sort_imgnames(imgnames, ext='.png', reverse=False):
+    names = list(map(int, [p.split(ext)[0] for p in imgnames]))# convert to integers
+    names.sort(reverse=reverse) # proper sorting for integers
+    return list(map(lambda n: str(n) + ext, names)) # restore names
 
 
 def gen_rand_point(habitats, option=None):
