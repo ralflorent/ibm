@@ -208,45 +208,52 @@ def update_one(habitats, agent):
     prob = 0.0
 
     for ag_cnf in C.CNF_AG: # for each category of agent (e.g., 15cm legged)
-        restricted_habs = [] # this agent can use certain areas only
-
+        # this agent can use certain areas only
+        restricted_habs = []
         for _type in ag_cnf['habs']:
             for hab in habitats:
                 if hab.type == _type:
                     restricted_habs.append(hab) # are these limited areas
                     break
 
-        if agent.type == ag_cnf['type']: # do's and dont's specific to this agent
-            _x, _y = gen_rand_point(restricted_habs, 'in')
-            _habitat = which_habitat((_x, _y), restricted_habs)
-            _d = compute_dist(_habitat, human_settlements)
+        # do's and dont's specific to this agent
+        if agent.type == ag_cnf['type']:
+            x, y = gen_rand_point(restricted_habs, 'in')
+            habitat = which_habitat((x, y), restricted_habs)
+            _d = compute_dist(habitat, human_settlements)
             min_index = _d.index( min(_d) ) # consider minimal distance
 
-            # specific characteristics (props) of the selected habitat
+            # specific characteristics of the selected habitat
             d = _d[min_index] # distance to human settlement
-            w, s, f = _habitat.props.values() # water depth, salinity, food availability
+            w, s, f = habitat.props.values() # water depth, salinity, food availability
 
             # this agent knows a specific way to compute certain operations
-            w_meta_fn = C.get_agentp(agent.type, 'fn')
+            meta_fns = C.get_agentp(agent.type, 'fns')
+            probs = { 'w': 0, 's': 0, 'f': 0, 'd': 0 } # track probabilities
+            for meta_fn in meta_fns:
+                penv = meta_fn['penv'] # which spec: w, s, f, d
+                if penv == 'w': probs['w'] = eval_fn(meta_fn, w)
+                elif penv == 's': probs['s'] = eval_fn(meta_fn, s)
+                elif penv == 'f': probs['f'] = eval_fn(meta_fn, f)
+                else: probs['d'] = eval_fn(meta_fn, d)
 
             # compute the probability of moving to this habitat
-            _prob_w = eval_fn(w_meta_fn, w)
-            _prob_d = -0.0013 * d**2 + 0.0074 * d - 0.0001
-            _prob_s = 0.00006 * s**2 + 0.0002 * s + 0.0004
-            _prob_f = (0.00673 * f**2) - (0.002936 * f) + 0.5
-            prob = _prob_s * _prob_w * _prob_d * _prob_f
+            prob = 1.0
+            for p in probs.values(): prob *= p # a reducer fits better / prod():::sum()
 
         if prob > C.THRESHOLD:
-            agent.set_point((_x, _y))
+            agent.set_point((x, y))
 
-    # store agent's position and probs
-    # update_store(C.STORE['agents'], agent, prob, _habitat.id)
-    return agent, _habitat
+        # store agent's position and probs
+        # update_store(C.STORE['agents'], agent, prob, _habitat.id)
+    return agent, habitat
     # END: update
 
 
 def eval_fn(meta_fn, *args):
-    fn_def, fn_args = meta_fn['def'], meta_fn['args']
+    fn_def, fn_args, fn_deps = meta_fn['def'], meta_fn['args'], meta_fn['deps']
+    if isinstance(fn_deps, list):
+        for dep in fn_deps: exec(dep, globals()) # execute deps if any
     fn = eval(fn_def)
 
     if not isinstance(fn_args, list) or len(fn_args) == 0: # no args required

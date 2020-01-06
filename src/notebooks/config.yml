@@ -79,33 +79,85 @@ app:
       quantity: 5
       color: '#6CC2BD'
       label: 5cm-legged
-      fn:
-        def: 'lambda x: -0.00002*x**5 + 0.0028*x**4 - 0.1551*x**3 + 4.0552*x**2 - 48.806*x + 213.64'
-        args:
-          - x
       habs:
       - 1
+      fns:
+        - penv: w
+          def: 'lambda x: -0.00002*x**5 + 0.0028*x**4 - 0.1551*x**3 + 4.0552*x**2 - 48.806*x + 213.64'
+          args:
+            - x
+          deps:
+        - penv: s
+          def: 'lambda s: 0.00006 * s**2 + 0.0002 * s + 0.0004'
+          args:
+            - s
+          deps:
+        - penv: f
+          def: 'lambda f: (0.00673 * f**2) - (0.002936 * f) + 0.5'
+          args:
+            - f
+          deps:
+        - penv: d
+          def: 'lambda d: -0.0013 * d**2 + 0.0074 * d - 0.0001'
+          args:
+            - d
+          deps:
     - type: 10cm
       quantity: 4
       color: '#5A809E'
       label: 10cm-legged
-      fn:
-        def: 'lambda x: 0.00009*x**4 - 0.0129*x**3 + 0.6696*x**2 - 14.75*x + 114.18'
-        args:
-          - x
       habs:
         - 1
+      fns:
+        - penv: w
+          def: 'lambda x: 0.00009*x**4 - 0.0129*x**3 + 0.6696*x**2 - 14.75*x + 114.18'
+          args:
+            - x
+          deps:
+        - penv: s
+          def: 'lambda s: 0.00006 * s**2 + 0.0002 * s + 0.0004'
+          args:
+            - s
+          deps:
+        - penv: f
+          def: 'lambda f: (0.00673 * f**2) - (0.002936 * f) + 0.5'
+          args:
+            - f
+          deps:
+        - penv: d
+          def: 'lambda d: -0.0013 * d**2 + 0.0074 * d - 0.0001'
+          args:
+            - d
+          deps:
     - type: 30cm
       quantity: 7
       color: '#7C79A2'
       label: 30cm-legged
-      fn:
-        def: 'lambda x: -10.89*math.log(x) + 44.71'
-        args:
-          - x
       habs:
         - 1
         - 2
+      fns:
+        - penv: w
+          def: 'lambda x: -10.89*math.log(x) + 44.71'
+          args:
+            - x
+          deps:
+            - 'import math'
+        - penv: s
+          def: 'lambda s: 0.00006 * s**2 + 0.0002 * s + 0.0004'
+          args:
+            - s
+          deps:
+        - penv: f
+          def: 'lambda f: (0.00673 * f**2) - (0.002936 * f) + 0.5'
+          args:
+            - f
+          deps:
+        - penv: d
+          def: 'lambda d: -0.0013 * d**2 + 0.0074 * d - 0.0001'
+          args:
+            - d
+          deps:
     - type: 60cm
       quantity: 6
       color: '#F57D7C'
@@ -117,3 +169,23 @@ app:
         - 1
         - 2
         - 3
+      fns:
+        - penv: w
+          def: 'lambda: 12.5'
+          args:
+          deps:
+        - penv: s
+          def: 'lambda s: 0.00006 * s**2 + 0.0002 * s + 0.0004'
+          args:
+            - s
+          deps:
+        - penv: f
+          def: 'lambda f: (0.00673 * f**2) - (0.002936 * f) + 0.5'
+          args:
+            - f
+          deps:
+        - penv: d
+          def: 'lambda d: -0.0013 * d**2 + 0.0074 * d - 0.0001'
+          args:
+            - d
+          deps:
