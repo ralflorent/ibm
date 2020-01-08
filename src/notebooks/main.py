@@ -1,8 +1,7 @@
-#!/usr/bin/env python
+# Virtual Environment for Individual-Based Modeling (IBM)
 #
-# Individual-Based Modeling (IBM)
-#
-# Created on October 12, 2019
+# Created on March 31, 2019
+# Last updated on Jan 6, 2020
 #
 # Authors:
 #   Ralph Florent <r.florent@jacobs-university.de>
@@ -17,9 +16,8 @@
 
 # -*- coding: utf-8 -*-
 import config
-import constants as CONST
-from core import initialize, observe, update
-from helpers import plot_figure, make_gif
+import constants
+from core import initialize, observe, update, finalize
 
 # ==============================================================================
 # END: Preamble
@@ -38,20 +36,22 @@ def application():
     time = 0 # define stopwatch for the process
 
      # process for t times
-    print('=> START: Processing random movements based on prob dist')
+    print('=> START: Running simulation for waterbirds ABM')
     habitats, agents = initialize()
     observe(habitats, agents, time)
 
-    for time in range(1, CONST.PROCESSING_TIME):
+    for time in range(1, constants.PROCESSING_TIME):
         agents = update(habitats, agents, time) # override agents when being updated
         observe(habitats, agents, time)
 
-    print('=> END: Processing random movements based on prob dist')
+    print('=> END: Running simulation for waterbirds ABM')
 
     # post-conditions
-    make_gif('snapshots.gif')
-    plot_figure()
-
+    finalize()
 
 # run application
 application()
+
+# ==============================================================================
+# END: Application
+# ==============================================================================

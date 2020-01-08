@@ -115,9 +115,12 @@ DEFAULTS['rain'][50] = 0
 
 # helpers
 def get_agentp(_type, prop):
+    """ Fetch the value of a specific property from the loaded configuration (of
+    the agents' setup)"""
     for ag_cnf in CNF_AG:
         if ag_cnf['type'] == _type:
             return ag_cnf[prop]
+    return None
 # ==============================================================================
 # END: Constants
 # ==============================================================================

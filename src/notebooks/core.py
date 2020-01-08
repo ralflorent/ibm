@@ -17,7 +17,6 @@
 
 # -*- coding: utf-8 -*-
 import os
-import math
 import uuid # hasher
 import pandas as pd # dataframe handling
 import copy as cp # copier
@@ -115,7 +114,6 @@ def create_patches():
     human3.label = C.LABELS[C.HUMAN_SETTLEMENT]
     human3.build(fill=True)
     habitats.append(human3)
-
     return habitats
 
 
@@ -216,8 +214,8 @@ def update_one(habitats, agent, time):
 
         # do's and dont's specific to this agent
         if agent.type == ag_cnf['type']:
-            x, y = gen_rand_point(restricted_habs, 'in')
-            habitat = which_habitat((x, y), restricted_habs)
+            point = gen_rand_point(restricted_habs, 'in')
+            habitat = which_habitat(point, restricted_habs)
             _d = compute_dist(habitat, human_settlements)
             min_index = _d.index( min(_d) ) # consider minimal distance
 
@@ -239,7 +237,7 @@ def update_one(habitats, agent, time):
             prob = reduce(lambda acc, val: acc * val, probs.values())
 
         if prob > C.THRESHOLD:
-            agent.set_point((x, y))
+            agent.set_point(point)
 
     stats = {
         'processing_unit': time,
@@ -345,9 +343,7 @@ def sort_imgnames(imgnames, ext='.png', reverse=False):
 
 
 def plot_figure():
-    """
-    TODO: proper docs
-    """
+    """Plot a summary of the distribution of the agents within the habitats."""
     plt.rcParams['axes.grid'] = True
     plt.rcParams['grid.alpha'] = 0.5
     plt.rcParams['figure.titlesize'] = 12
